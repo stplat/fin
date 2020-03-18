@@ -12,7 +12,7 @@ class CreateF22Table extends Migration {
    */
   public function up() {
     Schema::create('f22', function (Blueprint $table) {
-      $table->bigIncrements('id');
+      $table->increments('f22_id');
       $table->timestamps();
     });
   }
