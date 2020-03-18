@@ -1,0 +1,23 @@
+/* Переменные */
+@import '../_defaults/variables';
+
+.header {
+  height: 749px;
+  background: url('./components/header/header_bg.png') no-repeat;
+  background-size: contain;
+
+  @media (max-width: 1280px) {
+    height: 548px;
+    background-position: -100px 0;
+  }
+
+  @media (max-width: 992px) {
+    height: 480px;
+    background-position: -170px 0;
+  }
+
+  @media (max-width: 480px) {
+    height: 370px;
+    background-position: -170px 40px;
+  }
+}

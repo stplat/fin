@@ -1,0 +1,49 @@
+/*
+	https://www.giftofspeed.com/base64-encoder/ 
+*/
+@import 'regular/eot';
+@import 'regular/ttf';
+@import 'regular/woff';
+@import 'regular/woff2';
+@import 'bold/eot-bold';
+@import 'bold/ttf-bold';
+@import 'bold/woff-bold';
+@import 'bold/woff2-bold';
+@import 'medium/eot-medium';
+@import 'medium/ttf-medium';
+@import 'medium/woff-medium';
+@import 'medium/woff2-medium';
+@import 'light/eot-light';
+@import 'light/ttf-light';
+@import 'light/woff-light';
+@import 'light/woff2-light';
+
+/* =================  Roboto  ============ */
+
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: normal;
+  font-style: normal;
+  src: url('data:application/font-ttf;charset=utf-8;base64,' + $baseTTF) format('truetype'), url('data:font/opentype;charset=utf-8;base64,' + $baseEOT), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF) format('woff'), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 700;
+  font-style: normal;
+  src: url('data:application/font-ttf;charset=utf-8;base64,' + $baseTTF-bold) format('truetype'), url('data:font/opentype;charset=utf-8;base64,' + $baseEOT-bold), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF-bold) format('woff'), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF2-bold) format('woff2');
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 500;
+  font-style: normal;
+  src: url('data:application/font-ttf;charset=utf-8;base64,' + $baseTTF-medium) format('truetype'), url('data:font/opentype;charset=utf-8;base64,' + $baseEOT-medium), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF-medium) format('woff'), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF2-medium) format('woff2');
+}
+
+@font-face {
+  font-family: 'TTNorms';
+  font-weight: 300;
+  font-style: normal;
+  src: url('data:application/font-ttf;charset=utf-8;base64,' + $baseTTF-light) format('truetype'), url('data:font/opentype;charset=utf-8;base64,' + $baseEOT-medium), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF-medium) format('woff'), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF2-medium) format('woff2');
+}

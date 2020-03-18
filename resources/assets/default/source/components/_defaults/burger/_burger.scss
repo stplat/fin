@@ -1,0 +1,97 @@
+/*Разметка
+<a href="" class="burger">
+<span class="burger__box">
+<span class="burger__inner"></span>
+</span>
+</a>
+<nav class="mobile-nav">
+<a href="" class="nav__link">Как купить билет?</a>
+<a href="films.html" class="nav__link">Фильмы</a>
+<a href="" class="nav__link">Кинотеатры</a>
+<a href="" class="nav__link nav__link_drop">Мирза</a>
+</nav>
+
+
+*/
+
+// @include burger(23px);
+
+@mixin burger($width) {
+  .burger {
+    display: none;
+    //border-radius: 2px;
+
+    &.is-active + .mobile-nav {
+      display: block;
+      overflow-y: auto;
+    }
+
+    // анимация гамбургера
+    &.is-active {
+      padding: 6px 16px 6px 0;
+
+      .burger__inner {
+        transform: translate3d(0, 9px, 0) rotate(45deg);
+
+        &,
+        &:before,
+        &:after {
+          width: 46px;
+        }
+
+        &:before {
+          opacity: 0;
+        }
+
+        &:after {
+          transform: translate3d(0, -18px, 0) rotate(-90deg);
+        }
+      }
+    }
+
+    // иконка гамбургера
+    &__box {
+      position: relative;
+      width: $width;
+      height: 24px;
+      display: block;
+    }
+
+    &__inner {
+      top: 0;
+
+      &,
+      &:before,
+      &:after {
+        width: $width;
+        height: 3px;
+        background: #000000;
+        display: block;
+        //border-radius: 4px;
+        position: absolute;
+        transition: transform 0.25s, width 0.25s;
+      }
+
+      &:before,
+      &:after {
+        content: '';
+      }
+
+      &:before {
+        top: 9px;
+        transition: opacity 0.05s;
+        opacity: 1;
+      }
+
+      &:after {
+        top: 18px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      display: block;
+      position: relative;
+      z-index: 10;
+    }
+  }
+}

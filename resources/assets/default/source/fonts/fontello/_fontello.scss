@@ -1,0 +1,17 @@
+/* 
+	http://fontello.com/
+  https://www.giftofspeed.com/base64-encoder/
+*/
+@import 'eot';
+@import 'ttf';
+@import 'woff';
+@import 'woff2';
+
+/* =================  Fontello  ============ */
+
+@font-face {
+  font-family: 'Fontello';
+  font-weight: normal;
+  font-style: normal;
+  src: url('data:application/font-ttf;charset=utf-8;base64,' + $baseTTF) format('truetype'), url('data:font/opentype;charset=utf-8;base64,' + $baseEOT), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF) format('woff'), url('data:application/font-woff;charset=utf-8;base64,' + $baseWOFF2) format('woff2');
+}
