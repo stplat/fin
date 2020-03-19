@@ -4,15 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateF22Table extends Migration {
+class CreatePeriodTable extends Migration {
   /**
    * Run the migrations.
    *
    * @return void
    */
   public function up() {
-    Schema::create('f22', function (Blueprint $table) {
-      $table->increments('f22_id');
+    Schema::create('period', function (Blueprint $table) {
+      $table->increments('period_id');
+      $table->text('name');
       $table->timestamps();
     });
   }
@@ -23,6 +24,6 @@ class CreateF22Table extends Migration {
    * @return void
    */
   public function down() {
-    Schema::dropIfExists('f22');
+    Schema::dropIfExists('period');
   }
 }
