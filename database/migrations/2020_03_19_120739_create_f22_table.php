@@ -13,10 +13,11 @@ class CreateF22Table extends Migration {
   public function up() {
     Schema::create('f22', function (Blueprint $table) {
       $table->increments('f22_id');
+      $table->integer('period_id');
+      $table->integer('activity_id');
+      $table->integer('supply_id');
       $table->integer('article_id');
-      $table->text('period_id');
-      $table->text('activity_id');
-      $table->integer('sum');
+      $table->double('sum');
       $table->timestamps();
     });
   }

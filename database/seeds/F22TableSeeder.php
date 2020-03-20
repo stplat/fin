@@ -15,18 +15,74 @@ class F22TableSeeder extends Seeder {
    * @return void
    */
   public function run() {
-    $excel = PHPExcel_IOFactory::load(__DIR__ . '/f22.xlsx');
-    $P16 = $excel->getActiveSheet()->getCell('P16');
 
-    DB::table('f22')->insert([
-      [
-        'article_id' => '1',
-        'period_id' => '1',
-        'activity_id' => '1',
-        'sum' => $P16,
-        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-      ]
-    ]);
+    function getCell($cell) {
+      $excel = PHPExcel_IOFactory::load(__DIR__ . '/f22.xlsx');
+      $cell = (double)$excel->getActiveSheet()->getCell($cell)->getValue();
+
+      return $cell;
+    }
+
+    $f22 = [];
+    $supplies = ['22' => '1', '23' => '2', '24' => '3', '26' => '1', '27' => '2', '28' => '3', '30' => '1', '31' => '2', '32' => '3', '34' => '1', '35' => '2', '36' => '3'];
+    $articles = [1 => 'Q', 2 => 'R', 3 => 'S', 4 => 'T', 13 => 'W', 19 => 'X', 20 => 'Y', 21 => 'Z', 22 => 'AA', 23 => 'AB', 25 => 'AC'];
+
+    foreach ($supplies as $row => $supply) {
+      foreach ($articles as $key => $col) {
+        if ($row == '22' || $row == '23' || $row == '24') { // ПЕРЕВОЗКИ
+          $arr = [];
+          $arr['period_id'] = getCell('H17');
+          $arr['activity_id'] = '1';
+          $arr['supply_id'] = $supply;
+          $arr['article_id'] = $key;
+          $arr['sum'] = round(getCell($col . $row), 3);
+          $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+          $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
+
+          array_push($f22, $arr);
+        }
+
+        if ($row == '26' || $row == '27' || $row == '28') { // ПВД
+          $arr = [];
+          $arr['period_id'] = getCell('H17');
+          $arr['activity_id'] = '2';
+          $arr['supply_id'] = $supply;
+          $arr['article_id'] = $key;
+          $arr['sum'] = round(getCell($col . $row), 3);
+          $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+          $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
+
+          array_push($f22, $arr);
+        }
+
+        if ($row == '30' || $row == '31' || $row == '32') { // КВ
+          $arr = [];
+          $arr['period_id'] = getCell('H17');
+          $arr['activity_id'] = '3';
+          $arr['supply_id'] = $supply;
+          $arr['article_id'] = $key;
+          $arr['sum'] = round(getCell($col . $row), 3);
+          $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+          $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
+
+          array_push($f22, $arr);
+        }
+
+        if ($row == '34' || $row == '35' || $row == '36') { // ПРОЧИЕ
+          $arr = [];
+          $arr['period_id'] = getCell('H17');
+          $arr['activity_id'] = '4';
+          $arr['supply_id'] = $supply;
+          $arr['article_id'] = $key;
+          $arr['sum'] = round(getCell($col . $row), 3);
+          $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+          $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
+
+          array_push($f22, $arr);
+        }
+      }
+    }
+
+    DB::table('f22')->insert($f22);
   }
 }
