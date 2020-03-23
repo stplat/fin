@@ -4,9 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
-require_once __DIR__ . '/phpexcel/PHPExcel.php';
-require_once __DIR__ . '/phpexcel/PHPExcel/Writer/Excel2007.php';
-require_once __DIR__ . '/phpexcel/PHPExcel/IOFactory.php';
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class F22TableSeeder extends Seeder {
   /**
@@ -17,7 +15,7 @@ class F22TableSeeder extends Seeder {
   public function run() {
 
     function getCell($cell) {
-      $excel = PHPExcel_IOFactory::load(__DIR__ . '/f22.xlsx');
+      $excel = IOFactory::load(__DIR__ . '/f22.xlsx');
       $cell = (double)$excel->getActiveSheet()->getCell($cell)->getValue();
 
       return $cell;

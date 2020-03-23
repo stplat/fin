@@ -29,14 +29,14 @@ class DkreTableSeeder extends Seeder {
       [
         'be' => '3912',
         'name' => 'ДКРЭ_ОКТ',
-        'zavod' => 'ДКРЭ_ОКТ_ГОРЬК',
+        'zavod' => 'ДКРЭ_ОКТ_НЖГ',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],
       [
         'be' => '3912',
         'name' => 'ДКРЭ_ОКТ',
-        'zavod' => 'ДКРЭ_ОКТ_СЕВ',
+        'zavod' => 'ДКРЭ_ОКТ_ЯРС',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],
@@ -120,7 +120,7 @@ class DkreTableSeeder extends Seeder {
       [
         'be' => '3990',
         'name' => 'ДКРЭ соб.',
-        'zavod' => 'ДКРЭ соб.',
+        'zavod' => 'ДКРЭ',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],

@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder {
     $this->call(F22TableSeeder::class);
     $this->call(PeriodTableSeeder::class);
     $this->call(SupplyTableSeeder::class);
+    $this->call(BudgetTableSeeder::class);
+    $this->call(PlanpostavkiTableSeeder::class);
   }
 }
