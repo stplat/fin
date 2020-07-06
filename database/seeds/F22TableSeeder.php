@@ -30,9 +30,9 @@ class F22TableSeeder extends Seeder {
         if ($row == '22' || $row == '23' || $row == '24') { // ПЕРЕВОЗКИ
           $arr = [];
           $arr['period_id'] = getCell('H17');
-          $arr['activity_id'] = '1';
-          $arr['supply_id'] = $supply;
-          $arr['article_id'] = $key;
+          $arr['vid_deyatelnosti_id'] = '1';
+          $arr['istochnik_postavki_id'] = $supply;
+          $arr['statya_pb_id'] = $key;
           $arr['sum'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -43,9 +43,9 @@ class F22TableSeeder extends Seeder {
         if ($row == '26' || $row == '27' || $row == '28') { // ПВД
           $arr = [];
           $arr['period_id'] = getCell('H17');
-          $arr['activity_id'] = '2';
-          $arr['supply_id'] = $supply;
-          $arr['article_id'] = $key;
+          $arr['vid_deyatelnosti_id'] = '2';
+          $arr['istochnik_postavki_id'] = $supply;
+          $arr['statya_pb_id'] = $key;
           $arr['sum'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -56,9 +56,9 @@ class F22TableSeeder extends Seeder {
         if ($row == '30' || $row == '31' || $row == '32') { // КВ
           $arr = [];
           $arr['period_id'] = getCell('H17');
-          $arr['activity_id'] = '3';
-          $arr['supply_id'] = $supply;
-          $arr['article_id'] = $key;
+          $arr['vid_deyatelnosti_id'] = '3';
+          $arr['istochnik_postavki_id'] = $supply;
+          $arr['statya_pb_id'] = $key;
           $arr['sum'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -69,9 +69,9 @@ class F22TableSeeder extends Seeder {
         if ($row == '34' || $row == '35' || $row == '36') { // ПРОЧИЕ
           $arr = [];
           $arr['period_id'] = getCell('H17');
-          $arr['activity_id'] = '4';
-          $arr['supply_id'] = $supply;
-          $arr['article_id'] = $key;
+          $arr['vid_deyatelnosti_id'] = '4';
+          $arr['istochnik_postavki_id'] = $supply;
+          $arr['statya_pb_id'] = $key;
           $arr['sum'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');

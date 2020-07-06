@@ -4,14 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePeriodTable extends Migration {
+class CreateIstochnikPostavkiTable extends Migration {
   /**
    * Run the migrations.
    *
    * @return void
    */
   public function up() {
-    Schema::create('period', function (Blueprint $table) {
+    Schema::create('istochnik_postavki', function (Blueprint $table) {
       $table->increments('id');
       $table->text('name');
       $table->timestamps();
@@ -24,6 +24,6 @@ class CreatePeriodTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::dropIfExists('period');
+    Schema::dropIfExists('istochnik_postavki');
   }
 }

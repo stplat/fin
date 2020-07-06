@@ -12,7 +12,7 @@ class CreateDkreTable extends Migration {
    */
   public function up() {
     Schema::create('dkre', function (Blueprint $table) {
-      $table->increments('dkre_id');
+      $table->increments('id');
       $table->integer('be');
       $table->text('name');
       $table->text('zavod');

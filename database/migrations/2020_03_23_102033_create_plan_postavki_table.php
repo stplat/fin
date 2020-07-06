@@ -12,11 +12,11 @@ class CreatePlanPostavkiTable extends Migration {
    */
   public function up() {
     Schema::create('plan_postavki', function (Blueprint $table) {
-      $table->increments('plan_postavki_id');
+      $table->increments('id');
       $table->integer('period_id');
-      $table->integer('activity_id');
-      $table->integer('article_id');
-      $table->integer('supply_id');
+      $table->integer('vid_deyatelnosti_id');
+      $table->integer('istochnik_postavki_id');
+      $table->integer('statya_pb_id');
       $table->integer('dkre_id');
       $table->double('sum');
       $table->timestamps();
