@@ -9,99 +9,97 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer;
 
 class TestController extends Controller {
   public function index() {
 
-    $excel = IOFactory::load($_SERVER['DOCUMENT_ROOT'] . '/database/seeds/plan_postavki.xlsx');
+    $file = '4';
+
+    $excel = IOFactory::load($_SERVER['DOCUMENT_ROOT'] . '/app/Http/controllers/' . $file . '.xlsx');
 
     function getCell($excel, $cell) {
       $cell = $excel->getActiveSheet()->getCell($cell);
       return $cell;
     }
 
-    $maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
-    $data = $excel->getActiveSheet()->rangeToArray('C4:' . $maxCell['column'] . $maxCell['row']);
+    /*$maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
+    $data = $excel->getActiveSheet()->rangeToArray('A4:' . $maxCell['column'] . $maxCell['row']);*/
+    $sheets = [];
 
-    $plan_postavki = [];
+    /*echo $excel->getActiveSheet()->getStyle('B6')
+      ->getFont()->getUnderline();*/
 
-    foreach ($data as $row) {
+    $layout = IOFactory::load(__DIR__ . '/layout.xlsx');
+    $sheet = $layout->getActiveSheet();
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($layout);
 
-      $period = DB::table('period')->where('name', $row[1])->get()->all()[0];
-      $article = DB::table('article')->where('code', $row[0])->get()->all()[0];
-      $dkre = DB::table('dkre')->where('zavod', $row[3])->get()->all()[0];
+    $cursor = 0;
 
-      if ($row[2] == 'ПЕР') { // Перевозки
-        $arr = [];
-        $arr['period_id'] = $period->period_id;
-        $arr['activity_id'] = '3';
-        $arr['article_id'] = $article->article_id;
+    echo '<table>';
 
-        $row[2] == 'ЦЗ/РЗ' ?: $arr['supply_id'] = '1';
-        $row[2] == 'СЗ' ?: $arr['supply_id'] = '2';
+    foreach ($excel->getWorksheetIterator() as $worksheet) {
+      $maxCell = $worksheet->getHighestRowAndColumn();
 
-        $arr['dkre_id'] = $dkre->dkre_id;
-        $arr['sum'] = $row[5];
-        $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-        $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
+      for ($i = 0; $i <= $maxCell['row']; $i++) {
+        $cursor++;
+        /*echo '<tr>';
+        echo '<td>';
+        if ($worksheet->getStyle('A' . ($i + 1))->getFont()->getUnderline() === 'single')
+          echo $worksheet->getCell('A' . ($i + 1));
+        echo '</td>';
+        echo '<td>' . $worksheet->getCell('A' . $i) . '</td>';
+        echo '<td>' . $worksheet->getCell('C' . $i) . '</td>';
+        echo '<td>' . $worksheet->getCell('J' . $i) . '</td>';
+        echo '</tr>';*/
 
-        array_push($plan_postavki, $arr);
+        if ($worksheet->getStyle('A' . ($i + 1))->getFont()->getUnderline() === 'single') {
+          $sheet->setCellValue('A' . ($cursor + 1), $worksheet->getCell('A' . ($i + 1)));
+          $sheet->setCellValue('B' . ($cursor + 1), ($worksheet->getCell('B' . ($i + 1)) . ' ' . ($worksheet->getCell('C' . ($i + 1)))));
+        }
+
+        if ($worksheet->getCell('J' . ($i + 1)) == '-' || $worksheet->getCell('J' . ($i + 1)) == '')
+          $sheet->setCellValue('D' . ($cursor + 1), $worksheet->getCell('I' . ($i + 1)));
+        else
+          $sheet->setCellValue('D' . ($cursor + 1), $worksheet->getCell('J' . ($i + 1)));
+
+        $sheet->setCellValue('C' . ($cursor + 1), $worksheet->getCell('A' . ($i + 1)));
+        $sheet->setCellValue('E' . ($cursor + 1), $worksheet->getCell('C' . ($i + 1)));
+        $sheet->setCellValue('F' . ($cursor + 1), $worksheet->getCell('H' . ($i + 1)));
       }
 
-      if ($row[2] == 'ПВД') { // ПВД
-        $arr = [];
-        $arr['period_id'] = $period->period_id;
-        $arr['activity_id'] = '3';
-        $arr['article_id'] = $article->article_id;
 
-        $row[2] == 'ЦЗ/РЗ' ?: $arr['supply_id'] = '1';
-        $row[2] == 'СЗ' ?: $arr['supply_id'] = '2';
-
-        $arr['dkre_id'] = $dkre->dkre_id;
-        $arr['sum'] = $row[5];
-        $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-        $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
-
-        array_push($plan_postavki, $arr);
-      }
-
-      if ($row[2] == 'ИНВ') { // Инвестиции
-        $arr = [];
-        $arr['period_id'] = $period->period_id;
-        $arr['activity_id'] = '3';
-        $arr['article_id'] = $article->article_id;
-
-        $row[2] == 'ЦЗ/РЗ' ?: $arr['supply_id'] = '1';
-        $row[2] == 'СЗ' ?: $arr['supply_id'] = '2';
-
-        $arr['dkre_id'] = $dkre->dkre_id;
-        $arr['sum'] = $row[5];
-        $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-        $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
-
-        array_push($plan_postavki, $arr);
-      }
-
-      if ($row[2] == 'ПРО') { // Прочие
-        $arr = [];
-        $arr['period_id'] = $period->period_id;
-        $arr['activity_id'] = '3';
-        $arr['article_id'] = $article->article_id;
-
-        $row[2] == 'ЦЗ/РЗ' ?: $arr['supply_id'] = '1';
-        $row[2] == 'СЗ' ?: $arr['supply_id'] = '2';
-
-        $arr['dkre_id'] = $dkre->dkre_id;
-        $arr['sum'] = $row[5];
-        $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-        $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
-
-        array_push($plan_postavki, $arr);
-      }
-
+      $worksheet = $worksheet->toArray();
+      $sheets = array_merge($sheets, $worksheet);
     }
 
-    dd($plan_postavki);
-    //DB::table('budget')->insert($plan_postavki);
+    echo '</table>';
+
+    $norm = [];
+
+    /*foreach ($sheets as $row) {
+      $arr = [];
+      $arr['code'] = $row[0];
+      $arr['name'] = $row[1];
+      $arr['mark'] = $row[2];
+      $arr['num'] = $row[6];
+      $arr['ei'] = $row[7];
+      $arr['send'] = $row[9];
+
+      array_push($norm, $arr);
+    }
+
+    foreach ($norm as $key => $row) {
+      $sheet->setCellValue('B' . ($key + 1), $row['code']);
+      $sheet->setCellValue('C' . ($key + 1), $row['name']);
+      $sheet->setCellValue('D' . ($key + 1), $row['mark']);
+      $sheet->setCellValue('E' . ($key + 1), $row['ei']);
+      $sheet->setCellValue('F' . ($key + 1), $row['num']);
+      $sheet->setCellValue('G' . ($key + 1), $row['send']);
+    }*/
+
+    $writer->save($_SERVER['DOCUMENT_ROOT'] . '/app/Http/controllers/' . $file . '-new.xlsx');
+
+
   }
 }
