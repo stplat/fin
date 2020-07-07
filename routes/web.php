@@ -13,5 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'TestController@index');
+Route::get('/budget', 'BudgetController@index');
 

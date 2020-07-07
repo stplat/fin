@@ -1,9 +1,16 @@
 // Resets
-@import '~normalize.css';
+@import "~normalize.css";
 // Fonts
-@import 'fonts';
+@import "fonts";
 // Variables
-@import 'variables';
+@import "variables";
 // Preloader
 @import "~spinkit/spinkit.min.css";
 // Custom
+@import "layouts";
+@import "header";
+@import "sidebar";
+@import "breadcrumb";
+@import "card";
+@import "forms";
+

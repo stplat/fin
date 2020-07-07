@@ -1,0 +1,68 @@
+@mixin toggle($width, $height, $bg_active, $bg_deactive, $type: left) {
+  .toggle {
+    position: relative;
+    display: inline-flex;
+    height: $height;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+
+    input:checked + &__box {
+      background: $bg_active;
+
+      &:after {
+        @if $type == left {
+          left: $width - ($height - 2px + 1px);
+        }
+        @if $type == top {
+          top: $height - ($width - 2px + 1px);
+        }
+      }
+    }
+
+    &__label {
+      position: relative;
+      font-size: 16px;
+      color: #000000;
+      padding: 0 0 0 10px;
+      margin: 0;
+      display: block;
+    }
+
+    &__box {
+      border-radius: $height / 2;
+      padding: 0 10px;
+      height: $height;
+      width: $width;
+      position: relative;
+      background: $bg_deactive;
+      display: block;
+
+      &:after {
+        content: "";
+        background: #ffffff;
+        border-radius: 50%;
+        display: inline-block;
+        position: absolute;
+        z-index: 100;
+        @if $type == left {
+          width: $height - 2px;
+          height: $height - 2px;
+          left: 1px;
+          transition: left 0.3s;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        @if $type == top {
+          width: $width - 2px;
+          height: $width - 2px;
+          top: 1px;
+          transition: top 0.3s;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+    }
+  }
+}

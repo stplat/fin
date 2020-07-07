@@ -1,0 +1,41 @@
+/* Элементы формы */
+@import "mixins/toggle";
+
+/* Кастомный селект */
+.select {
+  display: block;
+  width: 100%;
+  height: $select-height;
+  padding: 5px 10px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+  &--multiple {
+    padding: 2px 10px;
+    height: $select-multyple-height;
+  }
+
+  &:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+  }
+}
+
+/* Ярлык для элементов формы */
+.label {
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
+/* Тумблер */
+@include toggle(40px, 20px, $blue, #787878);

@@ -1,11 +1,24 @@
 // HTML
-$html-bg: #F1F1F1;
-$box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-$line-color: #C3C3C3;
+$html-bg: #F8FAFC;
+$sidebar-bg: #3C4B64;
+$sidebar-menu-bg: rgba(255, 255, 255, 0.05);
+$card-bg: rgba(0, 0, 0, .04);
+
+$header-height: 70px;
+$select-height: 38px;
+$select-multyple-height: 100px;
+
+$box-shadow: 0 1px 1px 0 rgba(60, 75, 100, .14), 0 2px 1px -1px rgba(60, 75, 100, .12), 0 1px 3px 0 rgba(60, 75, 100, .2);
+$border-color: rgba(0, 0, 0, .125);
+
 
 // Typography
-$font-family-sans-serif: 'Akrobat', sans-serif;
+$font-family-sans-serif: 'Calibri', sans-serif;
 $font-family-icon: 'Fontello', sans-serif;
+$font-size-base: 1rem;
+$font-weight-base: 400;
+$line-height-base: 1.8;
+$color: #3C4B64;
 
 // Links
 $link-blue: #597FED;
@@ -18,11 +31,3 @@ $blue: #569ED0;
 $purple: #B427D7;
 
 
-
-
-$indigo: #6574cd;
-$pink: #f66d9b;
-$red: #e3342f;
-$orange: #f6993f;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;

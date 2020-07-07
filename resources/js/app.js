@@ -16,7 +16,7 @@ import store from './stores';
 // Vue.component('v-menu', require('./views/layouts/Menu').default);
 
 /* Components */
-// Vue.component('schedule', require('./components/Schedule/index').default);
+Vue.component('budget', require('./components/Budget/index').default);
 // Vue.component('ticker', require('./components/Ticker').default);
 // Vue.component('ad-block', require('./components/AdBlock').default);
 // Vue.component('yandex-map', require('./components/YandexMap').default);

@@ -1,0 +1,92 @@
+/* Боковая левая панель */
+.sidebar {
+  background-color: $sidebar-bg;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+}
+
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: $header-height;
+  text-transform: uppercase;
+
+  a {
+    font-size: 2rem;
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+}
+
+.sidebar__title {
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 15px;
+  margin: 10px 0 0;
+}
+
+.sidebar-menu {
+  background-color: $sidebar-menu-bg;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-menu__link {
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  padding: 20px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  line-height: 18px;
+  text-decoration: none;
+  transition: background-color 0.1s;
+
+  &:before {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0 15px 0 0;
+    width: 50px;
+    text-align: center;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  &.is-active:hover, &:hover {
+    background-color: $blue;
+  }
+
+  &.is-active {
+    background-color: $sidebar-menu-bg;
+  }
+
+  &.is-panel:before {
+    content: 'ПУ';
+  }
+
+  &.is-budget:before {
+    content: 'БЗМ';
+  }
+
+  &.is-vovlechenie:before {
+    content: 'ВОЛ';
+  }
+
+  &.is-fin:before {
+    content: 'ФИН';
+  }
+
+  &.is-forma:before {
+    content: 'Ф22';
+  }
+
+  &.is-denej:before {
+    content: 'ДЕН';
+  }
+}

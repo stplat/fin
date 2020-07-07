@@ -1,0 +1,30 @@
+/* Карточка для контента */
+.card {
+  box-shadow: $box-shadow;
+  border-radius: 0.25rem;
+  background: #FFFFFF;
+}
+
+.card__header {
+  background-color: $card-bg;
+  border-bottom: 1px solid $border-color;
+  padding: 12px 15px;
+  font-size: 1.6rem;
+  line-height: 1;
+  margin: 0;
+  font-weight: normal;
+  opacity: 0.9;
+}
+
+.card__body {
+  padding: 15px;
+}
+
+.card-panel {
+  display: flex;
+  margin: 0 -15px;
+}
+
+.card-panel__item {
+  margin: 0 15px;
+}
