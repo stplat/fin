@@ -6,96 +6,85 @@ use Illuminate\Support\Carbon;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-class PlanpostavkiTableSeeder extends Seeder {
+class BudgetsTableSeeder extends Seeder {
   /**
    * Run the database seeds.
    *
    * @return void
    */
   public function run() {
-    $excel = IOFactory::load(__DIR__ . '/plan_postavki.xlsx');
+    $excel = IOFactory::load(__DIR__ . '/budget.xlsx');
 
     $maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
-    $data = $excel->getActiveSheet()->rangeToArray('C4:' . $maxCell['column'] . $maxCell['row']);
+    $data = $excel->getActiveSheet()->rangeToArray('A5:' . $maxCell['column'] . $maxCell['row']);
 
-    $plan_postavki = [];
+    $budget = [];
 
     foreach ($data as $key => $row) {
       if ($row[5] != 0) {
-        $period = DB::table('periods')->where('name', $row[1])->get()->all()[0];
-        $article = DB::table('statya_pb')->where('code', $row[0])->get()->all()[0];
+        $period = DB::table('periods')->where('name', $row[2])->get()->all()[0];
+        $article = DB::table('statya_pb')->where('code', $row[1])->get()->all()[0];
         $dkre = DB::table('dkre')->where('zavod', $row[3])->get()->all()[0];
+        $version = DB::table('versions')->where('name', $row[6])->first();
 
-        if ($row[2] == 'ПЕР') { // Перевозки
+        if ($row[4] == 'ПЕР') { // ПЕРЕВОЗКИ
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['vid_deyatelnosti_id'] = '1';
           $arr['statya_pb_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['istochnik_postavki_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['istochnik_postavki_id'] = '2';
-
           $arr['dkre_id'] = $dkre->id;
           $arr['sum'] = $row[5];
+          $arr['version_id'] = $version->id;
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-          array_push($plan_postavki, $arr);
+          array_push($budget, $arr);
         }
 
-        if ($row[2] == 'ПВД') { // ПВД
+        if ($row[4] == 'ПВД') { // ПВД
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['vid_deyatelnosti_id'] = '2';
           $arr['statya_pb_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['istochnik_postavki_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['istochnik_postavki_id'] = '2';
-
           $arr['dkre_id'] = $dkre->id;
           $arr['sum'] = $row[5];
+          $arr['version_id'] = $version->id;
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-          array_push($plan_postavki, $arr);
+          array_push($budget, $arr);
         }
 
-        if ($row[2] == 'ИНВ') { // КВ
+        if ($row[4] == 'ИНВ') { // КВ
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['vid_deyatelnosti_id'] = '3';
           $arr['statya_pb_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['istochnik_postavki_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['istochnik_postavki_id'] = '2';
-
           $arr['dkre_id'] = $dkre->id;
           $arr['sum'] = $row[5];
+          $arr['version_id'] = $version->id;
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-          array_push($plan_postavki, $arr);
+          array_push($budget, $arr);
         }
 
-        if ($row[2] == 'ПРО') { // Прочие
+        if ($row[4] == 'ПРО') { // Прочие
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['vid_deyatelnosti_id'] = '4';
           $arr['statya_pb_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['istochnik_postavki_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['istochnik_postavki_id'] = '2';
-
           $arr['dkre_id'] = $dkre->id;
           $arr['sum'] = $row[5];
+          $arr['version_id'] = $version->id;
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-          array_push($plan_postavki, $arr);
+          array_push($budget, $arr);
         }
       }
     }
 
-    DB::table('plan_postavki')->insert($plan_postavki);
+    DB::table('budgets')->insert($budget);
   }
 }

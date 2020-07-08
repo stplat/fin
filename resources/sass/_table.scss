@@ -1,0 +1,30 @@
+/* Общие стили таблицы */
+.table {
+
+  table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  tr {
+
+    &.strong {
+      font-weight: bold;
+    }
+  }
+
+  th, td {
+    border: 1px solid $border-color;
+    line-height: 1.5;
+  }
+
+
+}
+
+.table__unit {
+  text-align: right;
+  font-size: 1.1rem;
+}
+

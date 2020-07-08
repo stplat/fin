@@ -1,4 +1,4 @@
 @extends('layouts.app', ['title' => 'Бюджет затрат (мат+топ)'])
 @section('content')
-  <budget></budget>
+  <budget :initial-data="{{ $data }}"></budget>
 @endsection

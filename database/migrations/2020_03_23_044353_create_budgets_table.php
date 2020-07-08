@@ -4,20 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDkreTable extends Migration {
+class CreateBudgetsTable extends Migration {
   /**
    * Run the migrations.
    *
    * @return void
    */
   public function up() {
-    Schema::create('dkre', function (Blueprint $table) {
+    Schema::create('budgets', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('be');
-      $table->string('slug_name');
-      $table->string('name');
-      $table->string('slug_zavod');
-      $table->string('zavod');
+      $table->integer('period_id');
+      $table->integer('vid_deyatelnosti_id');
+      $table->integer('statya_pb_id');
+      $table->integer('dkre_id');
+      $table->double('sum');
+      $table->integer('version_id');
       $table->timestamps();
     });
   }
@@ -28,6 +29,6 @@ class CreateDkreTable extends Migration {
    * @return void
    */
   public function down() {
-    Schema::dropIfExists('dkre');
+    Schema::dropIfExists('budgets');
   }
 }
