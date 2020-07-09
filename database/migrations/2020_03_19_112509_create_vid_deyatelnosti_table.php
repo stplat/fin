@@ -13,7 +13,8 @@ class CreateVidDeyatelnostiTable extends Migration {
   public function up() {
     Schema::create('vid_deyatelnosti', function (Blueprint $table) {
       $table->increments('id');
-      $table->text('name');
+      $table->string('code');
+      $table->string('name');
       $table->timestamps();
     });
   }

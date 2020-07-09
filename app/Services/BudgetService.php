@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Budget;
 use App\Models\Dkre;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Boolean;
+
 
 class BudgetService
 {
@@ -66,33 +68,63 @@ class BudgetService
    */
   public function getBudgetByGroupDkre($period, $version)
   {
-    $budget = \DB::table('budgets')->selectRaw("
+    $budget = DB::table('budgets')->selectRaw("
       dkre.be as be, 
       dkre.name as dkre, 
       periods.name as period,
-      budgets.vid_deyatelnosti_id as vid_deyatelnosti, 
+      vid_deyatelnosti.id as vid_deyatelnosti, 
       statya_pb.code as statya_pb, 
-      SUM(sum) as sum
+      ROUND(SUM(sum), 3) as sum
       ")
       ->where(['period_id' => $period, 'version_id' => $version])
       ->groupBy(['be', 'dkre', 'period', 'vid_deyatelnosti', 'statya_pb'])
       ->leftJoin('dkre', 'budgets.dkre_id', '=', 'dkre.id')
       ->join('periods', 'budgets.period_id', '=', 'periods.id')
       ->join('statya_pb', 'budgets.statya_pb_id', '=', 'statya_pb.id')
+      ->join('vid_deyatelnosti', 'budgets.vid_deyatelnosti_id', '=', 'vid_deyatelnosti.id')
       ->get()
       ->sortBy('vid_deyatelnosti')
       ->sort()
       ->groupBy(['dkre', 'vid_deyatelnosti', 'statya_pb']);
 
-    return $budget->map(function ($item, $key) {
+    $total = DB::table('budgets')->selectRaw("
+      vid_deyatelnosti.id as vid_deyatelnosti, 
+      statya_pb.code as statya_pb, 
+      ROUND(SUM(sum), 3) as sum
+      ")
+      ->where(['period_id' => $period, 'version_id' => $version])
+      ->groupBy(['vid_deyatelnosti', 'statya_pb'])
+      ->leftJoin('dkre', 'budgets.dkre_id', '=', 'dkre.id')
+      ->join('periods', 'budgets.period_id', '=', 'periods.id')
+      ->join('statya_pb', 'budgets.statya_pb_id', '=', 'statya_pb.id')
+      ->join('vid_deyatelnosti', 'budgets.vid_deyatelnosti_id', '=', 'vid_deyatelnosti.id')
+      ->get()
+      ->sortBy('vid_deyatelnosti')
+      ->sort()
+      ->groupBy(['vid_deyatelnosti', 'statya_pb']);
+
+    $budget = $budget->map(function ($item, $key) {
+      $array = $item->map(function ($item) {
+        return $item->map(function ($item) {
+          return round($item[0]->sum, 3);
+        });
+      });
+
       return collect([
         'dkre' => $key,
-        'vid_deyatelnosti' => $item->map(function ($item) {
-          return $item->map(function ($item) {
-            return $item[0]->sum;
-          });
-        })
+        '63310' => round($array->pluck('63310')->sum(), 3),
+        '63320' => round($array->pluck('63320')->sum(), 3),
+        '63330' => round($array->pluck('63330')->sum(), 3),
+        '63340' => round($array->pluck('63340')->sum(), 3),
+        '63430' => round($array->pluck('63430')->sum(), 3),
+        'vid_deyatelnosti' => $array
       ]);
     })->values();
+
+    return collect([
+      'budget' => $budget,
+      'total' => $total
+    ]);
+
   }
 }

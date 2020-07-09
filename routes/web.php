@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/budget', 'BudgetController@index');
+Route::get('/budget/all', 'BudgetController@all');
 

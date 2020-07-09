@@ -10,8 +10,24 @@
 
   tr {
 
+    /* Жирная строка */
     &.strong {
       font-weight: bold;
+    }
+
+    /* Строка выделенная типа подзаголовок */
+    &.bg {
+      background-color: $table-bg;
+    }
+
+    /* Событие по наведению */
+    &:hover {
+      background-color: $table-hover;
+    }
+
+    /* Строки без события */
+    &.not-hover:hover {
+      background-color: transparent;
     }
   }
 

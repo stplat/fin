@@ -73,7 +73,6 @@
       }
     },
     mounted() {
-      console.log(this.initialData);
     }
   }
 </script>

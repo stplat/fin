@@ -1,13 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import budget from "./modules/budget";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
+    budget
   },
   state: {
-    requestPath: 'http://lkstops3.optimagp66.ru'
+    requestPath: ''
     // requestPath: 'http://lkstops.loc'
   }
 });

@@ -14,9 +14,7 @@ class CreateDkreTable extends Migration {
     Schema::create('dkre', function (Blueprint $table) {
       $table->increments('id');
       $table->integer('be');
-      $table->string('slug_name');
       $table->string('name');
-      $table->string('slug_zavod');
       $table->string('zavod');
       $table->timestamps();
     });

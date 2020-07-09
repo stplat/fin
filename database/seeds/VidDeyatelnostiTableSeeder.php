@@ -13,21 +13,25 @@ class VidDeyatelnostiTableSeeder extends Seeder {
   public function run() {
     DB::table('vid_deyatelnosti')->insert([
       [
+        'code' => '01',
         'name' => 'Перевозки',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],
       [
+        'code' => '21',
         'name' => 'ПВД',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],
       [
+        'code' => '61',
         'name' => 'КВ',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],
       [
+        'code' => '81',
         'name' => 'Прочие',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')

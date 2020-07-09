@@ -5,7 +5,7 @@ import Vue from 'vue';
 import store from './stores';
 
 /* Mixins */
-// Vue.mixin(require('./mixins/helpers').default);
+Vue.mixin(require('./mixins/helpers').default);
 // Vue.mixin(require('./mixins/localization').default);
 
 /* Filters */
