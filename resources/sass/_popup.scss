@@ -1,0 +1,97 @@
+/* Всплывающее модальное окно */
+.popup-wrapper {
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: block;
+  transition: opacity 0.3s;
+  overflow-y: auto;
+}
+
+.popup-close {
+  font-size: 2rem;
+  line-height: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 1rem;
+  background: none;
+  border: none;
+  opacity: 0.7;
+  transition: opacity 0.08s;
+  z-index: 10;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.popup-header {
+  padding: 1rem 4rem 1rem 1.5rem;
+  position: relative;
+  border-bottom: 1px solid #e8e8e8;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+  z-index: 1;
+}
+
+.popup-sub-title {
+  line-height: 18px;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.popup-body {
+  padding: 1.5rem;
+  position: relative;
+
+  & img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 0.25rem;
+  }
+}
+
+.popup-footer {
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid #e8e8e8;
+  border-bottom-right-radius: calc(0.3rem - 1px);
+  border-bottom-left-radius: calc(0.3rem - 1px);
+}
+
+.popup-container {
+  max-width: 80%;
+  width: 500px;
+  top: 0;
+  margin: 1.5rem auto;
+  background-color: #fff;
+  border-radius: .25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  position: relative;
+  transition: all 0.1s;
+
+  &.d-inline-block {
+    width: auto;
+
+    .popup-body {
+      padding: 0;
+      line-height: 0;
+    }
+  }
+}
+
+.popup-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+
+

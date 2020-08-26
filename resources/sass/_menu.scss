@@ -1,0 +1,93 @@
+/* Боковое меню  */
+.menu {
+  list-style-type: none;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menu__item {
+  flex: 0 0 auto;
+
+  &:last-child {
+    margin-bottom: 1rem;
+  }
+
+  &--grow {
+    flex: 1 0 auto;
+  }
+}
+
+.menu__link {
+  padding: 13px 10px 13px 65px;
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.08s;
+  position: relative;
+
+  &:before {
+    content: '\F0F7';
+    font-family: $font-icons;
+    position: absolute;
+    left: 25px;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &.is-active {
+    background: hsla(0, 0%, 100%, .05);
+  }
+
+  .no-touchevents &:hover {
+    text-decoration: none;
+    color: #FFFFFF;
+    background: #007bff;
+  }
+}
+
+.menu__link--check:before {
+  content: '\E800';
+  left: 24px;
+}
+
+.menu__link--settings:before {
+  content: '\E801';
+  left: 24px;
+}
+
+.menu__link--applicant {
+
+  &:before {
+    content: '\E804';
+    left: 26px;
+    font-size: 1.2rem;
+  }
+
+  .no-touchevents &:hover {
+    &:before {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.menu__link--user:before {
+  content: '\E802';
+  left: 24px;
+}
+
+
+.menu__title {
+  padding: .75rem 1rem;
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 85%;
+  text-transform: uppercase;
+  transition: .25s;
+  color: rgba(255, 255, 255, 0.6);
+}

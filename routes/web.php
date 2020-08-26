@@ -13,6 +13,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/budget', 'BudgetController@index');
-Route::get('/budget/all', 'BudgetController@all');
+Route::middleware('auth')->group(function () {
+
+  Route::get('/', 'IndexController@index')->name('index');
+  Route::resource('budget', 'BudgetController');
+
+
+  /* Таблицы vue-table-2 (экспорт) */
+  Route::post('/table/export', 'TableController@export')->name('table-export');
+
+});
+
+
+Auth::routes([
+  'register' => false,
+  'confirm' => false,
+  'email' => false,
+  'request' => false,
+  'update' => false,
+  'reset' => false,
+]);
 

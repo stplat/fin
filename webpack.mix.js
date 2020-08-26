@@ -9,9 +9,17 @@ const mix = require('laravel-mix');
  | for your Laravel application. By default, we are compiling the Sass
  | file for the application as well as bundling up all the JS files.
  |
-*/
+ */
 
 mix
-  .js('resources/js/app.js', 'js/app.js')
-  .sass('resources/sass/app.scss', 'css');
+  .js('resources/js/app.js', 'public/js')
+  .sass('resources/sass/app.scss', 'public/css')
+  .extract(['vue', 'bootstrap', 'jquery', 'lodash', 'axios', 'popper.js']);
 
+
+mix.options({
+  processCssUrls: false,
+  extractVueStyles: false,
+  purifyCss: false,
+  clearConsole: false
+});

@@ -1,57 +1,66 @@
 <template>
   <main>
     <div class="card mb-1">
-      <h4 class="card__header">Выбор бюджетных параметров</h4>
-      <div class="card__body">
-        <div class="card__panel">
-          <div class="card-panel">
+      <h4 class="card-header">Выбор бюджетных параметров</h4>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-1">
             <div class="card-panel__item">
-              <label for="zavod_dkre" class="label mb-1">По участкам:</label>
+              <label for="region_or_dkre" class="label mb-2">По участкам:</label>
               <div>
                 <label title="Участки/ДКРЭ" class="toggle">
-                  <input type="checkbox" id="zavod_dkre" hidden="hidden">
+                  <input type="checkbox" id="region_or_dkre" hidden="hidden" v-model="region">
                   <span class="toggle__box"></span>
                 </label>
               </div>
             </div>
-            <div class="card-panel__item">
-              <label for="dkre" class="label mb-1">ДКРЭ:</label>
-              <select class="select select--multiple" multiple name="" id="dkre">
-                <option value="asd">ДКРЭ_ОКТ</option>
+          </div>
+          <div class="col-md-3" v-if="!region">
+            <div class="form-group">
+              <label for="dkre" class="text-muted"><strong>ДКРЭ:</strong></label>
+              <select class="form-control" id="dkre" multiple v-model="data.dkres">
+                <option :value="dkre.id" v-for="(dkre, key) in dkres" :key="key">{{ dkre.name }}</option>
               </select>
             </div>
-            <div class="card-panel__item">
-              <label for="zavod" class="label mb-1">Участок:</label>
-              <select class="select select--multiple" multiple name="" id="zavod">
-                <option value="asd">ДКРЭ_ОКТ_ОКТ</option>
+          </div>
+          <div class="col-md-3" v-if="region">
+            <div class="form-group">
+              <label for="region" class="text-muted"><strong>Участок:</strong></label>
+              <select class="form-control" id="region" multiple v-model="data.regions">
+                <option :value="region.id" v-for="(region, key) in regions" :key="key">{{ region.region }}</option>
               </select>
             </div>
-            <div class="card-panel__item">
-              <label for="period" class="label mb-1">Период:</label>
-              <select class="select select--multiple" multiple name="" id="period">
-                <option value="asd">1 квартал 2020</option>
-                <option value="asd">2 квартал 2020</option>
-                <option value="asd">3 квартал 2020</option>
-                <option value="asd">4 квартал 2020</option>
-                <option value="asd">1 квартал 2020</option>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="month" class="text-muted"><strong>Период:</strong></label>
+              <select class="form-control" id="month" multiple v-model="data.periods">
+                <option :value="month.id" v-for="(month, key) in months" :key="key">{{ month.name }}</option>
               </select>
             </div>
-            <div class="card-panel__item">
-              <label for="version" class="label mb-1">Версия бюджета:</label>
-              <select class="select" name="" id="version">
-                <option disabled="disabled" value="">Выберите версию</option>
-                <option value="asd">15.04.2020</option>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="version" class="text-muted"><strong>Версия бюджета:</strong></label>
+              <select class="form-control" id="version" v-model="data.version">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
               </select>
             </div>
-            <div class="card-panel__item">
-              <button>Выгрузить</button>
-            </div>
+          </div>
+          <div class="col-md-1">
+            <div class="btn btn-primary">Применить</div>
+          </div>
+          <div class="col-md-2 text-right">
+            <div class="btn btn-secondary">Загрузить</div>
+            <div class="btn btn-secondary">Выгрузить</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card__body">
+    <div class="card mt-3">
+      <h4 class="card-header">Бюджетные параметры</h4>
+      <div class="card-body">
         <budget-table></budget-table>
       </div>
     </div>
@@ -65,14 +74,38 @@
       BudgetTable
     },
     data() {
-      return {}
+      return {
+        data: {
+          dkres: [],
+          regions: [],
+          periods: [],
+          version: '',
+        },
+        region: false
+      }
     },
     props: {
       initialData: {
-        type: Array
+        type: Object,
+        required: true
+      }
+    },
+    computed: {
+      dkres() {
+        return this.initialData.dkres;
+      },
+      regions() {
+        return this.initialData.regions;
+      },
+      months() {
+        return this.initialData.months;
+      },
+      versions() {
+        return this.initialData.versions;
       }
     },
     mounted() {
+      this.$store.commit('budget/setBudget', this.initialData.budget);
     }
   }
 </script>

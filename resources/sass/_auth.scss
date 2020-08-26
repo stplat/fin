@@ -1,0 +1,29 @@
+/* Элементы Авторизации, Регистрации, и т.п. */
+.auth {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+}
+
+.auth__wrap {
+  display: inline-flex;
+  align-items: flex-end;
+  padding: 30px;
+}
+.auth__logo {
+  padding-right: 70px;
+  width: 300px;
+
+  img {
+    width: 100%;
+  }
+}
+
+.auth__entry {
+  width: 300px;
+
+  .card {
+    padding: 20px 30px;
+  }
+}
+

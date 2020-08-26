@@ -1,21 +1,54 @@
-/* Шапка */
-
+/* Фиксированная шапка сайта */
 .header {
-  position: fixed;
-  width: calc(100% - 260px);
   background: #FFFFFF;
-  box-shadow: $box-shadow;
+  box-shadow: $box-shadow-block;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header__top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 30px;
-  height: $header-height;
-  z-index: 10;
+  height: 56px;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0 1.5rem;
+}
 
+.header__btn {
+  flex: 0 0 auto;
+  line-height: 1;
+  font-size: 0;
+}
 
-  h3 {
-    font-size: 2rem;
-    margin: 10px 0;
-    font-weight: 400;
+.header__login {
+  flex: 0 0 auto;
+  height: 44px;
+  position: relative;
+
+  img {
+    height: 100%;
+    cursor: pointer;
   }
 }
+
+.header__bottom {
+  padding: 0 1.5rem;
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__title {
+  h3 {
+    margin: 0!important;
+    padding: 0!important;
+  }
+}
+
+.header__breadcrumbs {
+
+}
+

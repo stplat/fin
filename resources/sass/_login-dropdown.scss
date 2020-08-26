@@ -1,0 +1,53 @@
+/* Выпадашка в логине */
+.login-dropdown {
+  position: absolute;
+  right: 0;
+  top: 140%;
+  margin-top: 5px;
+  width: 200px;
+  background: #FFFFFF;
+  box-shadow: $box-shadow-block;
+  outline: 1px solid #EAEAEA;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.08s, top 0.2s;
+
+  &.is-dropped {
+    opacity: 1;
+    top: 100%;
+    display: block;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 2px 0;
+  }
+}
+
+.login-dropdown__link {
+  padding: 10px 20px 10px 50px;
+  display: block;
+  color: #16181b;
+  transition: background-color 0.08s;
+  position: relative;
+  line-height: 1;
+
+  &:before {
+    content: '\E80B';
+    font-family: $font-icons;
+    color: rgba(60, 75, 100, 0.8);
+    display: inline-block;
+    transform: scale(-1, 1) translateY(-50%);
+    top: 49%;
+    position: absolute;
+    left: 20px;
+    font-size: 1rem;
+  }
+
+  .no-touchevents &:hover {
+    text-decoration: none;
+    color: #16181b;
+    background: #ebedef;
+  }
+}

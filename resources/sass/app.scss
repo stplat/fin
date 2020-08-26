@@ -1,17 +1,35 @@
 // Resets
-@import "~normalize.css";
-// Fonts
-@import "fonts";
-// Variables
-@import "variables";
+@import "~normalize.css/normalize.css";
 // Preloader
 @import "~spinkit/spinkit.min.css";
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+// Variables
+@import 'variables';
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+// Mixins
+@import 'mixins/toggle';
 // Custom
-@import "layouts";
-@import "header";
-@import "sidebar";
-@import "breadcrumb";
-@import "card";
-@import "forms";
-@import "table";
+@import 'aside';
+@import 'auth';
+@import 'breadcrumbs';
+@import 'buttons';
+@import 'card';
+@import 'check';
+@import 'fonts';
+@import 'forms';
+@import 'hamburgers';
+@import 'header';
+@import 'layouts';
+@import 'lists';
+@import 'login-dropdown';
+@import 'menu';
+@import 'popup';
+@import 'preloader';
+@import 'table';
+@import 'tabs';
+@import 'tile';
+
+
 

@@ -1,30 +1,31 @@
-/* Карточка для контента */
-.card {
-  box-shadow: $box-shadow;
-  border-radius: 0.25rem;
-  background: #FFFFFF;
-}
-
-.card__header {
-  background-color: $card-bg;
-  border-bottom: 1px solid $border-color;
-  padding: 12px 15px;
-  font-size: 1.6rem;
-  line-height: 1;
-  margin: 0;
-  font-weight: normal;
-  opacity: 0.9;
-}
-
-.card__body {
-  padding: 15px;
-}
-
-.card-panel {
+/* Базовые карточки у bootstrap */
+.card__container  {
   display: flex;
-  margin: 0 -15px;
+  margin: 0 -7.5px;
 }
 
-.card-panel__item {
-  margin: 0 15px;
+.card {
+  box-shadow: $box-shadow-block;
+  border: none;
+  width: 100%;
+  flex-grow: 0;
+
+  .card__container--half & {
+    width: calc(100%/2 - 0.75rem);
+    margin: 0 7.5px;
+  }
+
+  .card__container--part & {
+    margin: 0 7.5px;
+
+    &:first-child {
+      flex-grow: 1;
+    }
+
+    &:last-child {
+      width: calc(100%/3 - 0.75rem);
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+  }
 }

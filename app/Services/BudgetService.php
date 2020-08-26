@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\Dkre;
+use App\Models\Budget;
+use App\Models\Version;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\Boolean;
 
+use App\Models\Dkre;
+use App\Models\Period;
 
 class BudgetService
 {
-
-  public function __construct()
-  {
-  }
 
   /**
    * Getting budget by period and version.
@@ -21,42 +19,50 @@ class BudgetService
    * @param $version integer
    * @return \Illuminate\Support\Collection
    */
-  public function getBudget($period, $version)
+  public function getBudget($period = [3, 4], $version = 2)
   {
-    $budget = Dkre::with(['budget' => function ($item) use ($period, $version) {
-      $item->with('vid_deyatelnosti', 'statya_pb', 'version')
-        ->where('period_id', $period)
-        ->where('version_id', $version);
-    }])->get()
-      ->map(function ($item) {
-        $budget = $item->budget->reduce(function ($carry, $item) {
+    $budget = Budget::select(DB::raw("
+    dkres.region, payment_balance_articles.code as article, activity_types.name as activity, ROUND(SUM(budgets.count), 3) as total
+    "))
+      ->join('dkres', 'dkres.id', '=', 'budgets.dkre_id')
+      ->join('activity_types', 'activity_types.id', '=', 'budgets.activity_type_id')
+      ->join('payment_balance_articles', 'payment_balance_articles.id', '=', 'budgets.payment_balance_article_id')
+      ->whereIn('period_id', $period)
+      ->where('version_id', $version)
+      ->orderBy('budgets.dkre_id')
+      ->orderBy('budgets.activity_type_id')
+      ->groupBy('budgets.dkre_id', 'budgets.payment_balance_article_id', 'budgets.activity_type_id')
+      ->get();
 
-          /* Если предыдущий элемент не пустой и уже содержит такой вид деятельности */
-          if (count($carry) && array_key_exists($item->vid_deyatelnosti->id, $carry)) {
-            /* В данный вид деятельности записываем новую статью ПБ */
-            $carry[$item->vid_deyatelnosti->id][$item->statya_pb->code] = $item->sum;
-            return $carry;
-          }
-
-          /*Создаем новый вид деятельности для ДКРЭ*/
-          $carry[$item->vid_deyatelnosti->id] = [
-            'vid_deyatelnosti_id' => $item->vid_deyatelnosti->id,
-            'vid_deyatelnosti' => $item->vid_deyatelnosti->name,
-            'version' => $item->version->name,
-            $item->statya_pb->code => $item->sum
-          ];
-
-          return $carry;
-        }, []);
+    return $budget->groupBy('region')->map(function ($item, $key) {
+      return collect([
+        'dkre' => $key,
+        'activity' => $item->groupBy('activity')->map(function ($item, $key) {
+          return collect([
+            'name' => $key,
+            'article' => $item->groupBy('article')->map(function ($item, $key) {
+              return $item[0]->total;
+            })
+          ]);
+        })->values(),
+        'total' => $item->groupBy('article')->map(function ($item) {
+          return round($item->sum('total'), 3);
+        })
+      ]);
+    })->put('', collect([
+      'dkre' => 'ИТОГО',
+      'activity' => $budget->groupBy('activity')->map(function ($item, $key) {
         return collect([
-          'be' => $item->be,
-          'name' => $item->name,
-          'zavod' => $item->zavod,
-          'budget' => collect($budget)->sortBy('vid_deyatelnosti_id')
+          'name' => $key,
+          'article' => $item->groupBy('article')->map(function ($item, $key) {
+            return $item->sum('total');
+          })
         ]);
-      });
-
-    return $budget;
+      })->values(),
+      'total' => $budget->groupBy('article')->map(function ($item, $key) {
+        return $item->sum('total');
+      })
+    ]))->values();
   }
 
   /**
@@ -77,15 +83,15 @@ class BudgetService
       ROUND(SUM(sum), 3) as sum
       ")
       ->where(['period_id' => $period, 'version_id' => $version])
-      ->groupBy(['be', 'dkre', 'period', 'vid_deyatelnosti', 'statya_pb'])
-      ->leftJoin('dkre', 'budgets.dkre_id', '=', 'dkre.id')
+      ->groupBy(['be', 'dkres', 'period', 'vid_deyatelnosti', 'payment_balance_articles'])
+      ->leftJoin('dkres', 'budgets.dkre_id', '=', 'dkre.id')
       ->join('periods', 'budgets.period_id', '=', 'periods.id')
-      ->join('statya_pb', 'budgets.statya_pb_id', '=', 'statya_pb.id')
-      ->join('vid_deyatelnosti', 'budgets.vid_deyatelnosti_id', '=', 'vid_deyatelnosti.id')
+      ->join('payment_balance_articles', 'budgets.payment_balance_article_id', '=', 'statya_pb.id')
+      ->join('vid_deyatelnosti', 'budgets.activity_type_id', '=', 'vid_deyatelnosti.id')
       ->get()
       ->sortBy('vid_deyatelnosti')
       ->sort()
-      ->groupBy(['dkre', 'vid_deyatelnosti', 'statya_pb']);
+      ->groupBy(['dkres', 'vid_deyatelnosti', 'payment_balance_articles']);
 
     $total = DB::table('budgets')->selectRaw("
       vid_deyatelnosti.id as vid_deyatelnosti, 
@@ -93,15 +99,15 @@ class BudgetService
       ROUND(SUM(sum), 3) as sum
       ")
       ->where(['period_id' => $period, 'version_id' => $version])
-      ->groupBy(['vid_deyatelnosti', 'statya_pb'])
-      ->leftJoin('dkre', 'budgets.dkre_id', '=', 'dkre.id')
+      ->groupBy(['vid_deyatelnosti', 'payment_balance_articles'])
+      ->leftJoin('dkres', 'budgets.dkre_id', '=', 'dkre.id')
       ->join('periods', 'budgets.period_id', '=', 'periods.id')
-      ->join('statya_pb', 'budgets.statya_pb_id', '=', 'statya_pb.id')
-      ->join('vid_deyatelnosti', 'budgets.vid_deyatelnosti_id', '=', 'vid_deyatelnosti.id')
+      ->join('payment_balance_articles', 'budgets.payment_balance_article_id', '=', 'statya_pb.id')
+      ->join('vid_deyatelnosti', 'budgets.activity_type_id', '=', 'vid_deyatelnosti.id')
       ->get()
       ->sortBy('vid_deyatelnosti')
       ->sort()
-      ->groupBy(['vid_deyatelnosti', 'statya_pb']);
+      ->groupBy(['vid_deyatelnosti', 'payment_balance_articles']);
 
     $budget = $budget->map(function ($item, $key) {
       $array = $item->map(function ($item) {
@@ -111,7 +117,7 @@ class BudgetService
       });
 
       return collect([
-        'dkre' => $key,
+        'dkres' => $key,
         '63310' => round($array->pluck('63310')->sum(), 3),
         '63320' => round($array->pluck('63320')->sum(), 3),
         '63330' => round($array->pluck('63330')->sum(), 3),
@@ -125,6 +131,53 @@ class BudgetService
       'budget' => $budget,
       'total' => $total
     ]);
+  }
 
+  /**
+   * Получаем список ДКРЭ
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getDkres()
+  {
+    return Dkre::all()->unique('name')->values();
+  }
+
+  /**
+   * Получаем список Регионов
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getRegions()
+  {
+    return Dkre::all();
+  }
+
+  /**
+   * Получаем список Периодов
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getPeriods($type = null)
+  {
+    return !$type ? Period::all() : Period::where('type', $type)->get();
+  }
+
+  /**
+   * Получаем список Версий
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getVersions()
+  {
+    return Version::all();
   }
 }

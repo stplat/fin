@@ -9,10 +9,10 @@
   <meta name="author" content="">
   <meta name="keyword" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <meta name="bearer" content="{{ auth()->user() ? auth()->user()->api_token : '' }}">
+{{--  <meta name="bearer" content="{{ auth()->user() ? auth()->user()->api_token : '' }}">--}}
   <title>{!! $title ?? '' !!}</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/32.png') }}">
-  <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon/16.png') }}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/96.png') }}">
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicons/favicon_16.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicons/favicon_32.png') }}">
+  <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicons/favicon_96.png') }}">
+  <link href="{{ asset('css/app.css?=' . microtime(true)) }}" rel="stylesheet"/>
 </head>

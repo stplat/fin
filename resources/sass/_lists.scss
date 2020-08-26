@@ -1,0 +1,34 @@
+/* Образцы списков */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border-color: transparent;
+    margin: 10px 0 0;
+
+    td {
+      padding: 0.75rem;
+      border: 1px solid #dee2e6;
+    }
+  }
+}
+
+.list__item {
+  padding: 3px 0;
+  line-height: 18px;
+
+  .key {
+    font-weight: bold;
+
+    &:after {
+      content: ': ';
+    }
+  }
+}
+
+

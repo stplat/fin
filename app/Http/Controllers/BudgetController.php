@@ -16,8 +16,16 @@ class BudgetController extends Controller
 
   public function index()
   {
-//    dd($this->budgetService->getBudgetByGroupDkre(1, 2)->toArray());
-    return view('budget');
+//    dd($this->budgetService->getBudget()->toArray());
+    return view('budget')->with([
+      'data' => collect([
+        'dkres' => $this->budgetService->getDkres(),
+        'regions' => $this->budgetService->getRegions(),
+        'months' => $this->budgetService->getPeriods('month'),
+        'versions' => $this->budgetService->getVersions(),
+        'budget' => $this->budgetService->getBudget()
+      ])
+    ]);
   }
 
   public function all(BudgetAll $request)

@@ -1,0 +1,67 @@
+/* Блоки с информацией с картинкой (на главной) */
+.tile__container {
+  display: flex;
+  margin: 0 -7.5px;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 30px;
+  border-radius: 0.25rem;
+  width: calc(100% / 4 - 0.75rem);
+  margin: 0 7.5px;
+  box-shadow: $box-shadow-block;
+  background: #FFFFFF;
+
+  &:before {
+    content: '\E807';
+    font-family: $font-icons;
+    color: rgba(65, 105, 225, 0.6);
+    display: block;
+    position: absolute;
+    right: 30px;
+    top: 7px;
+    font-size: 60px;
+  }
+}
+
+.tile--alert {
+  &:before {
+    content: '\E806';
+  }
+}
+
+.tile--bell {
+  &:before {
+    content: '\E805';
+  }
+}
+
+.tile--server {
+  &:before {
+    content: '\E803';
+  }
+}
+
+
+.tile--photo {
+  &:before {
+    content: '\E808';
+  }
+}
+
+.tile__title {
+  span:first-child {
+    font-size: 60px;
+    font-weight: bold;
+
+  }
+
+  span:last-child {
+    display: block;
+    font-size: 20px;
+    opacity: 0.8;
+  }
+}

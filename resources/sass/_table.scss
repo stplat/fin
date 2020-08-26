@@ -1,5 +1,6 @@
 /* Общие стили таблицы */
 .table {
+  background: none!important;
 
   table {
     width: 100%;
@@ -34,6 +35,8 @@
   th, td {
     border: 1px solid $border-color;
     line-height: 1.5;
+    vertical-align: middle;
+    padding: 0.25rem;
   }
 
 
@@ -41,6 +44,4 @@
 
 .table__unit {
   text-align: right;
-  font-size: 1.1rem;
 }
-

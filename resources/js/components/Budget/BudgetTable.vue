@@ -18,25 +18,33 @@
       <template v-for="budget in budgets">
         <tr class="strong bg">
           <td>{{ budget.dkre }}</td>
-          <td>{{ budget['63430'] }}</td>
-          <td>{{ addWithEmptyHelper([ budget['63310'], budget['63320'], budget['63330'], budget['63340'] ]) }}</td>
-          <td>{{ budget['63310'] }}</td>
-          <td>{{ budget['63320'] }}</td>
-          <td>{{ budget['63330'] }}</td>
-          <td>{{ budget['63340'] }}</td>
-          <td>{{ addWithEmptyHelper([ budget['63310'], budget['63320'], budget['63330'], budget['63340'],
-            budget['63430'] ]) }}
+          <td>{{ budget.total['63430'] }}</td>
+          <td>{{ addWithEmptyHelper([ budget.total['63310'], budget.total['63320'], budget.total['63330'],
+            budget.total['63340'] ]) }}
+          </td>
+          <td>{{ budget.total['63310'] }}</td>
+          <td>{{ budget.total['63320'] }}</td>
+          <td>{{ budget.total['63330'] }}</td>
+          <td>{{ budget.total['63340'] }}</td>
+          <td>{{ addWithEmptyHelper([ budget.total['63310'], budget.total['63320'], budget.total['63330'],
+            budget.total['63340'],
+            budget.total['63430'] ]) }}
           </td>
         </tr>
-        <tr v-for="(vd, key) in budget.vid_deyatelnosti">
-          <td>{{ key | converVdHelper }}</td>
-          <td>{{ vd['63430'] }}</td>
-          <td>{{ addWithEmptyHelper([ vd['63310'], vd['63320'], vd['63330'], vd['63340'] ]) }}</td>
-          <td>{{ vd['63310'] }}</td>
-          <td>{{ vd['63320'] }}</td>
-          <td>{{ vd['63330'] }}</td>
-          <td>{{ vd['63340'] }}</td>
-          <td>{{ addWithEmptyHelper([ vd['63310'], vd['63320'], vd['63330'], vd['63430'] ]) }}</td>
+        <tr v-for="(activity, key) in budget.activity" :key="budget.dkre + key">
+          <td>{{ activity.name }}</td>
+          <td>{{ activity.article['63430'] }}</td>
+          <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
+            activity.article['63340'] ]) }}
+          </td>
+          <td>{{ activity.article['63310'] }}</td>
+          <td>{{ activity.article['63320'] }}</td>
+          <td>{{ activity.article['63330'] }}</td>
+          <td>{{ activity.article['63340'] }}</td>
+          <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
+            activity.article['63340'],
+            activity.article['63430'] ]) }}
+          </td>
         </tr>
       </template>
     </table>
@@ -50,12 +58,12 @@
     },
     computed: {
       budgets() {
-        return this.$store.getters['budget/getBudget'].budget;
+        return this.$store.getters['budget/getBudget'];
       }
     },
     methods: {},
     mounted() {
-      this.$store.dispatch('budget/updateBudget', { period: 1, version: 2, isDkre: 1 })
+      // this.$store.dispatch('budget/updateBudget', { period: 1, version: 2, isDkre: 1 })
     }
   }
 </script>

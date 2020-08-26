@@ -11,14 +11,14 @@ class Budget extends Model
     return $this->belongsTo(Period::class);
   }
 
-  public function vid_deyatelnosti()
+  public function activity()
   {
-    return $this->belongsTo(VidDeyatelnosti::class);
+    return $this->belongsTo(ActivityType::class, 'activity_type_id', 'id');
   }
 
-  public function statya_pb()
+  public function article()
   {
-    return $this->belongsTo(StatyaPb::class);
+    return $this->belongsTo(PaymentBalanceArticle::class, 'payment_balance_article_id', 'id');
   }
 
   public function dkre()

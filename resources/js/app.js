@@ -1,30 +1,23 @@
-require('./assets/modernizr');
 require('./assets/bootstrap');
+require('./assets/modernizr');
+require('./assets/aside-slide');
+require('./assets/login-dropdown');
 
 import Vue from 'vue';
 import store from './stores';
 
 /* Mixins */
+Vue.mixin(require('./mixins/variables').default);
 Vue.mixin(require('./mixins/helpers').default);
-// Vue.mixin(require('./mixins/localization').default);
 
-/* Filters */
-
-/* Views (pages) */
-// Vue.component('index', require('./views/Index').default);
-// Vue.component('v-header', require('./views/layouts/Header').default);
-// Vue.component('v-menu', require('./views/layouts/Menu').default);
+/* Plugins */
+import Union from './plugins/Unicon';
 
 /* Components */
-Vue.component('budget', require('./components/Budget/index').default);
-// Vue.component('ticker', require('./components/Ticker').default);
-// Vue.component('ad-block', require('./components/AdBlock').default);
-// Vue.component('yandex-map', require('./components/YandexMap').default);
-// Vue.component('preloader', require('./components/Preloader').default);
-// Vue.component('locale', require('./components/Locale').default);
+Vue.component('budget', require('./components/Budget').default);
 
-new Vue({
-  name: 'App',
+const app = new Vue({
   el: '#app',
+  Union,
   store
 });

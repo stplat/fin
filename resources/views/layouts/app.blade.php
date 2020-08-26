@@ -1,10 +1,12 @@
 @include('layouts._head')
+
 <body>
-@include('layouts._sidebar')
-@include('layouts._header')
-<div class="body">
-  <div id="app" @auth v-cloak @endauth>
+@include('layouts._aside')
+<div class="app__content" id="content-slide">
+  @include('layouts._header')
+  <main class="app__main" id="app" @auth v-cloak @endauth>
     @yield('content')
-  </div>
+  </main>
 </div>
+
 @include('layouts._footer')

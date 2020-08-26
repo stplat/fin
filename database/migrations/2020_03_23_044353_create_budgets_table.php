@@ -12,12 +12,12 @@ class CreateBudgetsTable extends Migration {
    */
   public function up() {
     Schema::create('budgets', function (Blueprint $table) {
-      $table->increments('id');
+      $table->id();
       $table->integer('period_id');
-      $table->integer('vid_deyatelnosti_id');
-      $table->integer('statya_pb_id');
+      $table->integer('activity_type_id');
+      $table->integer('payment_balance_article_id');
       $table->integer('dkre_id');
-      $table->double('sum');
+      $table->double('count');
       $table->integer('version_id');
       $table->timestamps();
     });
