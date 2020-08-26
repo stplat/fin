@@ -16,11 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
   Route::get('/', 'IndexController@index')->name('index');
-  Route::resource('budget', 'BudgetController');
-
-
+  Route::resource('budget', 'BudgetController')->only('index');
+  Route::get('/budget/all', 'BudgetController@all')->name('budget.all');
   /* Таблицы vue-table-2 (экспорт) */
-  Route::post('/table/export', 'TableController@export')->name('table-export');
+//  Route::post('/table/export', 'TableController@export')->name('table-export');
 
 });
 

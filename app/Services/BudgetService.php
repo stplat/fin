@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Budget;
-use App\Models\Version;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Dkre;
 use App\Models\Period;
+use App\Models\Budget;
+use App\Models\Version;
 
 class BudgetService
 {
@@ -15,12 +15,15 @@ class BudgetService
   /**
    * Getting budget by period and version.
    *
-   * @param $period integer
+   * @param $period array
    * @param $version integer
+   * @param $dkre array
+   *
    * @return \Illuminate\Support\Collection
    */
-  public function getBudget($period = [3, 4], $version = 2)
+  public function getBudget($period = [3], $version = 2, $dkre = null)
   {
+    $dkre = $dkre ?: Dkre::get()->pluck('id');
     $budget = Budget::select(DB::raw("
     dkres.region, payment_balance_articles.code as article, activity_types.name as activity, ROUND(SUM(budgets.count), 3) as total
     "))
@@ -29,6 +32,7 @@ class BudgetService
       ->join('payment_balance_articles', 'payment_balance_articles.id', '=', 'budgets.payment_balance_article_id')
       ->whereIn('period_id', $period)
       ->where('version_id', $version)
+      ->whereIn('dkre_id', $dkre)
       ->orderBy('budgets.dkre_id')
       ->orderBy('budgets.activity_type_id')
       ->groupBy('budgets.dkre_id', 'budgets.payment_balance_article_id', 'budgets.activity_type_id')
@@ -41,7 +45,7 @@ class BudgetService
           return collect([
             'name' => $key,
             'article' => $item->groupBy('article')->map(function ($item, $key) {
-              return $item[0]->total;
+              return round($item->sum('total'), 3);
             })
           ]);
         })->values(),
@@ -55,12 +59,12 @@ class BudgetService
         return collect([
           'name' => $key,
           'article' => $item->groupBy('article')->map(function ($item, $key) {
-            return $item->sum('total');
+            return round($item->sum('total'), 3);
           })
         ]);
       })->values(),
       'total' => $budget->groupBy('article')->map(function ($item, $key) {
-        return $item->sum('total');
+        return round($item->sum('total'), 3);
       })
     ]))->values();
   }

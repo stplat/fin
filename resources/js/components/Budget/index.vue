@@ -4,26 +4,26 @@
       <h4 class="card-header">Выбор бюджетных параметров</h4>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-1">
-            <div class="card-panel__item">
-              <label for="region_or_dkre" class="label mb-2">По участкам:</label>
-              <div>
-                <label title="Участки/ДКРЭ" class="toggle">
-                  <input type="checkbox" id="region_or_dkre" hidden="hidden" v-model="region">
-                  <span class="toggle__box"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3" v-if="!region">
-            <div class="form-group">
-              <label for="dkre" class="text-muted"><strong>ДКРЭ:</strong></label>
-              <select class="form-control" id="dkre" multiple v-model="data.dkres">
-                <option :value="dkre.id" v-for="(dkre, key) in dkres" :key="key">{{ dkre.name }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3" v-if="region">
+<!--          <div class="col-md-1">-->
+<!--            <div class="card-panel__item">-->
+<!--              <label for="region_or_dkre" class="label mb-2">По участкам:</label>-->
+<!--              <div>-->
+<!--                <label title="Участки/ДКРЭ" class="toggle">-->
+<!--                  <input type="checkbox" id="region_or_dkre" hidden="hidden" v-model="region">-->
+<!--                  <span class="toggle__box"></span>-->
+<!--                </label>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="col-md-3" v-if="!region">-->
+<!--            <div class="form-group">-->
+<!--              <label for="dkre" class="text-muted"><strong>ДКРЭ:</strong></label>-->
+<!--              <select class="form-control" id="dkre" multiple v-model="data.dkres">-->
+<!--                <option :value="dkre.id" v-for="(dkre, key) in dkres" :key="key">{{ dkre.name }}</option>-->
+<!--              </select>-->
+<!--            </div>-->
+<!--          </div>-->
+          <div class="col-md-4" v-if="region">
             <div class="form-group">
               <label for="region" class="text-muted"><strong>Участок:</strong></label>
               <select class="form-control" id="region" multiple v-model="data.regions">
