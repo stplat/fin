@@ -9,6 +9,9 @@
         <li class="menu__item"><a href="{{ route('budget.index') }}"
                                   class="menu__link menu__link--check {{!request()->is('budget') ?: 'is-active'}}">Бюджетные параметры</a>
         </li>
+        <li class="menu__item"><a href="{{ route('involvement.index') }}"
+                                  class="menu__link menu__link--check {{!request()->is('involvement') ?: 'is-active'}}">Вовлечение</a>
+        </li>
       </ul>
     </div>
   </div>

@@ -9,25 +9,6 @@
           </div>
         </div>
         <div class="row">
-          <!--          <div class="col-md-1">-->
-          <!--            <div class="card-panel__item">-->
-          <!--              <label for="region_or_dkre" class="label mb-2">По участкам:</label>-->
-          <!--              <div>-->
-          <!--                <label title="Участки/ДКРЭ" class="toggle">-->
-          <!--                  <input type="checkbox" id="region_or_dkre" hidden="hidden" v-model="region">-->
-          <!--                  <span class="toggle__box"></span>-->
-          <!--                </label>-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-          <!--          <div class="col-md-3" v-if="!region">-->
-          <!--            <div class="form-group">-->
-          <!--              <label for="dkre" class="text-muted"><strong>ДКРЭ:</strong></label>-->
-          <!--              <select class="form-control" id="dkre" multiple v-model="data.dkres">-->
-          <!--                <option :value="dkre.id" v-for="(dkre, key) in dkres" :key="key">{{ dkre.name }}</option>-->
-          <!--              </select>-->
-          <!--            </div>-->
-          <!--          </div>-->
           <div class="col-md-2">
             <div class="form-group">
               <label for="region" class="text-muted"><strong>Участок:</strong></label>
@@ -61,26 +42,27 @@
     </div>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Бюджетные параметры</h4>
+      <h4 class="card-header">Вовлечение</h4>
       <div class="card-body">
-        <budget-table></budget-table>
+        <involvement-table></involvement-table>
       </div>
     </div>
   </main>
 </template>
+
 <script>
-  import BudgetTable from "./BudgetTable";
+  import InvolvementTable from "./InvolvementTable";
 
   export default {
     components: {
-      BudgetTable
+      InvolvementTable
     },
     data() {
       return {
         data: {
           regions: [],
           periods: [ 3 ],
-          version: 2,
+          version: 1,
         },
         isLoading: true,
         messages: [
@@ -101,7 +83,7 @@
       confirm() {
         this.isLoading = true;
         let { regions, periods, version } = this.data;
-        this.$store.dispatch('budget/updateBudget', { regions, periods, version }).then(res => {
+        this.$store.dispatch('involvement/updateInvolvement', { regions, periods, version }).then(res => {
           this.errors = res.errors;
           this.isLoading = false;
         });

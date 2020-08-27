@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\BudgetService;
-use App\Http\Requests\BudgetAll;
+use App\Http\Requests\Budget\BudgetAll;
 
 class BudgetController extends Controller
 {
@@ -16,24 +16,22 @@ class BudgetController extends Controller
 
   public function index()
   {
-//    dd($this->budgetService->getBudget()->toArray());
     return view('budget')->with([
       'data' => collect([
         'dkres' => $this->budgetService->getDkres(),
         'regions' => $this->budgetService->getRegions(),
         'months' => $this->budgetService->getPeriods('month'),
         'versions' => $this->budgetService->getVersions(),
-        'budget' => $this->budgetService->getBudget()
       ])
     ]);
   }
 
   public function all(BudgetAll $request)
   {
-    $period = $request->input('period');
-    $version = $request->input('version');
-    $is_dkre = $request->input('is_dkre');
+    $regions = $request->input('regions');
+    $periods = $request->input('periods');
+    $version = $request->input('version') ?: null;
 
-    return $is_dkre ? $this->budgetService->getBudgetByGroupDkre($period, $version) : $this->budgetService->getBudget($period, $version);
+    return $this->budgetService->getBudget($periods, $version, $regions);
   }
 }

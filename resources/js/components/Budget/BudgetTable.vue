@@ -18,32 +18,32 @@
       <template v-for="budget in budgets">
         <tr class="strong bg">
           <td>{{ budget.dkre }}</td>
-          <td>{{ budget.total['63430'] }}</td>
+          <td>{{ budget.total['63430'] | roundHelper }}</td>
           <td>{{ addWithEmptyHelper([ budget.total['63310'], budget.total['63320'], budget.total['63330'],
-            budget.total['63340'] ]) }}
+            budget.total['63340'] ]) | roundHelper }}
           </td>
-          <td>{{ budget.total['63310'] }}</td>
-          <td>{{ budget.total['63320'] }}</td>
-          <td>{{ budget.total['63330'] }}</td>
-          <td>{{ budget.total['63340'] }}</td>
+          <td>{{ budget.total['63310'] | roundHelper }}</td>
+          <td>{{ budget.total['63320'] | roundHelper }}</td>
+          <td>{{ budget.total['63330'] | roundHelper }}</td>
+          <td>{{ budget.total['63340'] | roundHelper }}</td>
           <td>{{ addWithEmptyHelper([ budget.total['63310'], budget.total['63320'], budget.total['63330'],
             budget.total['63340'],
-            budget.total['63430'] ]) }}
+            budget.total['63430'] ]) | roundHelper }}
           </td>
         </tr>
         <tr v-for="(activity, key) in budget.activity" :key="budget.dkre + key">
           <td>{{ activity.name }}</td>
-          <td>{{ activity.article['63430'] }}</td>
+          <td>{{ activity.article['63430'] | roundHelper }}</td>
           <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
-            activity.article['63340'] ]) }}
+            activity.article['63340'] ]) | roundHelper }}
           </td>
-          <td>{{ activity.article['63310'] }}</td>
-          <td>{{ activity.article['63320'] }}</td>
-          <td>{{ activity.article['63330'] }}</td>
-          <td>{{ activity.article['63340'] }}</td>
+          <td>{{ activity.article['63310'] | roundHelper }}</td>
+          <td>{{ activity.article['63320'] | roundHelper }}</td>
+          <td>{{ activity.article['63330'] | roundHelper }}</td>
+          <td>{{ activity.article['63340'] | roundHelper }}</td>
           <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
             activity.article['63340'],
-            activity.article['63430'] ]) }}
+            activity.article['63430'] ]) | roundHelper }}
           </td>
         </tr>
       </template>
@@ -63,7 +63,6 @@
     },
     methods: {},
     mounted() {
-      // this.$store.dispatch('budget/updateBudget', { period: 1, version: 2, isDkre: 1 })
     }
   }
 </script>

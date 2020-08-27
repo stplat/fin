@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Budget;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,9 +26,9 @@ class BudgetAll extends FormRequest
   public function rules()
   {
     return [
-      'period' => ['required'],
+      'regions' => [],
+      'periods' => ['required'],
       'version' => ['required'],
-      'is_dkre' => ['boolean'],
     ];
   }
 
@@ -40,9 +40,9 @@ class BudgetAll extends FormRequest
   public function messages()
   {
     return [
-      'period.required' => 'Параметр <strong>period</strong> обязателен для заполнения',
-      'version.required' => 'Параметр <strong>version</strong> обязателен для заполнения',
-      'is_dkre.boolean' => 'Параметр <strong>is_dkre</strong> должен быть bool',
+      'regions.required' => 'Параметр <strong>period</strong> обязателен для заполнения',
+      'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
+      'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
     ];
   }
 

@@ -3,18 +3,18 @@ import { serialize } from '../../mixins/helpers';
 export default {
   namespaced: true,
   state: {
-    budget: []
+    involvement: []
   },
   actions: {
-    /* Получаем бюджетные параметры */
-    async updateBudget({ commit }, payload) {
+    /* Получаем вовлечение */
+    async updateInvolvement({ commit }, payload) {
       let { regions, periods, version } = payload;
       const req = `?${serialize(regions, 'regions')}&${serialize(periods, 'periods')}&version=${version}`;
-      const res = await axios.get(this.state.requestPath + '/budget/all' + req)
-        .catch(err => console.log('In budget/updateBudget -', err));
-
+      const res = await axios.get(this.state.requestPath + '/involvement/all' + req)
+        .catch(err => console.log('In involvement/updateInvolvement -', err));
+      console.log(res)
       if (!res.data.errors) {
-        commit('setBudget', res.data);
+        commit('setInvolvement', res.data);
         return res.data;
       } else {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
@@ -23,10 +23,10 @@ export default {
 
   },
   mutations: {
-    setBudget: (state, array) => state.budget = array,
+    setInvolvement: (state, array) => state.involvement = array,
   },
   getters: {
-    getBudget: (state) => state.budget,
+    getInvolvement: (state) => state.involvement,
 
   }
 };

@@ -1,5 +1,6 @@
 export default {
   methods: {
+    /* Суммируем значения с учетом пустых */
     addWithEmptyHelper(array) {
       return array.filter(Boolean)
         .reduce((carry, item) => carry + item, 0).toFixed(3);
@@ -11,7 +12,7 @@ export default {
       const month = date.getMonth() < 9 ? '0' + Number(date.getMonth() + 1) : Number(date.getDate() + 1);
       const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
 
-      return `${ year }-${ month }-${ day }`;
+      return `${year}-${month}-${day}`;
     },
 
     /* Формат времени */
@@ -20,27 +21,19 @@ export default {
       const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
       const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
 
-      return `${ hours }:${ minutes }`;
+      return `${hours}:${minutes}`;
     }
   },
   filters: {
-    convertVdHelper(value) {
-      let string;
-      switch (value) {
-        case '1':
-          string = 'ПЕР';
-          break;
-        case '2':
-          string = 'ПВД';
-          break;
-        case '3':
-          string = 'КВ';
-          break;
-        case '4':
-          string = 'ПРО';
-          break;
-      }
-      return string;
+    roundHelper(value) {
+      return value && Number(value) !== 0 ? Number(value).toFixed(3) : '';
     }
   },
+};
+
+export function serialize(array, name) {
+  return array.reduce((item, carry) => {
+    return `${String(item)}&${name}[]=${String(carry)}`;
+  }, '').replace("&", "");
 }
+

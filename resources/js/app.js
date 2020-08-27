@@ -14,7 +14,10 @@ Vue.mixin(require('./mixins/helpers').default);
 import Union from './plugins/Unicon';
 
 /* Components */
+Vue.component('alert', require('./components/Alert').default);
 Vue.component('budget', require('./components/Budget').default);
+Vue.component('involvement', require('./components/Involvement').default);
+Vue.component('preloader', require('./components/Preloader').default);
 
 const app = new Vue({
   el: '#app',
