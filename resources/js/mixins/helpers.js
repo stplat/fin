@@ -29,6 +29,20 @@ export default {
       return value && Number(value) !== 0 ? Number(value).toFixed(3) : '';
     }
   },
+  directives: {
+    'prevent-number': {
+      bind(el, binding) {
+        const inputHandler = function(e) {
+          var ch = String.fromCharCode(e.which);
+          var re = new RegExp(/[A-Za-zА-Яа-яЁё]/);
+          if (ch.match(re)) {
+            e.preventDefault();
+          }
+        };
+        el.addEventListener('keypress', inputHandler);
+      }
+    }
+  }
 };
 
 export function serialize(array, name) {

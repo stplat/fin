@@ -18,7 +18,8 @@ Route::middleware('auth')->group(function () {
   Route::get('/', 'IndexController@index')->name('index');
 
   Route::get('/involvement/all', 'InvolvementController@all')->name('involvement.all');
-  Route::resource('involvement', 'InvolvementController');
+  Route::get('/involvement', 'InvolvementController@index')->name('involvement.index');
+  Route::put('/involvement', 'InvolvementController@update')->name('involvement.update');
 
   Route::get('/budget/all', 'BudgetController@all')->name('budget.all');
   Route::resource('budget', 'BudgetController')->only('index');

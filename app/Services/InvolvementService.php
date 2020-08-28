@@ -25,13 +25,17 @@ class InvolvementService
   {
     $dkres = $regions ?: Dkre::get()->pluck('id');
     $involvement = Involvement::select(DB::raw("
+    dkres.id as dkre_id,
+    payment_balance_articles.id as article_id,
+    activity_types.id as activity_id,
     dkres.region, 
     payment_balance_articles.code as article, 
     activity_types.name as activity,
     ROUND(SUM(involvements.involve_by_prepayment_last_year), 3) as involve_last,
     ROUND(SUM(involvements.involve_by_prepayment_current_year), 3) as involve_current,
     ROUND(SUM(involvements.involve_by_turnover), 3) as involve_turnover,
-    ROUND(SUM(involvements.prepayment), 3) as prepayment
+    ROUND(SUM(involvements.prepayment_current_year), 3) as prepayment_current,
+    ROUND(SUM(involvements.prepayment_next_year), 3) as prepayment_next
     "))
       ->join('dkres', 'dkres.id', '=', 'involvements.dkre_id')
       ->join('activity_types', 'activity_types.id', '=', 'involvements.activity_type_id')
@@ -44,23 +48,28 @@ class InvolvementService
       ->groupBy('involvements.dkre_id', 'involvements.payment_balance_article_id', 'involvements.activity_type_id')
       ->get();
 
-    return $involvement->groupBy('region')->map(function ($item, $key) {
+    return $involvement->groupBy('region')->map(function ($item, $key) use ($version, $periods) {
       return collect([
         'dkre' => $key,
+        'dkre_id' => $item[0]->dkre_id,
+        'article_id' => $item[0]->article_id,
         'activity' => $item->groupBy('activity')->map(function ($item, $key) {
           return collect([
+            'activity_id' => $item[0]->activity_id,
             'name' => $key,
             'involve_last' => round($item->sum('involve_last'), 3),
             'involve_current' => round($item->sum('involve_current'), 3),
             'involve_turnover' => round($item->sum('involve_turnover'), 3),
-            'prepayment' => round($item->sum('prepayment'), 3),
+            'prepayment_current' => round($item->sum('prepayment_current'), 3),
+            'prepayment_next' => round($item->sum('prepayment_next'), 3),
           ]);
         })->values(),
         'total' => collect([
           'involve_last' => round($item->sum('involve_last'), 3),
           'involve_current' => round($item->sum('involve_current'), 3),
           'involve_turnover' => round($item->sum('involve_turnover'), 3),
-          'prepayment' => round($item->sum('prepayment'), 3),
+          'prepayment_current' => round($item->sum('prepayment_current'), 3),
+          'prepayment_next' => round($item->sum('prepayment_next'), 3),
         ])
       ]);
     })->put('', collect([
@@ -71,14 +80,16 @@ class InvolvementService
           'involve_last' => round($item->sum('involve_last'), 3),
           'involve_current' => round($item->sum('involve_current'), 3),
           'involve_turnover' => round($item->sum('involve_turnover'), 3),
-          'prepayment' => round($item->sum('prepayment'), 3),
+          'prepayment_current' => round($item->sum('prepayment_current'), 3),
+          'prepayment_next' => round($item->sum('prepayment_next'), 3),
         ]);
       })->values(),
       'total' => collect([
         'involve_last' => round($involvement->sum('involve_last'), 3),
         'involve_current' => round($involvement->sum('involve_current'), 3),
         'involve_turnover' => round($involvement->sum('involve_turnover'), 3),
-        'prepayment' => round($involvement->sum('prepayment'), 3),
+        'prepayment_current' => round($involvement->sum('prepayment_current'), 3),
+        'prepayment_next' => round($involvement->sum('prepayment_next'), 3),
       ])
     ]))->values();
   }

@@ -12,7 +12,20 @@ export default {
       const req = `?${serialize(regions, 'regions')}&${serialize(periods, 'periods')}&version=${version}`;
       const res = await axios.get(this.state.requestPath + '/involvement/all' + req)
         .catch(err => console.log('In involvement/updateInvolvement -', err));
-      console.log(res)
+
+      if (!res.data.errors) {
+        commit('setInvolvement', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
+    /* Редактируем вовлечение */
+    async editInvolvement({ commit }, payload) {
+      let { period, version, region, activity, article } = payload;
+      const res = await axios.put(this.state.requestPath + '/involvement', { period, version, region, activity, article })
+        .catch(err => console.log('In involvement/editInvolvement -', err));
+console.log(res)
       if (!res.data.errors) {
         commit('setInvolvement', res.data);
         return res.data;
@@ -20,7 +33,6 @@ export default {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
     }
-
   },
   mutations: {
     setInvolvement: (state, array) => state.involvement = array,

@@ -42,9 +42,15 @@
     </div>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Вовлечение</h4>
+      <div class="card-header">
+        <h4 class="mb-0">Вовлечение</h4>
+        <template v-if="currentPeriods.length === 1">
+          <button class="btn btn-secondary" v-if="!mode.edit" @click="mode.edit = true">редактировать</button>
+          <button class="btn btn-danger" v-if="mode.edit" @click="mode.edit = false">отменить</button>
+        </template>
+      </div>
       <div class="card-body">
-        <involvement-table></involvement-table>
+        <involvement-table :mode="mode" :data="{ currentPeriods, currentVersion }"></involvement-table>
       </div>
     </div>
   </main>
@@ -71,6 +77,11 @@
           { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
         ],
         errors: [],
+        mode: {
+          edit: false
+        },
+        currentPeriods: [],
+        currentVersion: '',
       }
     },
     props: {
@@ -80,9 +91,14 @@
       }
     },
     methods: {
+      changeData() {
+
+      },
       confirm() {
         this.isLoading = true;
         let { regions, periods, version } = this.data;
+        this.currentPeriods = periods;
+        this.currentVersion = version;
         this.$store.dispatch('involvement/updateInvolvement', { regions, periods, version }).then(res => {
           this.errors = res.errors;
           this.isLoading = false;
@@ -109,3 +125,11 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>

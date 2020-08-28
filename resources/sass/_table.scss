@@ -1,6 +1,6 @@
 /* Общие стили таблицы */
 .table {
-  background: none!important;
+  background: none !important;
 
   table {
     width: 100%;
@@ -11,19 +11,26 @@
 
   tr {
 
+    th {
+      background-color: rgba(221, 235, 247, 1);
+    }
+
     /* Жирная строка */
-    &.strong {
+    &.strong,
+    .strong {
       font-weight: bold;
     }
 
     /* Строка выделенная типа подзаголовок */
-    &.bg {
-      background-color: $table-bg;
+    &.bg,
+    .bg {
+      background-color: rgba(221, 235, 247, 1);
     }
 
     /* Событие по наведению */
-    &:hover {
-      background-color: $table-hover;
+    &:hover,
+    & td:hover {
+      background-color: rgba(221, 235, 247, 0.5)!important;
     }
 
     /* Строки без события */
@@ -33,10 +40,22 @@
   }
 
   th, td {
-    border: 1px solid $border-color;
+    border: 1px solid #000;
     line-height: 1.5;
     vertical-align: middle;
     padding: 0.25rem;
+    cursor: default;
+
+    input {
+      text-align: center;
+      opacity: 1;
+      color: #212529;
+
+      &[disabled] {
+        background: none;
+        border: none;
+      }
+    }
   }
 }
 

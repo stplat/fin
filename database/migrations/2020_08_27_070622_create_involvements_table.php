@@ -23,7 +23,8 @@ class CreateInvolvementsTable extends Migration
       $table->double('involve_by_prepayment_last_year');
       $table->double('involve_by_prepayment_current_year');
       $table->double('involve_by_turnover');
-      $table->double('prepayment');
+      $table->double('prepayment_current_year');
+      $table->double('prepayment_next_year');
       $table->timestamps();
     });
   }
