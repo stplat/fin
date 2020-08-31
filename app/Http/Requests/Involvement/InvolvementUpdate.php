@@ -29,8 +29,11 @@ class InvolvementUpdate extends FormRequest
       'period' => ['required'],
       'version' => ['required'],
       'region' => ['required'],
+      'regions' => ['required'],
       'activity' => ['required'],
       'article' => ['required'],
+      'param' => ['required'],
+      'value' => ['required'],
     ];
   }
 
@@ -44,9 +47,12 @@ class InvolvementUpdate extends FormRequest
     return [
       'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
       'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
-      'regions.required' => 'Параметр <strong>Регион</strong> обязателен для заполнения',
+      'region.required' => 'Параметр <strong>Регион</strong> обязателен для заполнения',
+      'regions.required' => 'Параметр <strong>Регионы для выборки</strong> обязателен для заполнения',
       'activity.required' => 'Параметр <strong>Вид деятельности</strong> обязателен для заполнения',
       'article.required' => 'Параметр <strong>Статья</strong> обязателен для заполнения',
+      'param.required' => 'Параметр <strong>Название параметра</strong> обязателен для заполнения',
+      'value.required' => 'Параметр <strong>Значение</strong> обязателен для заполнения',
 
     ];
   }

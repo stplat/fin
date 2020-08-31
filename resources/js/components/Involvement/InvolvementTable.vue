@@ -44,6 +44,7 @@
                      :data-article="involvement['article_id']"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
+                     name="involve_by_prepayment_last_year"
                      v-prevent-number=""
                      @change="changeData">
             <span v-else>{{ activity['involve_last'] | roundHelper }}</span>
@@ -54,6 +55,7 @@
                      :data-article="involvement['article_id']"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
+                     name="involve_by_turnover"
                      v-prevent-number=""
                      @change="changeData">
             <span v-else>{{ activity['involve_turnover'] | roundHelper }}</span>
@@ -64,6 +66,7 @@
                      :data-article="involvement['article_id']"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
+                     name="involve_by_prepayment_current_year"
                      v-prevent-number=""
                      @change="changeData">
             <span v-else>{{ activity['involve_current'] | roundHelper }}</span>
@@ -77,6 +80,7 @@
                      :data-article="involvement['article_id']"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
+                     name="prepayment_current_year"
                      v-prevent-number=""
                      @change="changeData">
             <span v-else>{{ activity['prepayment_current'] | roundHelper }}</span>
@@ -87,6 +91,7 @@
                      :data-article="involvement['article_id']"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
+                     name="prepayment_next_year"
                      v-prevent-number=""
                      @change="changeData">
             <span v-else>{{ activity['prepayment_next'] | roundHelper }}</span>
@@ -122,13 +127,19 @@
     methods: {
       changeData(e) {
         this.isLoading = true;
-        let period = this.data.currentPeriods[0],
-          version = this.data.currentVersion,
-          region = e.target.dataset.region,
-          activity = e.target.dataset.activity,
-          article = e.target.dataset.article;
+        const payload = {
+          period: this.data.currentPeriods[0],
+          periods: this.data.currentPeriods,
+          regions: this.data.currentRegions,
+          version: this.data.currentVersion,
+          region: e.target.dataset.region,
+          activity: e.target.dataset.activity,
+          article: e.target.dataset.article,
+          param: e.target.name,
+          value: e.target.value
+        };
 
-        this.$store.dispatch('involvement/editInvolvement', { period, version, region, activity, article }).then(res => {
+        this.$store.dispatch('involvement/editInvolvement', payload).then(res => {
           this.errors = res.errors;
           this.isLoading = false;
         });

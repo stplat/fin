@@ -12,6 +12,9 @@
         <li class="menu__item"><a href="{{ route('involvement.index') }}"
                                   class="menu__link menu__link--check {{!request()->is('involvement') ?: 'is-active'}}">Вовлечение</a>
         </li>
+        <li class="menu__item"><a href="{{ route('shipment.index') }}"
+                                  class="menu__link menu__link--check {{!request()->is('shipment') ?: 'is-active'}}">План поставок</a>
+        </li>
       </ul>
     </div>
   </div>

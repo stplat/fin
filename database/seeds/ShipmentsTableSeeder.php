@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-class PlanShipmentsTableSeeder extends Seeder {
+class ShipmentsTableSeeder extends Seeder {
   /**
    * Run the database seeds.
    *
@@ -31,11 +31,9 @@ class PlanShipmentsTableSeeder extends Seeder {
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '1';
           $arr['payment_balance_article_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['source_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['source_id'] = '2';
-
+          $arr['source_id'] = $row[4] == 'ЦЗ/РЗ' ? 1 : 2;
           $arr['dkre_id'] = $dkre->id;
+          $arr['version_id'] = 1;
           $arr['count'] = $row[5];
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -48,11 +46,9 @@ class PlanShipmentsTableSeeder extends Seeder {
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '2';
           $arr['payment_balance_article_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['source_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['source_id'] = '2';
-
+          $arr['source_id'] = $row[4] == 'ЦЗ/РЗ' ? 1 : 2;
           $arr['dkre_id'] = $dkre->id;
+          $arr['version_id'] = 1;
           $arr['count'] = $row[5];
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -65,11 +61,9 @@ class PlanShipmentsTableSeeder extends Seeder {
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '3';
           $arr['payment_balance_article_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['source_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['source_id'] = '2';
-
+          $arr['source_id'] = $row[4] == 'ЦЗ/РЗ' ? 1 : 2;
           $arr['dkre_id'] = $dkre->id;
+          $arr['version_id'] = 1;
           $arr['count'] = $row[5];
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -82,11 +76,9 @@ class PlanShipmentsTableSeeder extends Seeder {
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '4';
           $arr['payment_balance_article_id'] = $article->id;
-
-          $row[2] == 'ЦЗ/РЗ' ?: $arr['source_id'] = '1';
-          $row[2] == 'СЗ' ?: $arr['source_id'] = '2';
-
+          $arr['source_id'] = $row[4] == 'ЦЗ/РЗ' ? 1 : 2;
           $arr['dkre_id'] = $dkre->id;
+          $arr['version_id'] = 1;
           $arr['count'] = $row[5];
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -96,6 +88,6 @@ class PlanShipmentsTableSeeder extends Seeder {
       }
     }
 
-    DB::table('plan_shipments')->insert($plan_postavki);
+    DB::table('shipments')->insert($plan_postavki);
   }
 }

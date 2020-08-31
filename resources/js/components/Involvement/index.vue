@@ -27,7 +27,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="version" class="text-muted"><strong>Версия бюджета:</strong></label>
+              <label for="version" class="text-muted"><strong>Версия:</strong></label>
               <select class="form-control" id="version" v-model="data.version">
                 <option disabled value>Выберите один из вариантов</option>
                 <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
@@ -50,7 +50,7 @@
         </template>
       </div>
       <div class="card-body">
-        <involvement-table :mode="mode" :data="{ currentPeriods, currentVersion }"></involvement-table>
+        <involvement-table :mode="mode" :data="{ currentPeriods, currentVersion, currentRegions }"></involvement-table>
       </div>
     </div>
   </main>
@@ -81,6 +81,7 @@
           edit: false
         },
         currentPeriods: [],
+        currentRegions: [],
         currentVersion: '',
       }
     },
@@ -99,6 +100,8 @@
         let { regions, periods, version } = this.data;
         this.currentPeriods = periods;
         this.currentVersion = version;
+        this.currentRegions = regions;
+        this.mode.edit = false;
         this.$store.dispatch('involvement/updateInvolvement', { regions, periods, version }).then(res => {
           this.errors = res.errors;
           this.isLoading = false;

@@ -18,6 +18,7 @@ Vue.component('alert', require('./components/Alert').default);
 Vue.component('budget', require('./components/Budget').default);
 Vue.component('involvement', require('./components/Involvement').default);
 Vue.component('preloader', require('./components/Preloader').default);
+Vue.component('shipment', require('./components/Shipment').default);
 
 const app = new Vue({
   el: '#app',

@@ -22,10 +22,10 @@ export default {
     },
     /* Редактируем вовлечение */
     async editInvolvement({ commit }, payload) {
-      let { period, version, region, activity, article } = payload;
-      const res = await axios.put(this.state.requestPath + '/involvement', { period, version, region, activity, article })
+      let { period, version, region, activity, article, param, value } = payload;
+      const res = await axios.put(this.state.requestPath + '/involvement', payload)
         .catch(err => console.log('In involvement/editInvolvement -', err));
-console.log(res)
+
       if (!res.data.errors) {
         commit('setInvolvement', res.data);
         return res.data;

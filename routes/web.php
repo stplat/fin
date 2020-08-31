@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
 
   Route::get('/budget/all', 'BudgetController@all')->name('budget.all');
   Route::resource('budget', 'BudgetController')->only('index');
+
+  Route::get('/shipment/all', 'ShipmentController@all')->name('shipment.all');
+  Route::resource('shipment', 'ShipmentController')->only('index');
+
+
   /* Таблицы vue-table-2 (экспорт) */
 //  Route::post('/table/export', 'TableController@export')->name('table-export');
 

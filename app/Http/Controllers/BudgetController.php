@@ -16,6 +16,7 @@ class BudgetController extends Controller
 
   public function index()
   {
+//    dd($this->budgetService->getBudget([1], 2)->toArray());
     return view('budget')->with([
       'data' => collect([
         'dkres' => $this->budgetService->getDkres(),

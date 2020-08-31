@@ -18,7 +18,6 @@ class InvolvementController extends Controller
 
   public function index()
   {
-//    dd($this->involvementService->getInvolvement([3], 1)->toArray());
     return view('involvement')->with([
       'data' => collect([
         'dkres' => $this->involvementService->getDkres(),
@@ -31,20 +30,30 @@ class InvolvementController extends Controller
 
   public function all(InvolvementAll $request)
   {
-    $regions = $request->input('regions');
+    $regions = $request->input('regions') ?: null;
     $periods = $request->input('periods');
-    $version = $request->input('version') ?: null;
+    $version = $request->input('version');
 
     return $this->involvementService->getInvolvement($periods, $version, $regions);
   }
 
-  public function update(InvolvementUpdate $request) {
-    return $request->input('period');
-    Involvement::where('period_id', $request->input('period'))
-      ->where('version_id', $request->input('version'))
-      ->where('dkre_id', $request->input('region'))
-      ->where('activity_id', $request->input('activity'))
-      ->where('article_id', $request->input('article'))
-      ->update()
+  public function update(InvolvementUpdate $request)
+  {
+    $region = $request->input('region');
+    $regions = $request->input('regions') ?: null;
+    $period = $request->input('period');
+    $periods = $request->input('periods');
+    $version = $request->input('version');
+
+    Involvement::where('period_id', $period)
+      ->where('version_id', $version)
+      ->where('dkre_id', $region)
+      ->where('activity_type_id', $request->input('activity'))
+      ->where('payment_balance_article_id', $request->input('article'))
+      ->update([
+        $request->input('param') => $request->input('value')
+      ]);
+
+    return $this->involvementService->getInvolvement($periods, $version, $regions);
   }
 }
