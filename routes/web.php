@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
   Route::get('/shipment/all', 'ShipmentController@all')->name('shipment.all');
   Route::resource('shipment', 'ShipmentController')->only('index');
 
+  Route::get('/finance/all', 'FinanceController@all')->name('finance.all');
+  Route::resource('finance', 'FinanceController')->only('index');
+
 
   /* Таблицы vue-table-2 (экспорт) */
 //  Route::post('/table/export', 'TableController@export')->name('table-export');

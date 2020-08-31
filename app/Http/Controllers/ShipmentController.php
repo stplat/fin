@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Involvement;
 use App\Services\ShipmentService;
-use App\Http\Requests\Involvement\InvolvementAll;
-use App\Http\Requests\Involvement\InvolvementUpdate;
+use App\Http\Requests\Shipment\ShipmentAll;
 
 class ShipmentController extends Controller
 {
@@ -29,7 +28,7 @@ class ShipmentController extends Controller
     ]);
   }
 
-  public function all(InvolvementAll $request)
+  public function all(ShipmentAll $request)
   {
     $regions = $request->input('regions') ?: null;
     $periods = $request->input('periods');

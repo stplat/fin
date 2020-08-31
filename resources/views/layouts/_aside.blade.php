@@ -15,6 +15,9 @@
         <li class="menu__item"><a href="{{ route('shipment.index') }}"
                                   class="menu__link menu__link--check {{!request()->is('shipment') ?: 'is-active'}}">План поставок</a>
         </li>
+        <li class="menu__item"><a href="{{ route('finance.index') }}"
+                                  class="menu__link menu__link--check {{!request()->is('finance') ?: 'is-active'}}">Финансирование</a>
+        </li>
       </ul>
     </div>
   </div>
