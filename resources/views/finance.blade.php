@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Финансирование', 'subtitle' => '', 'subtitle_link' => ''])
+@extends('layouts.app', ['title' => 'Форма №22', 'subtitle' => '', 'subtitle_link' => ''])
 @section('content')
-{{--  <budget :initial-data="{{ $data }}"></budget>--}}
+  <finance :initial-data="{{ $data }}"></finance>
 @endsection

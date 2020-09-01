@@ -16,7 +16,10 @@
                                   class="menu__link menu__link--check {{!request()->is('shipment') ?: 'is-active'}}">План поставок</a>
         </li>
         <li class="menu__item"><a href="{{ route('finance.index') }}"
-                                  class="menu__link menu__link--check {{!request()->is('finance') ?: 'is-active'}}">Финансирование</a>
+                                  class="menu__link menu__link--check {{!request()->is('finance') ?: 'is-active'}}">Форма №22</a>
+        </li>
+        <li class="menu__item"><a href="{{ route('application.index') }}"
+                                  class="menu__link menu__link--check {{!request()->is('application') ?: 'is-active'}}">Денежная заявка</a>
         </li>
       </ul>
     </div>

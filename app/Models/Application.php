@@ -4,11 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Finance extends Model
+class Application extends Model
 {
+  public function budget()
+  {
+    return $this->belongsTo(Budget::class);
+  }
+
   public function period()
   {
     return $this->belongsTo(Period::class);
+  }
+
+  public function source()
+  {
+    return $this->belongsTo(Source::class);
   }
 
   public function activity()
@@ -19,6 +29,11 @@ class Finance extends Model
   public function article()
   {
     return $this->belongsTo(PaymentBalanceArticle::class, 'payment_balance_article_id', 'id');
+  }
+
+  public function dkre()
+  {
+    return $this->belongsTo(Dkre::class);
   }
 
   public function version()

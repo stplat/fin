@@ -33,6 +33,7 @@ class FinancesTableSeeder extends Seeder {
           $arr['activity_type_id'] = '1';
           $arr['source_id'] = $supply;
           $arr['payment_balance_article_id'] = $key;
+          $arr['version_id'] = 2;
           $arr['count'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -45,6 +46,7 @@ class FinancesTableSeeder extends Seeder {
           $arr['period_id'] = getCell('H17');
           $arr['activity_type_id'] = '2';
           $arr['source_id'] = $supply;
+          $arr['version_id'] = 2;
           $arr['payment_balance_article_id'] = $key;
           $arr['count'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -58,6 +60,7 @@ class FinancesTableSeeder extends Seeder {
           $arr['period_id'] = getCell('H17');
           $arr['activity_type_id'] = '3';
           $arr['source_id'] = $supply;
+          $arr['version_id'] = 2;
           $arr['payment_balance_article_id'] = $key;
           $arr['count'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
@@ -71,6 +74,7 @@ class FinancesTableSeeder extends Seeder {
           $arr['period_id'] = getCell('H17');
           $arr['activity_type_id'] = '4';
           $arr['source_id'] = $supply;
+          $arr['version_id'] = 2;
           $arr['payment_balance_article_id'] = $key;
           $arr['count'] = round(getCell($col . $row), 3);
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');

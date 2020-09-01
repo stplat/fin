@@ -17,8 +17,8 @@ class CreateBudgetsTable extends Migration {
       $table->integer('activity_type_id');
       $table->integer('payment_balance_article_id');
       $table->integer('dkre_id');
-      $table->double('count');
       $table->integer('version_id');
+      $table->double('count');
       $table->timestamps();
     });
   }

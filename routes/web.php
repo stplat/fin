@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function () {
   Route::get('/finance/all', 'FinanceController@all')->name('finance.all');
   Route::resource('finance', 'FinanceController')->only('index');
 
+  Route::get('/application/all', 'ApplicationController@all')->name('application.all');
+  Route::resource('application', 'ApplicationController')->only('index');
+
 
   /* Таблицы vue-table-2 (экспорт) */
 //  Route::post('/table/export', 'TableController@export')->name('table-export');
