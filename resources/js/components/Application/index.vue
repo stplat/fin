@@ -17,6 +17,15 @@
               </select>
             </div>
           </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="article" class="text-muted"><strong>Статья ПБ:</strong></label>
+              <select class="form-control" id="article" v-model="data.version">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+              </select>
+            </div>
+          </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="version" class="text-muted"><strong>Версия:</strong></label>
@@ -28,6 +37,35 @@
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
             <button class="btn btn-secondary float-right">Загрузить</button>
             <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="version_22" class="text-muted"><strong>Версия ф.22:</strong></label>
+              <select class="form-control" id="version_22" v-model="data.version">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="version_budget" class="text-muted"><strong>Версия бюджета:</strong></label>
+              <select class="form-control" id="version_budget" v-model="data.version">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="version_ship" class="text-muted"><strong>Версия плана поставки:</strong></label>
+              <select class="form-control" id="version_ship" v-model="data.version">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>

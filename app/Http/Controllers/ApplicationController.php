@@ -16,7 +16,7 @@ class ApplicationController extends Controller
 
   public function index()
   {
-    dd($this->applicationService->getFinances([1], 2)->toArray());
+//    dd($this->applicationService->getApplications([1], 2)->toArray());
     return view('application')->with([
       'data' => collect([
         'periods' => $this->applicationService->getPeriods(),

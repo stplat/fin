@@ -31,7 +31,7 @@ class BudgetsTableSeeder extends Seeder {
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '1';
-          $arr['payment_balance_article_id'] = $article->id;
+          $arr['payment_balance_article_general'] = $article->general;
           $arr['dkre_id'] = $dkre->id;
           $arr['count'] = $row[5];
           $arr['version_id'] = $version->id;
@@ -45,7 +45,7 @@ class BudgetsTableSeeder extends Seeder {
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '2';
-          $arr['payment_balance_article_id'] = $article->id;
+          $arr['payment_balance_article_general'] = $article->general;
           $arr['dkre_id'] = $dkre->id;
           $arr['count'] = $row[5];
           $arr['version_id'] = $version->id;
@@ -59,7 +59,7 @@ class BudgetsTableSeeder extends Seeder {
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '3';
-          $arr['payment_balance_article_id'] = $article->id;
+          $arr['payment_balance_article_general'] = $article->general;
           $arr['dkre_id'] = $dkre->id;
           $arr['count'] = $row[5];
           $arr['version_id'] = $version->id;
@@ -73,7 +73,7 @@ class BudgetsTableSeeder extends Seeder {
           $arr = [];
           $arr['period_id'] = $period->id;
           $arr['activity_type_id'] = '4';
-          $arr['payment_balance_article_id'] = $article->id;
+          $arr['payment_balance_article_general'] = $article->general;
           $arr['dkre_id'] = $dkre->id;
           $arr['count'] = $row[5];
           $arr['version_id'] = $version->id;

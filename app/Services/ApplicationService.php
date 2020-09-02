@@ -22,7 +22,7 @@ class ApplicationService
    *
    * @return \Illuminate\Support\Collection
    */
-  public function getFinances($periods, $version)
+  public function getApplications($periods, $version)
   {
     $periodSql = implode(',', $periods);
     $application = DB::table('applications')

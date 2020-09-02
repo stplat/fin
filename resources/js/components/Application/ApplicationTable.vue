@@ -3,17 +3,19 @@
     <div class="table__unit">млн.руб. без НДС</div>
     <table>
       <tr class="not-hover">
-        <th rowspan="2">ДКРЭ/ВД</th>
-        <th rowspan="2">Новые закупаемые</th>
-        <th colspan="5">Топливо</th>
-        <th rowspan="2">ИТОГО:</th>
+        <th rowspan="2">ДКРЭ</th>
+        <th colspan="4">Денежная заявка</th>
+        <th colspan="4">План поставки</th>
       </tr>
       <tr class="not-hover">
         <th>ИТОГО:</th>
-        <th>Дизельное топливо</th>
-        <th>Мазут</th>
-        <th>Уголь</th>
-        <th>Другие виды топлива<br/>(бензин и газ)</th>
+        <th>ЦЗ/РЗ</th>
+        <th>СЗ</th>
+        <th>ЧДФ</th>
+        <th>ИТОГО:</th>
+        <th>ЦЗ/РЗ</th>
+        <th>СЗ</th>
+        <th>ЧДФ</th>
       </tr>
       <template v-for="budget in budgets">
         <tr class="strong bg">

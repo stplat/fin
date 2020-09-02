@@ -25,17 +25,17 @@ class BudgetService
   {
     $dkres = $regions ?: Dkre::get()->pluck('id');
     $budget = Budget::select(DB::raw("
-    dkres.region, payment_balance_articles.code as article, activity_types.name as activity, ROUND(SUM(budgets.count), 3) as total
+    dkres.region, payment_balance_articles.general as article, activity_types.name as activity, ROUND(SUM(budgets.count), 3) as total
     "))
       ->join('dkres', 'dkres.id', '=', 'budgets.dkre_id')
       ->join('activity_types', 'activity_types.id', '=', 'budgets.activity_type_id')
-      ->join('payment_balance_articles', 'payment_balance_articles.id', '=', 'budgets.payment_balance_article_id')
+      ->join('payment_balance_articles', 'payment_balance_articles.general', '=', 'budgets.payment_balance_article_general')
       ->whereIn('period_id', $periods)
       ->where('version_id', $version)
       ->whereIn('dkre_id', $dkres)
       ->orderBy('budgets.dkre_id')
       ->orderBy('budgets.activity_type_id')
-      ->groupBy('budgets.dkre_id', 'budgets.payment_balance_article_id', 'budgets.activity_type_id')
+      ->groupBy('budgets.dkre_id', 'budgets.payment_balance_article_general', 'budgets.activity_type_id')
       ->get();
 
     return $budget->groupBy('region')->map(function ($item, $key) {

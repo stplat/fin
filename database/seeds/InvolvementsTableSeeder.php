@@ -30,7 +30,7 @@ class InvolvementsTableSeeder extends Seeder
           $arr['period_id'] = $period;
           $arr['dkre_id'] = $dkre;
           $arr['activity_type_id'] = $activity;
-          $arr['payment_balance_article_id'] = 19;
+          $arr['payment_balance_article_general'] = 63400;
           $arr['version_id'] = 1;
           $arr['involve_by_prepayment_last_year'] = 1000;
           $arr['involve_by_prepayment_current_year'] = 200;

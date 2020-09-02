@@ -1,0 +1,172 @@
+SELECT applications.dkre_id, applications.activity_type_id, SUM(count) as count, budgets.budget
+FROM applications
+JOIN (SELECT dkre_id, activity_type_id, SUM(budgets.count) as budget FROM budgets WHERE period_id IN (1) AND version_id=2 GROUP BY dkre_id) budgets
+ON applications.dkre_id = budgets.dkre_id
+WHERE period_id=1 AND version_id=2
+GROUP BY applications.dkre_id, applications.activity_type_id
+
+
+бюджет
+SELECT budgets.activity_type_id, budgets.payment_balance_article_id, budgets.dkre_id, SUM(count) as count FROM `budgets`
+WHERE period_id=1 AND version_id=2
+GROUP BY budgets.activity_type_id, budgets.payment_balance_article_id, budgets.dkre_id
+
+
+вовлечение
+SELECT involvements.activity_type_id, involvements.payment_balance_article_id, involvements.dkre_id, 
+SUM(involve_by_prepayment_last_year) as involve_last,
+SUM(involve_by_prepayment_current_year) as involve_current,
+SUM(involve_by_turnover) as involve_turnover,
+SUM(prepayment_current_year) as prepayment_current,
+SUM(prepayment_next_year) as prepayment_next
+FROM `involvements`
+WHERE period_id=1 AND version_id=1
+GROUP BY involvements.activity_type_id, involvements.payment_balance_article_id, involvements.dkre_id
+
+
+бюджет + вовлечение
+SELECT budgets.activity_type_id, 
+budgets.payment_balance_article_id, 
+budgets.dkre_id, 
+SUM(count) as budget,
+IFNULL(SUM(involvements.involve_last), 0) as involve_last,
+IFNULL(SUM(involvements.involve_current), 0) as involve_current,
+IFNULL(SUM(involvements.involve_turnover), 0) as involve_turnover,
+IFNULL(SUM(involvements.prepayment_current), 0) as prepayment_current,
+IFNULL(SUM(involvements.prepayment_next), 0) as prepayment_next
+FROM `budgets`
+LEFT JOIN (SELECT involvements.activity_type_id, involvements.payment_balance_article_id, involvements.dkre_id, 
+SUM(involve_by_prepayment_last_year) as involve_last,
+SUM(involve_by_prepayment_current_year) as involve_current,
+SUM(involve_by_turnover) as involve_turnover,
+SUM(prepayment_current_year) as prepayment_current,
+SUM(prepayment_next_year) as prepayment_next
+FROM `involvements`
+WHERE period_id=3 AND version_id=1
+GROUP BY involvements.activity_type_id, involvements.payment_balance_article_id, involvements.dkre_id) involvements
+ON involvements.dkre_id = budgets.dkre_id
+AND involvements.activity_type_id = budgets.activity_type_id
+AND involvements.payment_balance_article_id = budgets.payment_balance_article_id
+WHERE period_id=1 AND version_id=2
+GROUP BY budgets.activity_type_id, budgets.payment_balance_article_id, budgets.dkre_id
+
+
+
+Финансирование
+SELECT budgets.activity_type_id, 
+budgets.payment_balance_article_general, 
+budgets.dkre_id, 
+ROUND((SUM(count) - IFNULL(SUM(involvements.involve_by_prepayment_last_year), 0) - IFNULL(SUM(involvements.involve_by_prepayment_current_year), 0) - IFNULL(SUM(involvements.involve_by_turnover), 0) + IFNULL(SUM(involvements.prepayment_current_year), 0) + IFNULL(SUM(involvements.prepayment_next_year), 0)), 3) as finance
+FROM `budgets`
+LEFT JOIN (SELECT * FROM `involvements` WHERE period_id=3 AND version_id=1) involvements
+ON involvements.dkre_id = budgets.dkre_id
+AND involvements.activity_type_id = budgets.activity_type_id
+AND involvements.payment_balance_article_general = budgets.payment_balance_article_general
+WHERE budgets.period_id=1 AND budgets.version_id=2
+GROUP BY budgets.activity_type_id, budgets.payment_balance_article_general, budgets.dkre_id, involvements.activity_type_id, involvements.payment_balance_article_general, involvements.dkre_id
+
+
+
+ф.22
+SELECT activity_type_id, source_id, SUM(count) as f22 FROM `finances` WHERE period_id in (1) AND version_id=2 AND payment_balance_article_id=19 GROUP BY activity_type_id, source_id
+
+план поставки
+SELECT dkre_id, activity_type_id, source_id, SUM(count) as shipment FROM `shipments` 
+WHERE period_id in (12) AND version_id=1 AND payment_balance_article_id=19 GROUP BY dkre_id, activity_type_id, source_id  
+
+
+period_id,payment_balance_article_id,payment_balance_article_general,activity_type_id,dkre_id,source_id,version_id,count
+
+
+денежные
+SELECT applications.dkre_id, applications.activity_type_id, 
+applications.payment_balance_article_id,
+applications.source_id,
+SUM(applications.count) as fin, 
+budgets.count as budget,
+involvements.involve_by_prepayment_last_year as involve_last
+FROM applications
+LEFT JOIN (SELECT * FROM budgets WHERE version_id=2) budgets
+ON applications.period_id = budgets.period_id
+AND applications.payment_balance_article_general = budgets.payment_balance_article_general
+AND applications.activity_type_id = budgets.activity_type_id
+AND applications.dkre_id = budgets.dkre_id
+LEFT JOIN (SELECT * FROM involvements WHERE version_id=1) involvements
+ON applications.period_id = involvements.period_id
+AND applications.payment_balance_article_general = involvements.payment_balance_article_general
+AND applications.activity_type_id = involvements.activity_type_id
+AND applications.dkre_id = involvements.dkre_id
+WHERE applications.period_id=1 AND applications.version_id=1 AND applications.payment_balance_article_id=19
+GROUP BY applications.dkre_id, applications.payment_balance_article_id, applications.activity_type_id, applications.source_id, budgets.count, involvements.involve_by_prepayment_last_year
+ORDER BY applications.dkre_id
+
+
+
+
+SELECT applications.dkre_id, applications.activity_type_id, 
+applications.payment_balance_article_id,
+applications.source_id,
+SUM(applications.count) finance,
+ROUND((budgets.finance - total_applications.sum), 3) as budgets,
+ROUND((finances.finance - total_applications.sum), 3) as f22,
+ROUND((total_applications.sum - shipments.shipment), 3) as shipment
+
+FROM applications
+
+LEFT JOIN (
+SELECT budgets.activity_type_id, 
+budgets.payment_balance_article_general, 
+budgets.dkre_id, 
+ROUND((SUM(count) - IFNULL(SUM(involvements.involve_by_prepayment_last_year), 0) - IFNULL(SUM(involvements.involve_by_prepayment_current_year), 0) - IFNULL(SUM(involvements.involve_by_turnover), 0) + IFNULL(SUM(involvements.prepayment_current_year), 0) + IFNULL(SUM(involvements.prepayment_next_year), 0)), 3) as finance
+FROM `budgets`
+LEFT JOIN (SELECT * FROM `involvements` WHERE period_id=3 AND version_id=1) involvements
+ON involvements.dkre_id = budgets.dkre_id
+AND involvements.activity_type_id = budgets.activity_type_id
+AND involvements.payment_balance_article_general = budgets.payment_balance_article_general
+WHERE budgets.period_id=1 AND budgets.version_id=2
+GROUP BY budgets.activity_type_id, budgets.payment_balance_article_general, budgets.dkre_id, involvements.activity_type_id, involvements.payment_balance_article_general, involvements.dkre_id
+) budgets
+ON applications.payment_balance_article_general = budgets.payment_balance_article_general
+AND applications.activity_type_id = budgets.activity_type_id
+AND applications.dkre_id = budgets.dkre_id
+
+LEFT JOIN (
+SELECT SUM(count) as finance, payment_balance_article_id, source_id, activity_type_id FROM finances 
+WHERE period_id IN (1, 2, 3) AND version_id=2
+GROUP BY payment_balance_article_id, source_id, activity_type_id
+) finances
+ON applications.payment_balance_article_id = finances.payment_balance_article_id
+AND applications.activity_type_id = finances.activity_type_id
+AND applications.source_id = finances.source_id
+
+LEFT JOIN (
+SELECT SUM(count) as shipment, payment_balance_article_id, source_id, activity_type_id, dkre_id FROM shipments 
+WHERE period_id IN (1, 2, 3, 4, 5, 6) AND version_id=1
+GROUP BY payment_balance_article_id, source_id, activity_type_id, dkre_id
+) shipments
+ON applications.payment_balance_article_id = shipments.payment_balance_article_id
+AND applications.activity_type_id = shipments.activity_type_id
+AND applications.source_id = shipments.source_id
+AND applications.dkre_id = shipments.dkre_id
+
+LEFT JOIN (
+SELECT SUM(count) as sum, payment_balance_article_id, payment_balance_article_general, source_id, activity_type_id, dkre_id FROM applications
+WHERE period_id IN (1, 2, 3, 4, 5, 6) AND version_id=1
+GROUP BY payment_balance_article_id, payment_balance_article_general, source_id, activity_type_id, dkre_id
+) total_applications
+ON applications.payment_balance_article_id = total_applications.payment_balance_article_id
+AND applications.payment_balance_article_general = total_applications.payment_balance_article_general
+AND applications.activity_type_id = total_applications.activity_type_id
+AND applications.source_id = total_applications.source_id
+AND applications.dkre_id = total_applications.dkre_id
+
+WHERE applications.period_id in (1) AND applications.version_id=1 AND applications.payment_balance_article_id=19
+GROUP BY applications.dkre_id, 
+applications.payment_balance_article_id, 
+applications.activity_type_id, 
+applications.source_id,
+budgets.finance,
+finances.finance,
+total_applications.sum,
+shipments.shipment
+ORDER BY applications.dkre_id
