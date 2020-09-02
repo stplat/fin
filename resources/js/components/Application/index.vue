@@ -11,18 +11,18 @@
         <div class="row">
           <div class="col-md-2">
             <div class="form-group">
-              <label for="month" class="text-muted"><strong>Период:</strong></label>
-              <select class="form-control" id="month" multiple v-model="data.periods">
-                <option :value="month.id" v-for="(month, key) in months" :key="key">{{ month.name }}</option>
+              <label for="period" class="text-muted"><strong>Период:</strong></label>
+              <select class="form-control" id="period" multiple v-model="data.periods">
+                <option :value="period.id" v-for="(period, key) in periods" :key="key">{{ period.name }}</option>
               </select>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="article" class="text-muted"><strong>Статья ПБ:</strong></label>
-              <select class="form-control" id="article" v-model="data.version">
+              <select class="form-control" id="article" v-model="data.article">
                 <option disabled value>Выберите один из вариантов</option>
-                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+                <option :value="article.id" v-for="(article, key) in articles" :key="key">{{ article.name }}</option>
               </select>
             </div>
           </div>
@@ -43,7 +43,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="version_22" class="text-muted"><strong>Версия ф.22:</strong></label>
-              <select class="form-control" id="version_22" v-model="data.version">
+              <select class="form-control" id="version_22" v-model="data.version_f22">
                 <option disabled value>Выберите один из вариантов</option>
                 <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
               </select>
@@ -52,7 +52,16 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="version_budget" class="text-muted"><strong>Версия бюджета:</strong></label>
-              <select class="form-control" id="version_budget" v-model="data.version">
+              <select class="form-control" id="version_budget" v-model="data.version_budget">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="version_involvement" class="text-muted"><strong>Версия вовлечения:</strong></label>
+              <select class="form-control" id="version_involvement" v-model="data.version_involvement">
                 <option disabled value>Выберите один из вариантов</option>
                 <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
               </select>
@@ -61,7 +70,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="version_ship" class="text-muted"><strong>Версия плана поставки:</strong></label>
-              <select class="form-control" id="version_ship" v-model="data.version">
+              <select class="form-control" id="version_ship" v-model="data.version_shipment">
                 <option disabled value>Выберите один из вариантов</option>
                 <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
               </select>
@@ -89,9 +98,13 @@
     data() {
       return {
         data: {
-          regions: [],
-          periods: [ 3 ],
-          version: 2,
+          periods: [ 1 ],
+          article: 1,
+          version: 1,
+          version_budget: 2,
+          version_involvement: 2,
+          version_f22: 2,
+          version_shipment: 2,
         },
         isLoading: true,
         messages: [
@@ -111,22 +124,21 @@
     methods: {
       confirm() {
         this.isLoading = true;
-        let { regions, periods, version } = this.data;
-        this.$store.dispatch('budget/updateBudget', { regions, periods, version }).then(res => {
+        this.$store.dispatch('application/updateApplications', this.data).then(res => {
           this.errors = res.errors;
           this.isLoading = false;
         });
       }
     },
     computed: {
-      dkres() {
-        return this.initialData.dkres;
-      },
-      months() {
-        return this.initialData.months;
+      periods() {
+        return this.initialData.periods;
       },
       versions() {
         return this.initialData.versions;
+      },
+      articles() {
+        return this.initialData.articles;
       }
     },
     mounted() {

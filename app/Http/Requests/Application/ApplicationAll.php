@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Budget;
+namespace App\Http\Requests\Application;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,9 +26,13 @@ class ApplicationAll extends FormRequest
   public function rules()
   {
     return [
-      'regions' => [],
-      'periods' => ['required'],
+      'periods' => ['required', 'array'],
+      'article' => ['required'],
       'version' => ['required'],
+      'version_budget' => ['required'],
+      'version_involvement' => ['required'],
+      'version_f22' => ['required'],
+      'version_shipment' => ['required'],
     ];
   }
 
@@ -40,9 +44,14 @@ class ApplicationAll extends FormRequest
   public function messages()
   {
     return [
-      'regions.required' => 'Параметр <strong>period</strong> обязателен для заполнения',
       'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
+      'periods.array' => 'Параметр <strong>Период</strong> должен быть массивом',
+      'article.required' => 'Параметр <strong>Статья</strong> обязателен для заполнения',
       'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
+      'version_budget.required' => 'Параметр <strong>Версия бюджета</strong> обязателен для заполнения',
+      'version_involvement.required' => 'Параметр <strong>Версия вовлечения</strong> обязателен для заполнения',
+      'version_f22.required' => 'Параметр <strong>Версия формы 22</strong> обязателен для заполнения',
+      'version_shipment.required' => 'Параметр <strong>Версия плана поставки</strong> обязателен для заполнения',
     ];
   }
 

@@ -22,7 +22,7 @@ class InvolvementController extends Controller
       'data' => collect([
         'dkres' => $this->involvementService->getDkres(),
         'regions' => $this->involvementService->getRegions(),
-        'months' => $this->involvementService->getPeriods('month'),
+        'periods' => $this->involvementService->getPeriods(),
         'versions' => $this->involvementService->getVersions(),
       ])
     ]);
@@ -49,7 +49,7 @@ class InvolvementController extends Controller
       ->where('version_id', $version)
       ->where('dkre_id', $region)
       ->where('activity_type_id', $request->input('activity'))
-      ->where('payment_balance_article_id', $request->input('article'))
+      ->where('payment_balance_article_general', $request->input('article'))
       ->update([
         $request->input('param') => $request->input('value')
       ]);

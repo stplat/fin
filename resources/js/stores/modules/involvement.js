@@ -12,7 +12,7 @@ export default {
       const req = `?${serialize(regions, 'regions')}&${serialize(periods, 'periods')}&version=${version}`;
       const res = await axios.get(this.state.requestPath + '/involvement/all' + req)
         .catch(err => console.log('In involvement/updateInvolvement -', err));
-
+console.log(res)
       if (!res.data.errors) {
         commit('setInvolvement', res.data);
         return res.data;

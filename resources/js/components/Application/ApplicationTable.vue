@@ -5,7 +5,9 @@
       <tr class="not-hover">
         <th rowspan="2">ДКРЭ</th>
         <th colspan="4">Денежная заявка</th>
-        <th colspan="4">План поставки</th>
+        <th colspan="4">Форма №22</th>
+        <th rowspan="2">Финансирование</th>
+        <th colspan="3">План поставки</th>
       </tr>
       <tr class="not-hover">
         <th>ИТОГО:</th>
@@ -16,37 +18,40 @@
         <th>ЦЗ/РЗ</th>
         <th>СЗ</th>
         <th>ЧДФ</th>
+        <th>ИТОГО:</th>
+        <th>ЦЗ/РЗ</th>
+        <th>СЗ</th>
       </tr>
-      <template v-for="budget in budgets">
+      <template v-for="app in applications">
         <tr class="strong bg">
-          <td>{{ budget.dkre }}</td>
-          <td>{{ budget.total['63430'] | roundHelper }}</td>
-          <td>{{ addWithEmptyHelper([ budget.total['63310'], budget.total['63320'], budget.total['63330'],
-            budget.total['63340'] ]) | roundHelper }}
-          </td>
-          <td>{{ budget.total['63310'] | roundHelper }}</td>
-          <td>{{ budget.total['63320'] | roundHelper }}</td>
-          <td>{{ budget.total['63330'] | roundHelper }}</td>
-          <td>{{ budget.total['63340'] | roundHelper }}</td>
-          <td>{{ addWithEmptyHelper([ budget.total['63310'], budget.total['63320'], budget.total['63330'],
-            budget.total['63340'],
-            budget.total['63430'] ]) | roundHelper }}
-          </td>
+          <td>{{ app.dkre }}</td>
+          <td>{{ addWithEmptyHelper([ app.total['1'].finance, app.total['2'].finance, app.total['3'].finance ]) | roundHelper}}</td>
+          <td>{{ app.total['1'].finance | roundHelper}}</td>
+          <td>{{ app.total['2'].finance | roundHelper}}</td>
+          <td>{{ app.total['3'].finance | roundHelper}}</td>
+          <td>{{ addWithEmptyHelper([ app.total['1'].f22, app.total['2'].f22, app.total['3'].f22 ]) | roundHelper}}</td>
+          <td>{{ app.total['1'].f22 | roundHelper}}</td>
+          <td>{{ app.total['2'].f22 | roundHelper}}</td>
+          <td>{{ app.total['3'].f22 | roundHelper}}</td>
+          <td>{{ app.total['1'].budget | roundHelper}}</td>
+          <td>{{ addWithEmptyHelper([ app.total['1'].shipment, app.total['2'].shipment ]) | roundHelper}}</td>
+          <td>{{ app.total['1'].shipment | roundHelper}}</td>
+          <td>{{ app.total['2'].shipment | roundHelper}}</td>
         </tr>
-        <tr v-for="(activity, key) in budget.activity" :key="budget.dkre + key">
+        <tr v-for="(activity, key) in app.activity" :key="app.dkre + key">
           <td>{{ activity.name }}</td>
-          <td>{{ activity.article['63430'] | roundHelper }}</td>
-          <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
-            activity.article['63340'] ]) | roundHelper }}
-          </td>
-          <td>{{ activity.article['63310'] | roundHelper }}</td>
-          <td>{{ activity.article['63320'] | roundHelper }}</td>
-          <td>{{ activity.article['63330'] | roundHelper }}</td>
-          <td>{{ activity.article['63340'] | roundHelper }}</td>
-          <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
-            activity.article['63340'],
-            activity.article['63430'] ]) | roundHelper }}
-          </td>
+          <td>{{ addWithEmptyHelper([ activity.source['1'].finance, activity.source['2'].finance, activity.source['3'].finance ]) | roundHelper}}</td>
+          <td>{{ activity.source['1'].finance | roundHelper}}</td>
+          <td>{{ activity.source['2'].finance | roundHelper}}</td>
+          <td>{{ activity.source['3'].finance | roundHelper}}</td>
+          <td>{{ addWithEmptyHelper([ activity.source['1'].f22, activity.source['2'].f22, activity.source['3'].f22 ]) | roundHelper}}</td>
+          <td>{{ activity.source['1'].f22 | roundHelper}}</td>
+          <td>{{ activity.source['2'].f22 | roundHelper}}</td>
+          <td>{{ activity.source['3'].f22 | roundHelper}}</td>
+          <td>{{ activity.source['1'].budget | roundHelper}}</td>
+          <td>{{ addWithEmptyHelper([ activity.source['1'].shipment, activity.source['2'].shipment ]) | roundHelper}}</td>
+          <td>{{ activity.source['1'].shipment | roundHelper}}</td>
+          <td>{{ activity.source['2'].shipment | roundHelper}}</td>
         </tr>
       </template>
     </table>
@@ -59,8 +64,8 @@
       return {}
     },
     computed: {
-      budgets() {
-        return this.$store.getters['budget/getBudget'];
+      applications() {
+        return this.$store.getters['application/getApplications'];
       }
     },
     methods: {},

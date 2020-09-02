@@ -19,9 +19,9 @@
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="month" class="text-muted"><strong>Период:</strong></label>
-              <select class="form-control" id="month" multiple v-model="data.periods">
-                <option :value="month.id" v-for="(month, key) in months" :key="key">{{ month.name }}</option>
+              <label for="periods" class="text-muted"><strong>Период:</strong></label>
+              <select class="form-control" id="periods" multiple v-model="data.periods">
+                <option :value="period.id" v-for="(period, key) in periods" :key="key">{{ period.name }}</option>
               </select>
             </div>
           </div>
@@ -116,8 +116,8 @@
         this.data.regions = this.initialData.regions.map(item => item.id);
         return this.initialData.regions;
       },
-      months() {
-        return this.initialData.months;
+      periods() {
+        return this.initialData.periods;
       },
       versions() {
         return this.initialData.versions;

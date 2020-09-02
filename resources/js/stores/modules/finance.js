@@ -12,7 +12,7 @@ export default {
       const req = `?${serialize(periods, 'periods')}&version=${version}`;
       const res = await axios.get(this.state.requestPath + '/finance/all' + req)
         .catch(err => console.log('In finance/updateFinances -', err));
-console.log(res)
+
       if (!res.data.errors) {
         commit('setFinances', res.data);
         return res.data;

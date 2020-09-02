@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Models\Application;
 use App\Models\Budget;
+use App\Models\PaymentBalanceArticle;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Dkre;
 use App\Models\Period;
 use App\Models\Finance;
 use App\Models\Version;
+use function foo\func;
 
 class ApplicationService
 {
@@ -22,69 +24,186 @@ class ApplicationService
    *
    * @return \Illuminate\Support\Collection
    */
-  public function getApplications($periods, $version)
+  public function getApplications($periods, $article, $version, $version_budget, $version_involvement, $version_f22, $version_shipment)
   {
     $periodSql = implode(',', $periods);
-    $application = DB::table('applications')
-      ->join(DB::raw(
-        "(SELECT dkre_id, activity_type_id, SUM(budgets.count) as budget FROM budgets WHERE period_id IN ($periodSql) AND version_id=$version GROUP BY dkre_id, activity_type_id) budgets"),
-        'applications.dkre_id', '=', 'budgets.dkre_id'
-      )
-//      ->join(DB::raw(
-//        "(SELECT payment_balance_article_id, SUM(finances.count) as finance FROM finances WHERE period_id IN ($periodSql) AND version_id=$version GROUP BY payment_balance_article_id) finances"),
-//        'applications.payment_balance_article_id', '=', 'finances.payment_balance_article_id'
-//      )
-      ->whereIn('applications.period_id', $periods)
-      ->where('applications.version_id', $version)
-      ->selectRaw('
-        applications.dkre_id, 
-        SUM(count) as count, 
-        budgets.budget,
-        applications.payment_balance_article_id,
-        budgets.activity_type_id,
-        applications.source_id,
-        ')
-      ->groupBy('applications.dkre_id', 'applications.payment_balance_article_id', 'applications.source_id', 'applications.activity_type_id')
-      ->get();
+    $application = DB::select("
+    SELECT applications.dkre_id, applications.activity_type_id, 
+    applications.payment_balance_article_id,
+    payment_balance_articles.name as article,
+    activity_types.name as activity,
+    dkres.region as region,
+    applications.source_id,
+    SUM(applications.count) finance,
+    budgets.sum as budget,
+    finances.sum as f22,
+    shipments.sum as shipment
+    
+    FROM applications
+    
+    LEFT JOIN (
+    SELECT budgets.activity_type_id, 
+    budgets.payment_balance_article_general, 
+    budgets.dkre_id, 
+    ROUND(SUM(budgets.count) - 
+    IFNULL(involvements.involve_last, 0) - 
+    IFNULL(involvements.involve_current, 0) - 
+    IFNULL(involvements.involve_turnover, 0) + 
+    IFNULL(involvements.prepayment_current, 0) + 
+    IFNULL(involvements.prepayment_next, 0) - 
+    total_applications.sum, 3) as sum
+    
+    FROM `budgets`
+    
+    LEFT JOIN 
+    (SELECT 
+     dkre_id, 
+     activity_type_id, 
+     payment_balance_article_general, 
+     SUM(involvements.involve_by_prepayment_last_year) as involve_last,
+     SUM(involvements.involve_by_prepayment_current_year) as involve_current,
+     SUM(involvements.involve_by_turnover) as involve_turnover,
+     SUM(involvements.prepayment_current_year) as prepayment_current,
+     SUM(involvements.prepayment_next_year) as prepayment_next FROM `involvements` 
+    WHERE period_id in ($periodSql) AND version_id=$version_involvement
+    GROUP BY involvements.activity_type_id, involvements.payment_balance_article_general, involvements.dkre_id
+    ) involvements
+    ON involvements.dkre_id = budgets.dkre_id
+    AND involvements.activity_type_id = budgets.activity_type_id
+    AND involvements.payment_balance_article_general = budgets.payment_balance_article_general
+    
+    LEFT JOIN
+    (SELECT 
+     SUM(count) as sum,  
+     payment_balance_article_general, 
+     activity_type_id, 
+     dkre_id FROM applications
+    WHERE period_id IN ($periodSql) AND version_id=$version
+    GROUP BY payment_balance_article_general, activity_type_id, dkre_id
+    ) total_applications 
+    ON total_applications.payment_balance_article_general = budgets.payment_balance_article_general
+    AND total_applications.activity_type_id = budgets.activity_type_id
+    AND total_applications.dkre_id = budgets.dkre_id
+    
+    WHERE budgets.period_id IN ($periodSql) AND budgets.version_id=$version_budget
+    GROUP BY budgets.activity_type_id, 
+    budgets.payment_balance_article_general, 
+    budgets.dkre_id, 
+    involvements.involve_last,
+    involvements.involve_current,
+    involvements.involve_turnover,
+    involvements.prepayment_current,
+    involvements.prepayment_next) budgets
+    ON applications.payment_balance_article_general = budgets.payment_balance_article_general
+    AND applications.activity_type_id = budgets.activity_type_id
+    AND applications.dkre_id = budgets.dkre_id
+    
+    LEFT JOIN (
+    SELECT finances.activity_type_id, 
+    finances.payment_balance_article_id, 
+    finances.source_id,
+    ROUND((SUM(finances.count) - 
+    total_applications.sum), 3) as sum
+    FROM `finances`
+    
+    LEFT JOIN
+    (SELECT 
+     SUM(count) as sum,  
+     payment_balance_article_id, 
+     activity_type_id, 
+     source_id FROM applications
+    WHERE period_id IN ($periodSql) AND version_id=$version
+    GROUP BY payment_balance_article_id, activity_type_id, source_id
+    ) total_applications     
+    ON total_applications.payment_balance_article_id = finances.payment_balance_article_id
+    AND total_applications.activity_type_id = finances.activity_type_id
+    AND total_applications.source_id = finances.source_id
+        
+    WHERE finances.period_id IN ($periodSql) AND finances.version_id=$version_f22
+    GROUP BY finances.activity_type_id, 
+    finances.payment_balance_article_id, 
+    finances.source_id) finances
+    ON applications.payment_balance_article_id = finances.payment_balance_article_id
+    AND applications.activity_type_id = finances.activity_type_id
+    AND applications.source_id = finances.source_id
+    
+    LEFT JOIN (
+    SELECT shipments.activity_type_id, 
+    shipments.payment_balance_article_id, 
+    shipments.source_id,
+    shipments.dkre_id,
+    ROUND(SUM(shipments.count) - 
+    total_applications.sum, 3) as sum
+    FROM `shipments`
+    
+    LEFT JOIN
+    (SELECT 
+     SUM(count) as sum,  
+     payment_balance_article_id, 
+     activity_type_id, 
+     source_id,
+     dkre_id
+     FROM applications
+    WHERE period_id IN ($periodSql) AND version_id=$version
+    GROUP BY payment_balance_article_id, activity_type_id, source_id, dkre_id
+    ) total_applications     
+    ON total_applications.payment_balance_article_id = shipments.payment_balance_article_id
+    AND total_applications.activity_type_id = shipments.activity_type_id
+    AND total_applications.source_id = shipments.source_id
+    AND total_applications.dkre_id = shipments.dkre_id
+        
+    WHERE shipments.period_id IN ($periodSql) AND shipments.version_id=$version_shipment
+    GROUP BY shipments.activity_type_id, 
+    shipments.payment_balance_article_id, 
+    shipments.source_id,
+    shipments.dkre_id) shipments
+    ON applications.payment_balance_article_id = shipments.payment_balance_article_id
+    AND applications.activity_type_id = shipments.activity_type_id
+    AND applications.source_id = shipments.source_id
+    AND applications.dkre_id = shipments.dkre_id
+    
+    JOIN payment_balance_articles
+    ON applications.payment_balance_article_id = payment_balance_articles.id
+    JOIN activity_types
+    ON applications.activity_type_id = activity_types.id
+    JOIN dkres
+    ON applications.dkre_id = dkres.id
+    
+    WHERE applications.period_id in ($periodSql) AND applications.version_id=$version AND applications.payment_balance_article_id=$article
+    GROUP BY applications.dkre_id, 
+    applications.payment_balance_article_id, 
+    applications.activity_type_id, 
+    applications.source_id,
+    budgets.sum,
+    finances.sum,
+    shipments.sum
+    ORDER BY applications.dkre_id
+    ");
 
-//    $budget = DB::raw('SELECT dkre_id, SUM(budgets.count)  FROM budgets WHERE period_id=1 AND version_id=2 GROUP BY dkre_id');
-
-    return $application;
-    $finances = Application::select(DB::raw("
-      payment_balance_articles.name as article, 
-      payment_balance_articles.id as article_id, 
-      activity_types.code as activity,
-      sources.id as source, 
-      ROUND(SUM(applications.count), 3) as total
-    "))
-      ->join('activity_types', 'activity_types.id', '=', 'applications.activity_type_id')
-      ->join('payment_balance_articles', 'payment_balance_articles.id', '=', 'applications.payment_balance_article_id')
-      ->join('sources', 'sources.id', '=', 'applications.source_id')
-      ->whereIn('period_id', $periods)
-      ->where('version_id', $version)
-      ->orderBy('applications.payment_balance_article_id')
-      ->groupBy('applications.payment_balance_article_id', 'applications.activity_type_id', 'sources.id')
-      ->get();
-
-    return $finances;
-
-    return $finances->groupBy('article')->map(function ($item, $key) {
+    $application = collect($application)->groupBy('dkre_id')->map(function ($item) {
       return collect([
-        'name' => $key,
-        'activity' => $item->groupBy('activity')->map(function ($item, $key) {
-          return $item->groupBy('source')->map(function ($item, $key) {
-            return round($item->sum('total'), 3);
-          });
+        'dkre' => count($item) ? $item[0]->region : '',
+        'activity' => $item->groupBy('activity_type_id')->map(function ($item) {
+          return collect([
+            'name' => count($item) ? $item[0]->activity : '',
+            'source' => $item->groupBy('source_id')->map(function ($item, $key) {
+              return $item[0];
+            })
+          ]);
+        })->values(),
+        'total' => $item->groupBy('source_id')->map(function ($item, $key) {
+          return collect([
+            'f22' => round($item->sum('f22'), 3),
+            'budget' => round($item->sum('budget'), 3),
+            'finance' => round($item->sum('finance'), 3),
+            'shipment' => round($item->sum('shipment'), 3),
+          ]);
         })
       ]);
-    })->put('', collect([
-      'name' => 'ИТОГО',
-      'activity' => $finances->groupBy('activity')->map(function ($item, $key) {
-        return $item->groupBy('source')->map(function ($item, $key) {
-          return round($item->sum('total'), 3);
-        });
-      })
-    ]))->values();
+    })->values();
+
+    return $application;
+
   }
 
   /**
@@ -133,5 +252,17 @@ class ApplicationService
   public function getVersions()
   {
     return Version::all();
+  }
+
+  /**
+   * Получаем список статей
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getArticles()
+  {
+    return PaymentBalanceArticle::all();
   }
 }
