@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Involvement;
+namespace App\Http\Requests\Budget;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class InvolvementUpdate extends FormRequest
+class BudgetUpdate extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.

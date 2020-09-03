@@ -81,9 +81,15 @@
     </div>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Бюджетные параметры</h4>
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Вовлечение</h4>
+        <template v-if="dataForProps.periods.length === 1">
+          <button class="btn btn-secondary" v-if="!mode.edit" @click="mode.edit = true">редактировать</button>
+          <button class="btn btn-danger" v-if="mode.edit" @click="mode.edit = false">отменить</button>
+        </template>
+      </div>
       <div class="card-body">
-        <application-table></application-table>
+        <application-table :mode="mode" :data="dataForProps"></application-table>
       </div>
     </div>
   </main>
@@ -113,6 +119,18 @@
           { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
         ],
         errors: [],
+        mode: {
+          edit: false
+        },
+        dataForProps: {
+          periods: [ 1 ],
+          article: 1,
+          version: 1,
+          version_budget: 2,
+          version_involvement: 2,
+          version_f22: 2,
+          version_shipment: 2,
+        }
       }
     },
     props: {
@@ -124,6 +142,9 @@
     methods: {
       confirm() {
         this.isLoading = true;
+        this.mode.edit = false;
+        this.dataForProps = _.clone(this.data);
+
         this.$store.dispatch('application/updateApplications', this.data).then(res => {
           this.errors = res.errors;
           this.isLoading = false;

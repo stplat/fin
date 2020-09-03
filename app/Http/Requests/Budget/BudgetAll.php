@@ -29,6 +29,7 @@ class BudgetAll extends FormRequest
       'regions' => [],
       'periods' => ['required'],
       'version' => ['required'],
+      'version_involvement' => ['required'],
     ];
   }
 
@@ -43,6 +44,7 @@ class BudgetAll extends FormRequest
       'regions.required' => 'Параметр <strong>period</strong> обязателен для заполнения',
       'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
       'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
+      'version_involvement.required' => 'Параметр <strong>Версия вовлечения</strong> обязателен для заполнения',
     ];
   }
 

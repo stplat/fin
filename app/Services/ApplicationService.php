@@ -28,7 +28,8 @@ class ApplicationService
   {
     $periodSql = implode(',', $periods);
     $application = DB::select("
-    SELECT applications.dkre_id, applications.activity_type_id, 
+    SELECT applications.dkre_id, 
+    applications.activity_type_id, 
     applications.payment_balance_article_id,
     payment_balance_articles.name as article,
     activity_types.name as activity,
@@ -183,9 +184,11 @@ class ApplicationService
     $application = collect($application)->groupBy('dkre_id')->map(function ($item) {
       return collect([
         'dkre' => count($item) ? $item[0]->region : '',
+        'dkre_id' => count($item) ? $item[0]->dkre_id : '',
         'activity' => $item->groupBy('activity_type_id')->map(function ($item) {
           return collect([
             'name' => count($item) ? $item[0]->activity : '',
+            'activity_id' => count($item) ? $item[0]->activity_type_id : '',
             'source' => $item->groupBy('source_id')->map(function ($item, $key) {
               return $item[0];
             })
@@ -263,6 +266,7 @@ class ApplicationService
    */
   public function getArticles()
   {
-    return PaymentBalanceArticle::all();
+    return PaymentBalanceArticle::whereNotBetween('code', [63411, 63418])
+      ->whereNotBetween('code', [63422, 63426])->get();
   }
 }

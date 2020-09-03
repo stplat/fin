@@ -1,4 +1,5 @@
-SELECT applications.dkre_id, applications.activity_type_id,
+SELECT applications.dkre_id,
+applications.activity_type_id,
 applications.payment_balance_article_id,
 applications.source_id,
 SUM(applications.count) finance,

@@ -9,25 +9,6 @@
           </div>
         </div>
         <div class="row">
-          <!--          <div class="col-md-1">-->
-          <!--            <div class="card-panel__item">-->
-          <!--              <label for="region_or_dkre" class="label mb-2">По участкам:</label>-->
-          <!--              <div>-->
-          <!--                <label title="Участки/ДКРЭ" class="toggle">-->
-          <!--                  <input type="checkbox" id="region_or_dkre" hidden="hidden" v-model="region">-->
-          <!--                  <span class="toggle__box"></span>-->
-          <!--                </label>-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-          <!--          <div class="col-md-3" v-if="!region">-->
-          <!--            <div class="form-group">-->
-          <!--              <label for="dkre" class="text-muted"><strong>ДКРЭ:</strong></label>-->
-          <!--              <select class="form-control" id="dkre" multiple v-model="data.dkres">-->
-          <!--                <option :value="dkre.id" v-for="(dkre, key) in dkres" :key="key">{{ dkre.name }}</option>-->
-          <!--              </select>-->
-          <!--            </div>-->
-          <!--          </div>-->
           <div class="col-md-2">
             <div class="form-group">
               <label for="region" class="text-muted"><strong>Участок:</strong></label>
@@ -38,9 +19,9 @@
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="month" class="text-muted"><strong>Период:</strong></label>
-              <select class="form-control" id="month" multiple v-model="data.periods">
-                <option :value="month.id" v-for="(month, key) in months" :key="key">{{ month.name }}</option>
+              <label for="period" class="text-muted"><strong>Период:</strong></label>
+              <select class="form-control" id="period" multiple v-model="data.periods">
+                <option :value="period.id" v-for="(period, key) in periods" :key="key">{{ period.name }}</option>
               </select>
             </div>
           </div>
@@ -57,13 +38,30 @@
             <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
           </div>
         </div>
+        <div class="row mt-4">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="version_22" class="text-muted"><strong>Версия вовлечения:</strong></label>
+              <select class="form-control" id="version_22" v-model="data.version_involvement">
+                <option disabled value>Выберите один из вариантов</option>
+                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Бюджетные параметры</h4>
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Бюджетные параметры</h4>
+        <template v-if="dataForProps.periods.length === 1">
+          <button class="btn btn-secondary" v-if="!mode.edit" @click="mode.edit = true">редактировать</button>
+          <button class="btn btn-danger" v-if="mode.edit" @click="mode.edit = false">отменить</button>
+        </template>
+      </div>
       <div class="card-body">
-        <budget-table></budget-table>
+        <budget-table :mode="mode" :data="dataForProps"></budget-table>
       </div>
     </div>
   </main>
@@ -81,6 +79,7 @@
           regions: [],
           periods: [ 3 ],
           version: 2,
+          version_involvement: 1
         },
         isLoading: true,
         messages: [
@@ -89,6 +88,15 @@
           { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
         ],
         errors: [],
+        mode: {
+          edit: false
+        },
+        dataForProps: {
+          periods: [ 1 ],
+          regions: 1,
+          version: 1,
+          version_involvement: 1
+        }
       }
     },
     props: {
@@ -100,8 +108,10 @@
     methods: {
       confirm() {
         this.isLoading = true;
-        let { regions, periods, version } = this.data;
-        this.$store.dispatch('budget/updateBudget', { regions, periods, version }).then(res => {
+        this.mode.edit = false;
+        this.dataForProps = _.clone(this.data);
+
+        this.$store.dispatch('budget/updateBudget', this.data).then(res => {
           this.errors = res.errors;
           this.isLoading = false;
         });
@@ -115,8 +125,8 @@
         this.data.regions = this.initialData.regions.map(item => item.id);
         return this.initialData.regions;
       },
-      months() {
-        return this.initialData.months;
+      periods() {
+        return this.initialData.periods;
       },
       versions() {
         return this.initialData.versions;

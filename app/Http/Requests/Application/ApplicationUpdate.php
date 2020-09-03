@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Involvement;
+namespace App\Http\Requests\Application;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class InvolvementUpdate extends FormRequest
+class ApplicationUpdate extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -27,11 +27,13 @@ class InvolvementUpdate extends FormRequest
   {
     return [
       'period' => ['required', 'numeric'],
-      'version' => ['required'],
-      'region' => ['required'],
-      'regions' => ['required'],
-      'activity' => ['required'],
+      'periods' => ['required', 'array'],
       'article' => ['required'],
+      'version' => ['required'],
+      'version_budget' => ['required'],
+      'version_involvement' => ['required'],
+      'version_f22' => ['required'],
+      'version_shipment' => ['required'],
       'param' => ['required'],
       'value' => ['required'],
     ];
@@ -47,11 +49,14 @@ class InvolvementUpdate extends FormRequest
     return [
       'period.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
       'period.numeric' => 'Параметр <strong>Период</strong> должен быть числом',
-      'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
-      'region.required' => 'Параметр <strong>Регион</strong> обязателен для заполнения',
-      'regions.required' => 'Параметр <strong>Регионы для выборки</strong> обязателен для заполнения',
-      'activity.required' => 'Параметр <strong>Вид деятельности</strong> обязателен для заполнения',
+      'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
+      'periods.array' => 'Параметр <strong>Период</strong> должен быть массивом',
       'article.required' => 'Параметр <strong>Статья</strong> обязателен для заполнения',
+      'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
+      'version_budget.required' => 'Параметр <strong>Версия бюджета</strong> обязателен для заполнения',
+      'version_involvement.required' => 'Параметр <strong>Версия вовлечения</strong> обязателен для заполнения',
+      'version_f22.required' => 'Параметр <strong>Версия формы 22</strong> обязателен для заполнения',
+      'version_shipment.required' => 'Параметр <strong>Версия плана поставки</strong> обязателен для заполнения',
       'param.required' => 'Параметр <strong>Название параметра</strong> обязателен для заполнения',
       'value.required' => 'Параметр <strong>Значение</strong> обязателен для заполнения',
 

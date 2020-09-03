@@ -32,14 +32,15 @@ export default {
   directives: {
     'prevent-number': {
       bind(el, binding) {
-        const inputHandler = function(e) {
-          var ch = String.fromCharCode(e.which);
-          var re = new RegExp(/[A-Za-zА-Яа-яЁё]/);
-          if (ch.match(re)) {
+        const inputKeyPressHandler = function(e) {
+          const ch = String.fromCharCode(e.which);
+          const regexp = new RegExp(/[A-Za-zА-Яа-яЁё]/);
+          if (ch.match(regexp)) {
             e.preventDefault();
           }
         };
-        el.addEventListener('keypress', inputHandler);
+
+        el.addEventListener('keypress', inputKeyPressHandler);
       }
     }
   }

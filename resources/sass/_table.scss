@@ -27,10 +27,13 @@
       background-color: rgba(221, 235, 247, 1);
     }
 
+    /* Отступы */
+
+
     /* Событие по наведению */
     &:hover,
     & td:hover {
-      background-color: rgba(221, 235, 247, 0.5)!important;
+      background-color: rgba(221, 235, 247, 0.5) !important;
     }
 
     /* Строки без события */
@@ -46,10 +49,15 @@
     padding: 0.25rem;
     cursor: default;
 
+    &:first-child {
+      width: 150px;
+    }
+
     input {
       text-align: center;
       opacity: 1;
       color: #212529;
+      width: 100%;
 
       &[disabled] {
         background: none;
