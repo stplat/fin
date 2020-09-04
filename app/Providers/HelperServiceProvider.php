@@ -24,5 +24,6 @@ class HelperServiceProvider extends ServiceProvider
   public function boot()
   {
     require app_path('Helpers/FormatNumberHelper.php');
+    require app_path('Helpers/ParserInObjectExcelHelper.php');
   }
 }

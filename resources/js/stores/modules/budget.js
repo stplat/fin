@@ -26,7 +26,37 @@ export default {
     async editBudget({ commit }, payload) {
       const res = await axios.put(this.state.requestPath + '/budget', payload)
         .catch(err => console.log('In budget/editBudget -', err));
-      console.log(res)
+
+      if (!res.data.errors) {
+        commit('setBudget', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
+    /* Загружаем данные из файла */
+    async uploadBudget({ commit }, payload) {
+      const formData = new FormData();
+      for (let param in payload) {
+        if (payload.hasOwnProperty(param)) {
+          if (param === 'periods') {
+            for (let period in payload['periods']) {
+              formData.append('periods[' + period + ']', payload[param][period]);
+            }
+          }
+          if (param === 'regions') {
+            for (let region in payload['regions']) {
+              formData.append('regions[' + region + ']', payload[param][region]);
+            }
+          } else {
+            formData.append(param, payload[param]);
+          }
+        }
+      }
+
+      const res = await axios.post(this.state.requestPath + '/budget/upload', formData)
+        .catch(err => console.log('In budget/uploadBudget -', err));
+
       if (!res.data.errors) {
         commit('setBudget', res.data);
         return res.data;

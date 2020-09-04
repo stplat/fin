@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
 use App\Models\Involvement;
 use App\Services\BudgetService;
 use App\Http\Requests\Budget\BudgetAll;
 use App\Http\Requests\Budget\BudgetUpdate;
+use App\Http\Requests\Budget\BudgetUpload;
 
 class BudgetController extends Controller
 {
@@ -16,9 +18,14 @@ class BudgetController extends Controller
     $this->budgetService = $budgetService;
   }
 
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
   public function index()
   {
-//    dd($this->budgetService->getBudget([1], 2, 3)->toArray());
+//    dd($this->budgetService->getBudget([2], 10, 1)->toArray());
     return view('budget')->with([
       'data' => collect([
         'dkres' => $this->budgetService->getDkres(),
@@ -29,6 +36,12 @@ class BudgetController extends Controller
     ]);
   }
 
+  /**
+   * Все данные бюджета
+   *
+   * @param \App\Http\Requests\Budget\BudgetAll
+   * @return \Illuminate\Support\Collection
+   */
   public function all(BudgetAll $request)
   {
     $regions = $request->input('regions');
@@ -39,6 +52,12 @@ class BudgetController extends Controller
     return $this->budgetService->getBudget($periods, $version, $version_involvement, $regions);
   }
 
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param \App\Http\Requests\Budget\BudgetUpdate
+   * @return \Illuminate\Support\Collection
+   */
   public function update(BudgetUpdate $request)
   {
     $region = $request->input('region');
@@ -56,6 +75,27 @@ class BudgetController extends Controller
       ->update([
         $request->input('param') => $request->input('value')
       ]);
+
+    return $this->budgetService->getBudget($periods, $version, $version_involvement, $regions);
+  }
+
+  /**
+   * Обновляем данные из файла
+   *
+   * @param \App\Http\Requests\Budget\BudgetUpdate
+   * @return \Illuminate\Support\Collection
+   */
+  public function upload(BudgetUpload $request)
+  {
+    $file = $request->file('file');
+    $regions = $request->input('regions') ?: null;
+    $periods = is_array($request->input('periods')) ? $request->input('periods') : [$request->input('periods')];
+    $version = $request->input('version');
+    $version_involvement = $request->input('version_involvement');
+    $data = $this->budgetService->getUploadFile($file, $version);
+
+    Budget::where('version_id', $version)->delete();
+    Budget::insert($data);
 
     return $this->budgetService->getBudget($periods, $version, $version_involvement, $regions);
   }

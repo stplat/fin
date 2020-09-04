@@ -19,6 +19,7 @@ Vue.component('application', require('./components/Application').default);
 Vue.component('budget', require('./components/Budget').default);
 Vue.component('finance', require('./components/Finance').default);
 Vue.component('involvement', require('./components/Involvement').default);
+Vue.component('popup', require('./components/Popup').default);
 Vue.component('preloader', require('./components/Preloader').default);
 Vue.component('shipment', require('./components/Shipment').default);
 

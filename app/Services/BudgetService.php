@@ -8,6 +8,7 @@ use App\Models\Dkre;
 use App\Models\Period;
 use App\Models\Budget;
 use App\Models\Version;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class BudgetService
 {
@@ -76,6 +77,7 @@ class BudgetService
       involvements.involve_turnover,
       involvements.prepayment_current,
       involvements.prepayment_next
+      ORDER BY budgets.dkre_id, budgets.activity_type_id
     ");
 
     return collect($budget)->groupBy('dkre_id')->map(function ($item, $key) {
@@ -195,5 +197,22 @@ class BudgetService
   public function getVersions()
   {
     return Version::all();
+  }
+
+  /**
+   * Парсим загруженный файл
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getUploadFile($file, $version)
+  {
+    $excel = IOFactory::load($file);
+
+    $maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
+    $data = $excel->getActiveSheet()->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
+
+    return ParserInObjectExcelHelper($data, $version);
   }
 }

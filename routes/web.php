@@ -21,9 +21,10 @@ Route::middleware('auth')->group(function () {
   Route::get('/involvement', 'InvolvementController@index')->name('involvement.index');
   Route::put('/involvement', 'InvolvementController@update')->name('involvement.update');
 
-  Route::get('/budget/all', 'BudgetController@all')->name('budget.all');
   Route::get('/budget', 'BudgetController@index')->name('budget.index');
   Route::put('/budget', 'BudgetController@update')->name('budget.update');
+  Route::get('/budget/all', 'BudgetController@all')->name('budget.all');
+  Route::post('/budget/upload', 'BudgetController@upload')->name('budget.upload');
 
   Route::get('/shipment/all', 'ShipmentController@all')->name('shipment.all');
   Route::resource('shipment', 'ShipmentController')->only('index');

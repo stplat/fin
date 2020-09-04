@@ -44,7 +44,8 @@
           <td>{{ budget.total['prepayment_current'] | roundHelper }}</td>
           <td>{{ budget.total['prepayment_next'] | roundHelper }}</td>
           <td>{{ budget.total['finance_material'] | roundHelper }}</td>
-          <td>{{ addWithEmptyHelper([ budget.total.article['63310'], budget.total.article['63320'], budget.total.article['63330'],
+          <td>{{ addWithEmptyHelper([ budget.total.article['63310'], budget.total.article['63320'],
+            budget.total.article['63330'],
             budget.total.article['63340'] ]) |
             roundHelper }}
           </td>
@@ -69,7 +70,9 @@
                      :disabled="!mode.edit"
                      name="involve_by_prepayment_last_year"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !budget['dkre_id'] ? activity['involve_last'] : '' | roundHelper }}
+          </td>
           <td><input :value="activity['involve_turnover'] | roundHelper"
                      v-if="budget['dkre_id']"
                      :data-region="budget['dkre_id']"
@@ -78,7 +81,9 @@
                      :disabled="!mode.edit"
                      name="involve_by_turnover"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !budget['dkre_id'] ? activity['involve_turnover'] : '' | roundHelper }}
+          </td>
           <td><input :value="activity['involve_current'] | roundHelper"
                      v-if="budget['dkre_id']"
                      :data-region="budget['dkre_id']"
@@ -87,7 +92,9 @@
                      :disabled="!mode.edit"
                      name="involve_by_prepayment_current_year"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !budget['dkre_id'] ? activity['involve_current'] : '' | roundHelper }}
+          </td>
           <td>{{ addWithEmptyHelper([ activity['prepayment_current'], activity['prepayment_next'] ]) |
             roundHelper }}
           </td>
@@ -99,7 +106,9 @@
                      :disabled="!mode.edit"
                      name="prepayment_current_year"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !budget['dkre_id'] ? activity['prepayment_current'] : '' | roundHelper }}
+          </td>
           <td><input :value="activity['prepayment_next'] | roundHelper"
                      v-if="budget['dkre_id']"
                      :data-region="budget['dkre_id']"
@@ -108,7 +117,9 @@
                      :disabled="!mode.edit"
                      name="prepayment_next_year"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !budget['dkre_id'] ? activity['prepayment_next'] : '' | roundHelper }}
+          </td>
           <td>{{ activity['finance_material'] | roundHelper }}</td>
           <td>{{ addWithEmptyHelper([ activity.article['63310'], activity.article['63320'], activity.article['63330'],
             activity.article['63340'] ]) |
@@ -161,8 +172,6 @@
             value: e.target.value ? e.target.value.replace(',', '.') : 0
           }, this.data);
 
-          console.log(payload)
-
           this.$store.dispatch('budget/editBudget', payload).then(res => {
             this.errors = res.errors;
             this.isLoading = false;
@@ -171,7 +180,7 @@
 
       },
       validation(str) {
-        const regexp = /^\d+,?\d{0,3}$/i;
+        const regexp = /^-?\d*[,.]?\d{0,3}$/i;
         let result = true;
         this.errors = [];
 

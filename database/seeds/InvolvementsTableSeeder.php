@@ -32,11 +32,11 @@ class InvolvementsTableSeeder extends Seeder
           $arr['activity_type_id'] = $activity;
           $arr['payment_balance_article_general'] = 63400;
           $arr['version_id'] = 1;
-          $arr['involve_by_prepayment_last_year'] = 1000;
-          $arr['involve_by_prepayment_current_year'] = 200;
-          $arr['involve_by_turnover'] = 100;
-          $arr['prepayment_current_year'] = 30;
-          $arr['prepayment_next_year'] = 10;
+          $arr['involve_by_prepayment_last_year'] = 0;
+          $arr['involve_by_prepayment_current_year'] = 0;
+          $arr['involve_by_turnover'] = 0;
+          $arr['prepayment_current_year'] = 0;
+          $arr['prepayment_next_year'] = 0;
           $arr['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
           $arr['updated_at'] = Carbon::now()->format('Y-m-d H:i:s');
 

@@ -1,5 +1,6 @@
 <template>
   <main>
+    <alert className="success" v-if="result" v-html="result"></alert>
     <div class="card mb-1">
       <h4 class="card-header">Выбор параметров</h4>
       <div class="card-body">
@@ -34,8 +35,8 @@
               </select>
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
-            <button class="btn btn-secondary float-right">Загрузить</button>
-            <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
+            <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
+            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
           </div>
         </div>
         <div class="row mt-4">
@@ -64,39 +65,45 @@
         <budget-table :mode="mode" :data="dataForProps"></budget-table>
       </div>
     </div>
+    <budget-upload @close="modals.upload = false"
+                   v-if="modals.upload"
+                   :initial-data="data"
+                   :versions="versions"
+                   @setResult="setResult"></budget-upload>
   </main>
 </template>
 <script>
   import BudgetTable from "./BudgetTable";
+  import BudgetUpload from "./BudgetUpload";
 
   export default {
     components: {
-      BudgetTable
+      BudgetTable,
+      BudgetUpload
     },
     data() {
       return {
         data: {
           regions: [],
-          periods: [ 3 ],
-          version: 2,
+          periods: [ 6 ],
+          version: 10,
           version_involvement: 1
         },
+        modals: {
+          upload: false
+        },
         isLoading: true,
-        messages: [
-          { 'login.required': 'Поле <strong>Логин</strong> обязательно для заполнения' },
-          { 'password.required': 'Поле <strong>Пароль</strong> обязательно для заполнения' },
-          { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
-        ],
         errors: [],
         mode: {
           edit: false
         },
         dataForProps: {
-          periods: [ 1 ],
-          regions: 1,
-          version: 1,
-          version_involvement: 1
-        }
+          periods: [],
+          regions: null,
+          version: null,
+          version_involvement: null
+        },
+        result: ''
       }
     },
     props: {
@@ -115,6 +122,10 @@
           this.errors = res.errors;
           this.isLoading = false;
         });
+      },
+      setResult(str) {
+        this.result = str;
+        setTimeout(() => this.result = '', 3000);
       }
     },
     computed: {

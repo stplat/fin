@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Budget extends Model
 {
+
+  protected $fillable = [
+    'period_id', 'activity_type_id', 'payment_balance_article_general', 'dkre_id', 'version_id',
+    'count', 'created_at', 'updated_at'
+  ];
+
   public function period()
   {
     return $this->belongsTo(Period::class);
