@@ -34,8 +34,8 @@
               </select>
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
-            <button class="btn btn-secondary float-right">Загрузить</button>
-            <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
+            <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
+            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
           </div>
         </div>
       </div>
@@ -46,18 +46,25 @@
         <h4 class="mb-0">Вовлечение</h4>
       </div>
       <div class="card-body">
-        <shipment-table :data="{ currentPeriods, currentVersion, currentRegions }"></shipment-table>
+        <shipment-table :data="dataForProps"></shipment-table>
       </div>
     </div>
+    <shipment-upload @close="modals.upload = false"
+                   v-if="modals.upload"
+                   :initial-data="data"
+                   :versions="versions"
+                   @setResult="setResult"></shipment-upload>
   </main>
 </template>
 
 <script>
   import ShipmentTable from "./ShipmentTable";
+  import ShipmentUpload from "./ShipmentUpload";
 
   export default {
     components: {
-      ShipmentTable
+      ShipmentTable,
+      ShipmentUpload
     },
     data() {
       return {
@@ -66,6 +73,9 @@
           periods: [ 3 ],
           version: 1,
         },
+        modals: {
+          upload: false
+        },
         isLoading: true,
         messages: [
           { 'login.required': 'Поле <strong>Логин</strong> обязательно для заполнения' },
@@ -73,9 +83,12 @@
           { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
         ],
         errors: [],
-        currentPeriods: [],
-        currentRegions: [],
-        currentVersion: '',
+        dataForProps: {
+          periods: [],
+          regions: [],
+          version: null,
+        },
+        result: ''
       }
     },
     props: {
@@ -90,14 +103,16 @@
       },
       confirm() {
         this.isLoading = true;
-        let { regions, periods, version } = this.data;
-        this.currentPeriods = periods;
-        this.currentVersion = version;
-        this.currentRegions = regions;
-        this.$store.dispatch('shipment/updateShipments', { regions, periods, version }).then(res => {
+        this.dataForProps = _.clone(this.data);
+
+        this.$store.dispatch('shipment/updateShipments', this.data).then(res => {
           this.errors = res.errors;
           this.isLoading = false;
         });
+      },
+      setResult(str) {
+        this.result = str;
+        setTimeout(() => this.result = '', 3000);
       }
     },
     computed: {

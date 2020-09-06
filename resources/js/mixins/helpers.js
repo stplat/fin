@@ -12,7 +12,7 @@ export default {
       const month = date.getMonth() < 9 ? '0' + Number(date.getMonth() + 1) : Number(date.getDate() + 1);
       const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
 
-      return `${year}-${month}-${day}`;
+      return `${ year }-${ month }-${ day }`;
     },
 
     /* Формат времени */
@@ -21,7 +21,7 @@ export default {
       const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
       const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
 
-      return `${hours}:${minutes}`;
+      return `${ hours }:${ minutes }`;
     }
   },
   filters: {
@@ -47,8 +47,6 @@ export default {
 };
 
 export function serialize(array, name) {
-  return array.reduce((item, carry) => {
-    return `${String(item)}&${name}[]=${String(carry)}`;
-  }, '').replace("&", "");
+  return `${ name }[]=${ array.join(',') }`;
 }
 
