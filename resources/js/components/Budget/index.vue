@@ -85,8 +85,8 @@
       return {
         data: {
           regions: [],
-          periods: [ 6 ],
-          version: 10,
+          periods: [ 14 ],
+          version: 11,
           version_involvement: 1
         },
         modals: {

@@ -47,6 +47,8 @@ export default {
 };
 
 export function serialize(array, name) {
-  return `${ name }[]=${ array.join(',') }`;
+  return array.reduce((item, carry) => {
+    return `${String(item)}&${name}[]=${String(carry)}`;
+  }, '').replace("&", "");
 }
 

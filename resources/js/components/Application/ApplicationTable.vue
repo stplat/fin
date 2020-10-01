@@ -133,7 +133,7 @@
 
       },
       validation(str) {
-        const regexp = /^\d+,?\d{0,3}$/i;
+        const regexp = /^-?\d*[,.]?\d{0,3}$/i;
         let result = true;
         this.errors = [];
 

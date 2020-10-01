@@ -56,7 +56,7 @@
           <td>{{ article.name }}</td>
           <td>{{ addWithEmptyHelper([ article.activity['01']['1'], article.activity['01']['2'], article.activity['21']['1'],
             article.activity['21']['2'], article.activity['61']['1'], article.activity['61']['2'],
-            article.activity['61']['2'], article.activity['81']['1'] ]) | roundHelper }}
+            article.activity['81']['1'], article.activity['81']['2'] ]) | roundHelper }}
           </td>
           <td>{{ addWithEmptyHelper([ article.activity['01']['1'], article.activity['01']['2'] ]) | roundHelper }}</td>
           <td>{{ addWithEmptyHelper([ article.activity['21']['1'], article.activity['21']['2'] ]) | roundHelper }}</td>

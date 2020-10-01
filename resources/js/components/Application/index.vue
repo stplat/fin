@@ -110,7 +110,7 @@
           version_budget: 2,
           version_involvement: 2,
           version_f22: 2,
-          version_shipment: 2,
+          version_shipment: 1,
         },
         isLoading: true,
         messages: [
@@ -129,7 +129,7 @@
           version_budget: 2,
           version_involvement: 2,
           version_f22: 2,
-          version_shipment: 2,
+          version_shipment: 1,
         }
       }
     },
