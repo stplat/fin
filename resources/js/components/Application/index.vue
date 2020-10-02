@@ -35,8 +35,8 @@
               </select>
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
-            <button class="btn btn-secondary float-right">Загрузить</button>
-            <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
+            <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
+            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
           </div>
         </div>
         <div class="row mt-4">
@@ -92,25 +92,35 @@
         <application-table :mode="mode" :data="dataForProps"></application-table>
       </div>
     </div>
+    <application-upload @close="modals.upload = false"
+                   v-if="modals.upload"
+                   :initial-data="data"
+                   :versions="versions"
+                   @setResult="setResult"></application-upload>
   </main>
 </template>
 <script>
   import ApplicationTable from "./ApplicationTable";
+  import ApplicationUpload from "./ApplicationUpload";
 
   export default {
     components: {
-      ApplicationTable
+      ApplicationTable,
+      ApplicationUpload
     },
     data() {
       return {
         data: {
-          periods: [ 1 ],
+          periods: [ 3 ],
           article: 1,
           version: 1,
-          version_budget: 2,
+          version_budget: 11,
           version_involvement: 2,
           version_f22: 2,
           version_shipment: 1,
+        },
+        modals: {
+          upload: false
         },
         isLoading: true,
         messages: [
@@ -149,6 +159,10 @@
           this.errors = res.errors;
           this.isLoading = false;
         });
+      },
+      setResult(str) {
+        this.result = str;
+        setTimeout(() => this.result = '', 3000);
       }
     },
     computed: {

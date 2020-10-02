@@ -26,8 +26,8 @@
               </select>
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
-            <button class="btn btn-secondary float-right">Загрузить</button>
-            <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
+            <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
+            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
           </div>
         </div>
       </div>
@@ -39,20 +39,30 @@
         <finance-table></finance-table>
       </div>
     </div>
+    <finance-upload @close="modals.upload = false"
+                        v-if="modals.upload"
+                        :initial-data="data"
+                        :versions="versions"
+                        @setResult="setResult"></finance-upload>
   </main>
 </template>
 <script>
   import FinanceTable from "./FinanceTable";
+  import FinanceUpload from "./FinanceUpload";
 
   export default {
     components: {
-      FinanceTable
+      FinanceTable,
+      FinanceUpload
     },
     data() {
       return {
         data: {
           periods: [ 1 ],
-          version: 2,
+          version: 11,
+        },
+        modals: {
+          upload: false
         },
         isLoading: true,
         messages: [
@@ -77,6 +87,10 @@
           this.errors = res.errors;
           this.isLoading = false;
         });
+      },
+      setResult(str) {
+        this.result = str;
+        setTimeout(() => this.result = '', 3000);
       }
     },
     computed: {

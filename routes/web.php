@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
   Route::get('/application/all', 'ApplicationController@all')->name('application.all');
   Route::get('/application', 'ApplicationController@index')->name('application.index');
   Route::put('/application', 'ApplicationController@update')->name('application.update');
-
+  Route::post('/application/upload', 'ApplicationController@upload')->name('application.upload');
 
   /* Таблицы vue-table-2 (экспорт) */
 //  Route::post('/table/export', 'TableController@export')->name('table-export');

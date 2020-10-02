@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Services\ApplicationService;
 use App\Http\Requests\Application\ApplicationAll;
 use App\Http\Requests\Application\ApplicationUpdate;
+use App\Http\Requests\Application\ApplicationUpload;
 
 class ApplicationController extends Controller
 {
@@ -61,6 +62,30 @@ class ApplicationController extends Controller
       ->update([
         $request->input('param') => $request->input('value')
       ]);
+
+    return $this->applicationService->getApplications($periods, $article, $version, $version_budget, $version_involvement, $version_f22, $version_shipment);
+  }
+
+  /**
+   * Обновляем данные из файла
+   *
+   * @param \App\Http\Requests\Budget\BudgetUpdate
+   * @return \Illuminate\Support\Collection
+   */
+  public function upload(ApplicationUpload $request)
+  {
+    $file = $request->file('file');
+    $periods = $request->input('periods');
+    $article = $request->input('article');
+    $version = $request->input('version');
+    $version_budget = $request->input('version_budget');
+    $version_involvement = $request->input('version_involvement');
+    $version_f22 = $request->input('version_f22');
+    $version_shipment = $request->input('version_shipment');
+    $data = $this->applicationService->getUploadFile($file, $version);
+
+    Application::where('version_id', $version)->delete();
+    Application::insert($data);
 
     return $this->applicationService->getApplications($periods, $article, $version, $version_budget, $version_involvement, $version_f22, $version_shipment);
   }
