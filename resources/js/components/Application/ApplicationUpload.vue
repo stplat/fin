@@ -4,7 +4,7 @@
     <template v-slot:body>
       <div class="row">
         <div class="col-md-12">
-          <alert :className="'info'">Ранее загруженные данные по версии - <strong>{{ version }}</strong> будут удалены!
+          <alert :className="'info'">Ранее загруженные данные за период - <strong>{{ period }}</strong> будут удалены!
           </alert>
           <alert v-for="(error, i) in errors" :key="i" v-html="error"/>
         </div>
@@ -44,7 +44,6 @@
             name: '',
             file: ''
           },
-          version: '',
           article: null,
           periods: [],
           version_budget: null,
@@ -63,7 +62,7 @@
         type: Object,
         required: true
       },
-      versions: {
+      periods: {
         type: Array,
         required: true
       }
@@ -76,8 +75,8 @@
       this.data.version_involvement = this.initialData.version_involvement;
     },
     computed: {
-      version() {
-        return this.versions.filter(item => item.id === this.data.version)[0].name;
+      period() {
+        return this.periods.filter(item => item.id === this.data.periods[0])[0].name;
       }
     },
     methods: {
@@ -107,14 +106,13 @@
 
       /* Загрузка перевозчика */
       upload() {
-        let { upload, version, article, periods, version_budget, version_f22, version_involvement, version_shipment } = this.data;
+        let { upload, article, periods, version_budget, version_f22, version_involvement, version_shipment } = this.data;
 
         if (this.validate(upload.file)) {
           this.isLoading = true;
 
           this.$store.dispatch('application/uploadApplication', {
             file: upload.file,
-            version,
             article,
             periods,
             version_budget,

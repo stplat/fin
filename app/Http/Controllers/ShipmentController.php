@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Involvement;
+use App\Models\Shipment;
 use App\Services\ShipmentService;
 use App\Http\Requests\Shipment\ShipmentAll;
+use App\Http\Requests\Shipment\ShipmentUpload;
 
 class ShipmentController extends Controller
 {
@@ -33,6 +34,26 @@ class ShipmentController extends Controller
     $regions = $request->input('regions') ?: null;
     $periods = $request->input('periods');
     $version = $request->input('version');
+
+    return $this->shipmentService->getShipments($periods, $version, $regions);
+  }
+
+  /**
+   * Обновляем данные из файла
+   *
+   * @param \App\Http\Requests\Budget\BudgetUpdate
+   * @return \Illuminate\Support\Collection
+   */
+  public function upload(ShipmentUpload $request)
+  {
+    $file = $request->file('file');
+    $regions = $request->input('regions') ?: null;
+    $periods = is_array($request->input('periods')) ? $request->input('periods') : [$request->input('periods')];
+    $version = $request->input('version');
+    $data = $this->shipmentService->getUploadFile($file, $version);
+
+    Shipment::where('version_id', $version)->delete();
+    Shipment::insert($data);
 
     return $this->shipmentService->getShipments($periods, $version, $regions);
   }

@@ -8,6 +8,7 @@ use App\Models\Dkre;
 use App\Models\Period;
 use App\Models\Finance;
 use App\Models\Version;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class FinanceService
 {
@@ -103,5 +104,22 @@ class FinanceService
   public function getVersions()
   {
     return Version::all();
+  }
+
+  /**
+   * Парсим загруженный файл
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   */
+  public function getUploadFile($file, $version)
+  {
+    $excel = IOFactory::load($file);
+
+    $maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
+    $data = $excel->getActiveSheet()->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
+
+    return ParserInObjectExcelHelper($data, $version);
   }
 }

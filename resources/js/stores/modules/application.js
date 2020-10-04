@@ -8,9 +8,8 @@ export default {
   actions: {
     /* Получаем бюджетные параметры */
     async updateApplications({ commit }, payload) {
-      let { periods, article, version, version_budget, version_involvement, version_f22, version_shipment } = payload;
-      console.log(payload)
-      const req = `?${serialize(periods, 'periods')}&article=${article}&version=${version}&version_budget=${version_budget}
+      let { periods, article, version_budget, version_involvement, version_f22, version_shipment } = payload;
+      const req = `?${serialize(periods, 'periods')}&article=${article}&version_budget=${version_budget}
       &version_involvement=${version_involvement}&version_f22=${version_f22}&version_shipment=${version_shipment}`;
 
       const res = await axios.get(this.state.requestPath + '/application/all' + req)
@@ -25,7 +24,7 @@ export default {
     },
     /* Редактируем вовлечение */
     async editApplication({ commit }, payload) {
-      let { periods, article, version, versionBudget, versionInvolvement, versionF22, versionShipment, param, value } = payload;
+      let { periods, article, versionBudget, versionInvolvement, versionF22, versionShipment, param, value } = payload;
       const res = await axios.put(this.state.requestPath + '/application', payload)
         .catch(err => console.log('In application/editApplication -', err));
 

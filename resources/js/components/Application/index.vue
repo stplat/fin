@@ -1,5 +1,6 @@
 <template>
   <main>
+    <alert className="success" v-if="result" v-html="result"></alert>
     <div class="card mb-1">
       <h4 class="card-header">Выбор параметров</h4>
       <div class="card-body">
@@ -17,7 +18,7 @@
               </select>
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="form-group">
               <label for="article" class="text-muted"><strong>Статья ПБ:</strong></label>
               <select class="form-control" id="article" v-model="data.article">
@@ -25,19 +26,19 @@
                 <option :value="article.id" v-for="(article, key) in articles" :key="key">{{ article.name }}</option>
               </select>
             </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="version" class="text-muted"><strong>Версия:</strong></label>
-              <select class="form-control" id="version" v-model="data.version">
-                <option disabled value>Выберите один из вариантов</option>
-                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>
-              </select>
-            </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
             <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
             <button class="btn btn-secondary float-right mr-1">Экспорт</button>
           </div>
+<!--          <div class="col-md-3">-->
+<!--            <div class="form-group">-->
+<!--              <label for="version" class="text-muted"><strong>Версия:</strong></label>-->
+<!--              <select class="form-control" id="version" v-model="data.version">-->
+<!--                <option disabled value>Выберите один из вариантов</option>-->
+<!--                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>-->
+<!--              </select>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
         <div class="row mt-4">
           <div class="col-md-2">
@@ -95,7 +96,7 @@
     <application-upload @close="modals.upload = false"
                    v-if="modals.upload"
                    :initial-data="data"
-                   :versions="versions"
+                   :periods="periods"
                    @setResult="setResult"></application-upload>
   </main>
 </template>
@@ -113,10 +114,9 @@
         data: {
           periods: [ 3 ],
           article: 1,
-          version: 1,
           version_budget: 11,
           version_involvement: 2,
-          version_f22: 2,
+          version_f22: 11,
           version_shipment: 1,
         },
         modals: {
@@ -129,13 +129,13 @@
           { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
         ],
         errors: [],
+        result: '',
         mode: {
           edit: false
         },
         dataForProps: {
           periods: [ 1 ],
           article: 1,
-          version: 1,
           version_budget: 2,
           version_involvement: 2,
           version_f22: 2,

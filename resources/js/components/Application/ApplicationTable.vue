@@ -25,7 +25,7 @@
         <th>СЗ</th>
       </tr>
       <template v-for="app in applications">
-        <tr class="strong bg">
+        <tr class="strong bg" v-if="app.total.hasOwnProperty('1')">
           <td class="text-left">{{ app.dkre }}</td>
           <td>{{ addWithEmptyHelper([ app.total['1'].finance, app.total['2'].finance, app.total['3'].finance ]) |
             roundHelper}}
@@ -48,29 +48,38 @@
             activity.source['3'].finance ]) | roundHelper}}
           </td>
           <td><input :value="activity.source['1'].finance | roundHelper"
+                     v-if="app['dkre_id']"
                      :data-region="app['dkre_id']"
                      :data-source="1"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
                      name="count"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !app['dkre_id'] ? activity.source['1'].finance : '' | roundHelper }}
+          </td>
           <td><input :value="activity.source['2'].finance | roundHelper"
+                     v-if="app['dkre_id']"
                      :data-region="app['dkre_id']"
                      :data-source="2"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
                      name="count"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !app['dkre_id'] ? activity.source['2'].finance : '' | roundHelper }}
+          </td>
           <td><input :value="activity.source['3'].finance | roundHelper"
+                     v-if="app['dkre_id']"
                      :data-region="app['dkre_id']"
                      :data-source="3"
                      :data-activity="activity['activity_id']"
                      :disabled="!mode.edit"
                      name="count"
                      v-prevent-number=""
-                     @change="changeData"></td>
+                     @change="changeData">
+            {{ !app['dkre_id'] ? activity.source['3'].finance : '' | roundHelper }}
+          </td>
           <td class="strong bg">{{ addWithEmptyHelper([ activity.source['1'].f22, activity.source['2'].f22,
             activity.source['3'].f22 ]) | roundHelper}}
           </td>

@@ -204,7 +204,31 @@ class ApplicationService
           ]);
         })
       ]);
-    })->values();
+    })->put('', collect([
+      'dkre' => 'ИТОГО',
+      'activity' => collect($application)->groupBy('activity_type_id')->map(function ($item) {
+        return collect([
+          'name' => count($item) ? $item[0]->activity : '',
+          'activity_id' => count($item) ? $item[0]->activity_type_id : '',
+          'source' => $item->groupBy('source_id')->map(function ($item, $key) {
+            return collect([
+              'f22' => round($item[0]->f22, 3),
+              'finance' => round($item->sum('finance'), 3),
+              'budget' => round($item->sum('budget'), 3),
+              'shipment' => round($item->sum('shipment'), 3),
+            ]);
+          })
+        ]);
+      })->values(),
+      'total' => collect($application)->groupBy('source_id')->map(function ($item, $key) {
+        return collect([
+          'f22' => round($item[0]->f22, 3),
+          'budget' => round($item->sum('budget'), 3),
+          'finance' => round($item->sum('finance'), 3),
+          'shipment' => round($item->sum('shipment'), 3),
+        ]);
+      })
+    ]))->values();
 
     return $application;
 
@@ -278,13 +302,13 @@ class ApplicationService
    * @param $version integer
    * @return \Illuminate\Support\Collection
    */
-  public function getUploadFile($file, $version)
+  public function getUploadFile($file, $period)
   {
     $excel = IOFactory::load($file);
 
     $maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
     $data = $excel->getActiveSheet()->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
 
-    return ParserInObjectExcelHelper($data, $version);
+    return ParserInObjectExcelHelper($data, null, $period);
   }
 }

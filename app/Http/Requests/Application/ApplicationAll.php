@@ -28,7 +28,6 @@ class ApplicationAll extends FormRequest
     return [
       'periods' => ['required', 'array'],
       'article' => ['required'],
-      'version' => ['required'],
       'version_budget' => ['required'],
       'version_involvement' => ['required'],
       'version_f22' => ['required'],
@@ -47,7 +46,6 @@ class ApplicationAll extends FormRequest
       'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
       'periods.array' => 'Параметр <strong>Период</strong> должен быть массивом',
       'article.required' => 'Параметр <strong>Статья</strong> обязателен для заполнения',
-      'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
       'version_budget.required' => 'Параметр <strong>Версия бюджета</strong> обязателен для заполнения',
       'version_involvement.required' => 'Параметр <strong>Версия вовлечения</strong> обязателен для заполнения',
       'version_f22.required' => 'Параметр <strong>Версия формы 22</strong> обязателен для заполнения',

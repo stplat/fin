@@ -28,9 +28,11 @@ Route::middleware('auth')->group(function () {
 
   Route::get('/shipment/all', 'ShipmentController@all')->name('shipment.all');
   Route::resource('shipment', 'ShipmentController')->only('index');
+  Route::post('/shipment/upload', 'ShipmentController@upload')->name('shipment.upload');
 
   Route::get('/finance/all', 'FinanceController@all')->name('finance.all');
   Route::resource('finance', 'FinanceController')->only('index');
+  Route::post('/finance/upload', 'FinanceController@upload')->name('finance.upload');
 
   Route::get('/application/all', 'ApplicationController@all')->name('application.all');
   Route::get('/application', 'ApplicationController@index')->name('application.index');

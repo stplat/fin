@@ -1,5 +1,6 @@
 <template>
   <main>
+    <alert className="success" v-if="result" v-html="result"></alert>
     <div class="card mb-1">
       <h4 class="card-header">Выбор параметров</h4>
       <div class="card-body">
@@ -71,7 +72,7 @@
         data: {
           regions: [],
           periods: [ 3 ],
-          version: 1,
+          version: 11,
         },
         modals: {
           upload: false

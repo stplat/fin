@@ -223,6 +223,13 @@ class PaymentBalanceArticlesTableSeeder extends Seeder
         'name' => 'подшипники локомотивные',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+      ],
+      [
+        'general' => '63400',
+        'code' => '63497',
+        'name' => 'подшипники локомотивные',
+        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+        'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
       ]
     ]);
 

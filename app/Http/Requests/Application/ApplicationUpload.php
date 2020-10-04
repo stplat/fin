@@ -28,12 +28,6 @@ class ApplicationUpload extends FormRequest
     return [
       'file' => ['required'],
       'periods' => ['required'],
-      'article' => ['required'],
-      'version' => ['required'],
-      'version_budget' => ['required'],
-      'version_involvement' => ['required'],
-      'version_f22' => ['required'],
-      'version_shipment' => ['required'],
     ];
   }
 
@@ -47,8 +41,6 @@ class ApplicationUpload extends FormRequest
     return [
       'file.required' => 'Параметр <strong>Файл</strong> обязателен для заполнения',
       'periods.required' => 'Параметр <strong>Период</strong> обязателен для заполнения',
-      'version.required' => 'Параметр <strong>Версия</strong> обязателен для заполнения',
-      'version_involvement.required' => 'Параметр <strong>Версия вовлечения</strong> обязателен для заполнения',
     ];
   }
 

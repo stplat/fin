@@ -1,5 +1,6 @@
 <template>
   <main>
+    <alert className="success" v-if="result" v-html="result"></alert>
     <div class="card mb-1">
       <h4 class="card-header">Выбор параметров</h4>
       <div class="card-body">
@@ -34,7 +35,7 @@
     </div>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Бюджетные параметры</h4>
+      <h4 class="card-header">Форма №22</h4>
       <div class="card-body">
         <finance-table></finance-table>
       </div>
@@ -58,7 +59,7 @@
     data() {
       return {
         data: {
-          periods: [ 1 ],
+          periods: [ 3 ],
           version: 11,
         },
         modals: {
@@ -71,6 +72,7 @@
           { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
         ],
         errors: [],
+        result: ''
       }
     },
     props: {

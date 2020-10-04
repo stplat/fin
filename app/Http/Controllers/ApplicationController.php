@@ -19,7 +19,7 @@ class ApplicationController extends Controller
 
   public function index()
   {
-//    dd($this->applicationService->getApplications([1, 2], 1, 1, 2, 2, 2, 2)->toArray());
+//    dd($this->applicationService->getApplications([3], 1, 1, 11, 1, 11, 2)->toArray());
     return view('application')->with([
       'data' => collect([
         'periods' => $this->applicationService->getPeriods(),
@@ -33,7 +33,7 @@ class ApplicationController extends Controller
   {
     $periods = $request->input('periods');
     $article = $request->input('article');
-    $version = $request->input('version');
+    $version = 1;
     $version_budget = $request->input('version_budget');
     $version_involvement = $request->input('version_involvement');
     $version_f22 = $request->input('version_f22');
@@ -47,7 +47,7 @@ class ApplicationController extends Controller
     $period = $request->input('period');
     $periods = $request->input('periods');
     $article = $request->input('article');
-    $version = $request->input('version');
+    $version = 1;
     $version_budget = $request->input('version_budget');
     $version_involvement = $request->input('version_involvement');
     $version_f22 = $request->input('version_f22');
@@ -77,14 +77,14 @@ class ApplicationController extends Controller
     $file = $request->file('file');
     $periods = $request->input('periods');
     $article = $request->input('article');
-    $version = $request->input('version');
+    $version = 1;
     $version_budget = $request->input('version_budget');
     $version_involvement = $request->input('version_involvement');
     $version_f22 = $request->input('version_f22');
     $version_shipment = $request->input('version_shipment');
-    $data = $this->applicationService->getUploadFile($file, $version);
+    $data = $this->applicationService->getUploadFile($file, $periods[0]);
 
-    Application::where('version_id', $version)->delete();
+    Application::where('period_id', $periods[0])->delete();
     Application::insert($data);
 
     return $this->applicationService->getApplications($periods, $article, $version, $version_budget, $version_involvement, $version_f22, $version_shipment);

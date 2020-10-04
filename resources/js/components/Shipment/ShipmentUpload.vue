@@ -46,7 +46,6 @@
             file: ''
           },
           periods: [],
-          version_involvement: null,
           regions: null
         },
         show: false,
@@ -65,11 +64,9 @@
       }
     },
     mounted() {
-      this.data.period = this.initialData.periods[0];
       this.data.version = this.initialData.version;
       this.data.periods = this.initialData.periods;
       this.data.regions = this.initialData.regions;
-      this.data.version_involvement = this.initialData.version_involvement;
     },
     computed: {
       period() {
@@ -106,12 +103,12 @@
 
       /* Загрузка перевозчика */
       upload() {
-        let { upload, version, regions, periods, version_involvement } = this.data;
+        let { upload, version, regions, periods } = this.data;
 
         if (this.validate(upload.file)) {
           this.isLoading = true;
 
-          this.$store.dispatch('budget/uploadBudget', { file: upload.file, version, regions, periods, version_involvement })
+          this.$store.dispatch('shipment/uploadShipments', { file: upload.file, version, regions, periods })
             .then(res => {
               this.errors = res.errors;
               this.isLoading = false;

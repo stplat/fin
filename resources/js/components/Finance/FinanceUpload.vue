@@ -45,9 +45,7 @@
             name: '',
             file: ''
           },
-          periods: [],
-          version_involvement: null,
-          regions: null
+          periods: []
         },
         show: false,
         isLoading: false,
@@ -65,11 +63,8 @@
       }
     },
     mounted() {
-      this.data.period = this.initialData.periods[0];
       this.data.version = this.initialData.version;
       this.data.periods = this.initialData.periods;
-      this.data.regions = this.initialData.regions;
-      this.data.version_involvement = this.initialData.version_involvement;
     },
     computed: {
       period() {
@@ -88,7 +83,7 @@
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           'application/excel',
           'application/vnd.ms-excel',
-          'application/vnd.msexcel',
+          'application/vnd.msexcel'
         ].findIndex(item => item === file.type);
 
         file === '' ? this.errors.push('Поле <strong>Файл для импорта</strong> обязательно для заполнения') :
@@ -106,25 +101,25 @@
 
       /* Загрузка перевозчика */
       upload() {
-        let { upload, version, regions, periods, version_involvement } = this.data;
+        let { upload, version, periods } = this.data;
 
         if (this.validate(upload.file)) {
           this.isLoading = true;
 
-          this.$store.dispatch('budget/uploadBudget', { file: upload.file, version, regions, periods, version_involvement })
+          this.$store.dispatch('finance/uploadFinance', { file: upload.file, version, periods })
             .then(res => {
               this.errors = res.errors;
               this.isLoading = false;
 
               if (!res.hasOwnProperty('errors')) {
                 this.errors = [];
-                this.$emit('setResult', `Файл <strong>${upload.name}</strong> успешно загружен!`);
+                this.$emit('setResult', `Файл <strong>${ upload.name }</strong> успешно загружен!`);
                 this.$emit('close');
               }
             });
         }
       }
-    },
+    }
   }
 
 

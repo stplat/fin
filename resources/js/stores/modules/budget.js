@@ -64,7 +64,6 @@ export default {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
     }
-
   },
   mutations: {
     setBudget: (state, array) => state.budget = array,

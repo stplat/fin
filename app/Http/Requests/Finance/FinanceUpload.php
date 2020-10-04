@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Shipment;
+namespace App\Http\Requests\Finance;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ShipmentUpload extends FormRequest
+class FinanceUpload extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
