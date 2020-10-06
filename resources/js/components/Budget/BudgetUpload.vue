@@ -17,7 +17,7 @@
               <p>Загрузите файл с компьютера. Ограничения:
               <p>- формат файла: <strong>xls, xlsx</strong>
               <p>- первая строка: <strong>Заголовки</strong>
-              <p>- <a :href="assetBase + 'storage/budget_layout.xlsx'" download>образец файла</a></p>
+              <p>- <a :href="assetBase + 'upload_layouts/budget_layout.xlsx'" download>образец файла</a></p>
             </div>
             <div class="form-group-file mt-4">
               <div class="form-group-file__name mr-3"><p>{{ data.upload.name ? data.upload.name :

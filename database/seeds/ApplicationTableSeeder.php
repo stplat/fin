@@ -13,6 +13,6 @@ class ApplicationTableSeeder extends Seeder
    */
   public function run()
   {
-    DB::unprepared(file_get_contents(__DIR__ . './../dumps/applications.sql'));
+    DB::unprepared(file_get_contents(__DIR__ . './../dumps/applications-05.10.2020.sql'));
   }
 }

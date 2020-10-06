@@ -23,21 +23,23 @@ class FinanceService
    */
   public function getFinances($periods, $version)
   {
-    $finances = Finance::select(DB::raw("
-      payment_balance_articles.name as article, 
-      payment_balance_articles.id as article_id, 
+    $periodSql = implode(',', $periods);
+    $finances = collect(DB::select("
+      SELECT payment_balance_articles.sub_general as article_id, 
+      payment_balance_articles.sub_general_name as article, 
       activity_types.code as activity, 
-      sources.id as source, 
-      ROUND(SUM(finances.count), 3) as total
-    "))
-      ->join('activity_types', 'activity_types.id', '=', 'finances.activity_type_id')
-      ->join('payment_balance_articles', 'payment_balance_articles.id', '=', 'finances.payment_balance_article_id')
-      ->join('sources', 'sources.id', '=', 'finances.source_id')
-      ->whereIn('period_id', $periods)
-      ->where('version_id', $version)
-      ->orderBy('finances.payment_balance_article_id')
-      ->groupBy('finances.payment_balance_article_id', 'finances.activity_type_id', 'sources.id')
-      ->get();
+      finances.source_id as source, 
+      SUM(finances.count) as total
+      FROM `finances`
+      LEFT JOIN 
+      (SELECT payment_balance_articles.sub_general, payment_balance_articles.sub_general_name 
+       FROM payment_balance_articles 
+       GROUP BY payment_balance_articles.sub_general, payment_balance_articles.sub_general_name) payment_balance_articles
+      ON payment_balance_articles.sub_general = finances.payment_balance_article_sub_general
+      LEFT JOIN `activity_types` ON activity_types.id = finances.activity_type_id
+      WHERE version_id=$version AND period_id in ($periodSql)
+      GROUP BY payment_balance_articles.sub_general, payment_balance_articles.sub_general_name, finances.activity_type_id, finances.source_id
+    "));
 
     return $finances->groupBy('article')->map(function ($item, $key) {
       return collect([

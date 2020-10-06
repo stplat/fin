@@ -43,12 +43,17 @@ export default {
         el.addEventListener('keypress', inputKeyPressHandler);
       }
     }
+  },
+  updated() {
+    const cells = document.querySelectorAll('td');
+    [...cells].forEach(item => item.innerText !== '' && item.innerText < 0 ? item.classList.add('red') : item.classList.remove('red'));
+
   }
 };
 
 export function serialize(array, name) {
   return array.reduce((item, carry) => {
-    return `${String(item)}&${name}[]=${String(carry)}`;
-  }, '').replace("&", "");
+    return `${ String(item) }&${ name }[]=${ String(carry) }`;
+  }, '').replace('&', '');
 }
 

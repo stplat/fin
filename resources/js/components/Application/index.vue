@@ -28,17 +28,20 @@
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
             <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
-            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
+            <button class="btn btn-secondary float-right mr-1" @click="download">Экспорт</button>
           </div>
-<!--          <div class="col-md-3">-->
-<!--            <div class="form-group">-->
-<!--              <label for="version" class="text-muted"><strong>Версия:</strong></label>-->
-<!--              <select class="form-control" id="version" v-model="data.version">-->
-<!--                <option disabled value>Выберите один из вариантов</option>-->
-<!--                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--          </div>-->
+          <div class="col-md-3" v-if="consolidateToggle">
+            <button class="btn btn-danger mt-4" @click="consolidate">Консолидировать квартал</button>
+          </div>
+          <!--          <div class="col-md-3">-->
+          <!--            <div class="form-group">-->
+          <!--              <label for="version" class="text-muted"><strong>Версия:</strong></label>-->
+          <!--              <select class="form-control" id="version" v-model="data.version">-->
+          <!--                <option disabled value>Выберите один из вариантов</option>-->
+          <!--                <option :value="version.id" v-for="(version, key) in versions" :key="key">{{ version.name }}</option>-->
+          <!--              </select>-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
         <div class="row mt-4">
           <div class="col-md-2">
@@ -83,7 +86,7 @@
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">Вовлечение</h4>
+        <h4 class="mb-0">Денежная заявка</h4>
         <template v-if="dataForProps.periods.length === 1">
           <button class="btn btn-secondary" v-if="!mode.edit" @click="mode.edit = true">редактировать</button>
           <button class="btn btn-danger" v-if="mode.edit" @click="mode.edit = false">отменить</button>
@@ -94,15 +97,15 @@
       </div>
     </div>
     <application-upload @close="modals.upload = false"
-                   v-if="modals.upload"
-                   :initial-data="data"
-                   :periods="periods"
-                   @setResult="setResult"></application-upload>
+                        v-if="modals.upload"
+                        :initial-data="data"
+                        :periods="periods"
+                        @setResult="setResult"></application-upload>
   </main>
 </template>
 <script>
-  import ApplicationTable from "./ApplicationTable";
-  import ApplicationUpload from "./ApplicationUpload";
+  import ApplicationTable from './ApplicationTable';
+  import ApplicationUpload from './ApplicationUpload';
 
   export default {
     components: {
@@ -112,12 +115,12 @@
     data() {
       return {
         data: {
-          periods: [ 3 ],
+          periods: [15],
           article: 1,
           version_budget: 11,
-          version_involvement: 2,
+          version_involvement: 1,
           version_f22: 11,
-          version_shipment: 1,
+          version_shipment: 11
         },
         modals: {
           upload: false
@@ -126,7 +129,7 @@
         messages: [
           { 'login.required': 'Поле <strong>Логин</strong> обязательно для заполнения' },
           { 'password.required': 'Поле <strong>Пароль</strong> обязательно для заполнения' },
-          { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
+          { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' }
         ],
         errors: [],
         result: '',
@@ -134,12 +137,12 @@
           edit: false
         },
         dataForProps: {
-          periods: [ 1 ],
+          periods: [1],
           article: 1,
           version_budget: 2,
           version_involvement: 2,
           version_f22: 2,
-          version_shipment: 1,
+          version_shipment: 1
         }
       }
     },
@@ -150,6 +153,30 @@
       }
     },
     methods: {
+      consolidate() {
+        this.isLoading = true;
+        this.mode.edit = false;
+        this.dataForProps = _.clone(this.data);
+
+        this.$store.dispatch('application/consolidateApplication', this.data).then(res => {
+          this.errors = res.errors;
+          if (!res.hasOwnProperty('errors')) {
+
+            this.setResult('<strong>' + this.periods.filter(item => item.id === this.data.periods[0])[0].name + '</strong> успешно сконсолидирован');
+          }
+          this.isLoading = false;
+        });
+      },
+      download() {
+        this.isLoading = true;
+        this.mode.edit = false;
+        let { periods } = this.data;
+
+        this.$store.dispatch('application/exportApplications', { period: periods[0] }).then(res => {
+          this.errors = res.errors;
+          this.isLoading = false;
+        });
+      },
       confirm() {
         this.isLoading = true;
         this.mode.edit = false;
@@ -166,6 +193,10 @@
       }
     },
     computed: {
+      consolidateToggle() {
+        return this.dataForProps.periods.length === 1 &&
+          ( this.dataForProps.periods[0] === 2 || this.dataForProps.periods[0] === 6 || this.dataForProps.periods[0] === 10 || this.dataForProps.periods[0] === 14 )
+      },
       periods() {
         return this.initialData.periods;
       },

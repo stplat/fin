@@ -20,11 +20,11 @@ class CreateInvolvementsTable extends Migration
       $table->integer('activity_type_id');
       $table->integer('payment_balance_article_general');
       $table->integer('version_id');
-      $table->double('involve_by_prepayment_last_year');
-      $table->double('involve_by_prepayment_current_year');
-      $table->double('involve_by_turnover');
-      $table->double('prepayment_current_year');
-      $table->double('prepayment_next_year');
+      $table->double('involve_by_prepayment_last_year')->nullable();
+      $table->double('involve_by_prepayment_current_year')->nullable();
+      $table->double('involve_by_turnover')->nullable();
+      $table->double('prepayment_current_year')->nullable();
+      $table->double('prepayment_next_year')->nullable();
       $table->timestamps();
     });
   }

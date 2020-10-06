@@ -1,10 +1,10 @@
 <template>
   <popup @close="$emit('close')" :isLoading="isLoading">
-    <template v-slot:header>Импорт денежных заявок</template>
+    <template v-slot:header>Импорт вовлечения</template>
     <template v-slot:body>
       <div class="row">
         <div class="col-md-12">
-          <alert :className="'info'">Ранее загруженные данные за период - <strong>{{ period }}</strong> будут удалены!
+          <alert :className="'info'">Ранее загруженные данные по версии - <strong>{{ version }}</strong> будут удалены!
           </alert>
           <alert v-for="(error, i) in errors" :key="i" v-html="error"/>
         </div>
@@ -17,7 +17,7 @@
               <p>Загрузите файл с компьютера. Ограничения:
               <p>- формат файла: <strong>xls, xlsx</strong>
               <p>- первая строка: <strong>Заголовки</strong>
-              <p>- <a :href="assetBase + 'upload_layouts/application_layout.xlsx'" download>образец файла</a></p>
+              <p>- <a :href="assetBase + 'upload_layouts/involvement_layout.xlsx'" download>образец файла</a></p>
             </div>
             <div class="form-group-file mt-4">
               <div class="form-group-file__name mr-3"><p>{{ data.upload.name ? data.upload.name :
@@ -40,17 +40,13 @@
     data() {
       return {
         data: {
+          version: '',
           upload: {
             name: '',
             file: ''
           },
-          article: null,
           periods: [],
-          version_budget: null,
-          version_f22: null,
-          version_involvement: null,
-          version_shipment: null
-
+          regions: null
         },
         show: false,
         isLoading: false,
@@ -62,21 +58,22 @@
         type: Object,
         required: true
       },
-      periods: {
+      versions: {
         type: Array,
         required: true
       }
     },
     mounted() {
       this.data.version = this.initialData.version;
-      this.data.article = this.initialData.article;
       this.data.periods = this.initialData.periods;
       this.data.regions = this.initialData.regions;
-      this.data.version_involvement = this.initialData.version_involvement;
     },
     computed: {
       period() {
-        return this.periods.filter(item => item.id === this.data.periods[0])[0].name;
+        return this.periods.filter(item => item.id === this.data.period)[0].name;
+      },
+      version() {
+        return this.versions.filter(item => item.id === this.data.version)[0].name;
       }
     },
     methods: {
@@ -106,20 +103,12 @@
 
       /* Загрузка перевозчика */
       upload() {
-        let { upload, article, periods, version_budget, version_f22, version_involvement, version_shipment } = this.data;
+        let { upload, version, regions, periods } = this.data;
 
         if (this.validate(upload.file)) {
           this.isLoading = true;
 
-          this.$store.dispatch('application/uploadApplication', {
-            file: upload.file,
-            article,
-            periods,
-            version_budget,
-            version_f22,
-            version_involvement,
-            version_shipment
-          })
+          this.$store.dispatch('involvement/uploadInvolvement', { file: upload.file, version, regions, periods })
             .then(res => {
               this.errors = res.errors;
               this.isLoading = false;

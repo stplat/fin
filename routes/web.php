@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
   Route::get('/involvement/all', 'InvolvementController@all')->name('involvement.all');
   Route::get('/involvement', 'InvolvementController@index')->name('involvement.index');
   Route::put('/involvement', 'InvolvementController@update')->name('involvement.update');
+  Route::post('/involvement/upload', 'InvolvementController@upload')->name('involvement.upload');
 
   Route::get('/budget', 'BudgetController@index')->name('budget.index');
   Route::put('/budget', 'BudgetController@update')->name('budget.update');
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
   Route::get('/application', 'ApplicationController@index')->name('application.index');
   Route::put('/application', 'ApplicationController@update')->name('application.update');
   Route::post('/application/upload', 'ApplicationController@upload')->name('application.upload');
+  Route::post('/application/consolidate', 'ApplicationController@consolidate')->name('application.consolidate');
+  Route::post('/application/export', 'ApplicationController@export')->name('application.export');
 
   /* Таблицы vue-table-2 (экспорт) */
 //  Route::post('/table/export', 'TableController@export')->name('table-export');

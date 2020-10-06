@@ -18,7 +18,7 @@ class FinanceController extends Controller
 
   public function index()
   {
-//    dd($this->financeService->getFinances([1], 2)->toArray());
+//    dd($this->financeService->getFinances([3], 11)->toArray());
     return view('finance')->with([
       'data' => collect([
         'periods' => $this->financeService->getPeriods(),

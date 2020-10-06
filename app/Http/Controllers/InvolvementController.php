@@ -6,6 +6,7 @@ use App\Models\Involvement;
 use App\Services\InvolvementService;
 use App\Http\Requests\Involvement\InvolvementAll;
 use App\Http\Requests\Involvement\InvolvementUpdate;
+use App\Http\Requests\Involvement\InvolvementUpload;
 
 class InvolvementController extends Controller
 {
@@ -53,6 +54,26 @@ class InvolvementController extends Controller
       ->update([
         $request->input('param') => $request->input('value')
       ]);
+
+    return $this->involvementService->getInvolvement($periods, $version, $regions);
+  }
+
+  /**
+   * Обновляем данные из файла
+   *
+   * @param \App\Http\Requests\Involvement\InvolvementUpload
+   * @return \Illuminate\Support\Collection
+   */
+  public function upload(InvolvementUpload $request)
+  {
+    $file = $request->file('file');
+    $regions = $request->input('regions') ?: null;
+    $periods = is_array($request->input('periods')) ? $request->input('periods') : [$request->input('periods')];
+    $version = $request->input('version');
+    $data = $this->involvementService->getUploadFile($file, $version);
+
+    Involvement::where('version_id', $version)->delete();
+    Involvement::insert($data);
 
     return $this->involvementService->getInvolvement($periods, $version, $regions);
   }

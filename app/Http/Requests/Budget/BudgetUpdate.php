@@ -54,7 +54,6 @@ class BudgetUpdate extends FormRequest
       'article.required' => 'Параметр <strong>Статья</strong> обязателен для заполнения',
       'param.required' => 'Параметр <strong>Название параметра</strong> обязателен для заполнения',
       'value.required' => 'Параметр <strong>Значение</strong> обязателен для заполнения',
-
     ];
   }
 

@@ -18,6 +18,7 @@ class CreateApplicationsTable extends Migration
       $table->integer('period_id');
       $table->integer('payment_balance_article_id');
       $table->integer('payment_balance_article_general');
+      $table->integer('payment_balance_article_sub_general');
       $table->integer('activity_type_id');
       $table->integer('dkre_id');
       $table->integer('source_id');

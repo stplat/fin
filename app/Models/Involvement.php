@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Involvement extends Model
 {
   protected $fillable = [
+    'dkre_id', 'period_id', 'activity_type_id', 'payment_balance_article_general', 'version_id',
     'involve_by_prepayment_last_year', 'involve_by_prepayment_current_year',
     'involve_by_turnover', 'prepayment_current_year', 'prepayment_next_year'
   ];

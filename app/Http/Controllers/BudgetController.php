@@ -67,14 +67,17 @@ class BudgetController extends Controller
     $version = $request->input('version');
     $version_involvement = $request->input('version_involvement');
 
-    Involvement::where('period_id', $period)
-      ->where('version_id', $version_involvement)
-      ->where('dkre_id', $region)
-      ->where('activity_type_id', $request->input('activity'))
-      ->where('payment_balance_article_general', $request->input('article'))
-      ->update([
+    Involvement::updateOrCreate([
+      'dkre_id' => $region,
+      'period_id' => $period,
+      'version_id' => $version_involvement,
+      'activity_type_id' => $request->input('activity'),
+      'payment_balance_article_general' => $request->input('article'),
+    ],
+      [
         $request->input('param') => $request->input('value')
-      ]);
+      ]
+    );
 
     return $this->budgetService->getBudget($periods, $version, $version_involvement, $regions);
   }

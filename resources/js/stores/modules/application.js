@@ -9,8 +9,8 @@ export default {
     /* Получаем бюджетные параметры */
     async updateApplications({ commit }, payload) {
       let { periods, article, version_budget, version_involvement, version_f22, version_shipment } = payload;
-      const req = `?${serialize(periods, 'periods')}&article=${article}&version_budget=${version_budget}
-      &version_involvement=${version_involvement}&version_f22=${version_f22}&version_shipment=${version_shipment}`;
+      const req = `?${ serialize(periods, 'periods') }&article=${ article }&version_budget=${ version_budget }
+      &version_involvement=${ version_involvement }&version_f22=${ version_f22 }&version_shipment=${ version_shipment }`;
 
       const res = await axios.get(this.state.requestPath + '/application/all' + req)
         .catch(err => console.log('In finance/updateApplications -', err));
@@ -59,13 +59,38 @@ export default {
       } else {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
+    },
+    /* Редактируем вовлечение */
+    async consolidateApplication({ commit }, payload) {
+      let { periods, article, versionBudget, versionInvolvement, versionF22, versionShipment, param, value } = payload;
+      const res = await axios.post(this.state.requestPath + '/application/consolidate', payload)
+        .catch(err => console.log('In application/consolidateApplication -', err));
+
+      if (!res.data.errors) {
+        commit('setApplications', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
+    /* Экспорт */
+    async exportApplications({ commit }, payload) {
+      let { period } = payload;
+      const res = await axios.post(this.state.requestPath + '/application/export', payload)
+        .catch(err => console.log('In application/exportApplication -', err));
+      console.log(res)
+      if (!res.data.errors) {
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
     }
   },
   mutations: {
-    setApplications: (state, array) => state.applications = array,
+    setApplications: (state, array) => state.applications = array
   },
   getters: {
-    getApplications: (state) => state.applications,
+    getApplications: (state) => state.applications
 
   }
 };

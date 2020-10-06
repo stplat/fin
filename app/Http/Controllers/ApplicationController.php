@@ -7,6 +7,10 @@ use App\Services\ApplicationService;
 use App\Http\Requests\Application\ApplicationAll;
 use App\Http\Requests\Application\ApplicationUpdate;
 use App\Http\Requests\Application\ApplicationUpload;
+use App\Http\Requests\Application\ApplicationConsolidate;
+use App\Http\Requests\Application\ApplicationExport;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
+
 
 class ApplicationController extends Controller
 {
@@ -19,7 +23,7 @@ class ApplicationController extends Controller
 
   public function index()
   {
-//    dd($this->applicationService->getApplications([3], 1, 1, 11, 1, 11, 2)->toArray());
+//    dd($this->applicationService->getApplications([3], 24, 1, 11, 1, 11, 2)->toArray());
     return view('application')->with([
       'data' => collect([
         'periods' => $this->applicationService->getPeriods(),
@@ -85,8 +89,50 @@ class ApplicationController extends Controller
     $data = $this->applicationService->getUploadFile($file, $periods[0]);
 
     Application::where('period_id', $periods[0])->delete();
-    Application::insert($data);
+    foreach (array_chunk((array)$data, 1000) as $chunk) {
+      Application::insert($chunk);
+    }
 
     return $this->applicationService->getApplications($periods, $article, $version, $version_budget, $version_involvement, $version_f22, $version_shipment);
+  }
+
+  /**
+   * Консолидируем квартал
+   *
+   * @param \App\Http\Requests\Budget\BudgetUpdate
+   * @return \Illuminate\Support\Collection
+   */
+  public function consolidate(ApplicationConsolidate $request)
+  {
+    $periods = $request->input('periods');
+    $article = $request->input('article');
+    $version = 1;
+    $version_budget = $request->input('version_budget');
+    $version_involvement = $request->input('version_involvement');
+    $version_f22 = $request->input('version_f22');
+    $version_shipment = $request->input('version_shipment');
+    $data = $this->applicationService->consolidatePeriod($periods[0]);
+
+    Application::where('period_id', $periods[0])->delete();
+
+    foreach (array_chunk((array)$data, 1000) as $chunk) {
+      Application::insert($chunk);
+    }
+
+    return $this->applicationService->getApplications($periods, $article, $version, $version_budget, $version_involvement, $version_f22, $version_shipment);
+  }
+
+  /**
+   * Консолидируем квартал
+   *
+   * @param \App\Http\Requests\Application\ApplicationExport
+   * @return \Illuminate\Support\Collection
+   */
+  public function export(ApplicationExport $request)
+  {
+    $period = $request->input('period');
+    $version = 1;
+
+    return $this->applicationService->exportPeriod($period);
   }
 }

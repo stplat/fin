@@ -34,8 +34,8 @@
               </select>
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
-            <button class="btn btn-secondary float-right">Загрузить</button>
-            <button class="btn btn-secondary float-right mr-1">Выгрузить</button>
+            <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
+            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
           </div>
         </div>
       </div>
@@ -53,28 +53,37 @@
         <involvement-table :mode="mode" :data="{ currentPeriods, currentVersion, currentRegions }"></involvement-table>
       </div>
     </div>
+    <involvement-upload @close="modals.upload = false"
+                        v-if="modals.upload"
+                        :initial-data="data"
+                        :versions="versions"
+                        @setResult="setResult"></involvement-upload>
   </main>
 </template>
 
 <script>
-  import InvolvementTable from "./InvolvementTable";
+  import InvolvementTable from './InvolvementTable';
+  import InvolvementUpload from './InvolvementUpload';
+  import upload from '../../mixins/upload';
 
   export default {
+    mixins: [upload],
     components: {
-      InvolvementTable
+      InvolvementTable,
+      InvolvementUpload
     },
     data() {
       return {
         data: {
           regions: [],
-          periods: [ 3 ],
-          version: 1,
+          periods: [3],
+          version: 1
         },
         isLoading: true,
         messages: [
           { 'login.required': 'Поле <strong>Логин</strong> обязательно для заполнения' },
           { 'password.required': 'Поле <strong>Пароль</strong> обязательно для заполнения' },
-          { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' },
+          { 'role.required': 'Поле <strong>Роль</strong> обязательно для заполнения' }
         ],
         errors: [],
         mode: {
@@ -82,7 +91,7 @@
         },
         currentPeriods: [],
         currentRegions: [],
-        currentVersion: '',
+        currentVersion: ''
       }
     },
     props: {

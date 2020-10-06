@@ -32,6 +32,36 @@ export default {
       } else {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
+    },
+    /* Загружаем данные из файла */
+    async uploadInvolvement({ commit }, payload) {
+      const formData = new FormData();
+      for (let param in payload) {
+        if (payload.hasOwnProperty(param)) {
+          if (param === 'periods') {
+            for (let period in payload['periods']) {
+              formData.append('periods[' + period + ']', payload[param][period]);
+            }
+          }
+          if (param === 'regions') {
+            for (let region in payload['regions']) {
+              formData.append('regions[' + region + ']', payload[param][region]);
+            }
+          } else {
+            formData.append(param, payload[param]);
+          }
+        }
+      }
+
+      const res = await axios.post(this.state.requestPath + '/involvement/upload', formData)
+        .catch(err => console.log('In budget/uploadInvolvement -', err));
+
+      if (!res.data.errors) {
+        commit('setInvolvement', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
     }
   },
   mutations: {

@@ -14,7 +14,9 @@ class CreatePaymentBalanceArticlesTable extends Migration {
     Schema::create('payment_balance_articles', function (Blueprint $table) {
       $table->id();
       $table->string('general');
+      $table->string('sub_general');
       $table->string('code');
+      $table->string('sub_general_name');
       $table->string('name');
       $table->timestamps();
     });
