@@ -174,6 +174,13 @@
 
         this.$store.dispatch('application/exportApplications', { period: periods[0] }).then(res => {
           this.errors = res.errors;
+
+          if (!res.errors) {
+            const a = document.createElement('a');
+            a.href = res;
+            a.click();
+          }
+
           this.isLoading = false;
         });
       },

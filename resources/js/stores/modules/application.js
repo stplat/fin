@@ -78,7 +78,7 @@ export default {
       let { period } = payload;
       const res = await axios.post(this.state.requestPath + '/application/export', payload)
         .catch(err => console.log('In application/exportApplication -', err));
-      console.log(res)
+
       if (!res.data.errors) {
         return res.data;
       } else {
