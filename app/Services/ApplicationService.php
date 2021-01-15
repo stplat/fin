@@ -413,17 +413,18 @@ class ApplicationService
       $sheet->getStyle('A4')->getAlignment()->setHorizontal('right');
       $sheet->mergeCells('A4:M4');
       /* Заголовки */
-      $sheet->setCellValue('A5', '№ статьи');
-      $sheet->mergeCells('A5:A7');
-      $sheet->getStyle('A5')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('A5')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('A6', '№ статьи');
+      $sheet->mergeCells('A5:B5');
+      $sheet->mergeCells('A6:A7');
+      $sheet->getStyle('A6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('A6')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('A')->setAutoSize(false);
       $sheet->getColumnDimension('A')->setWidth(9);
       /* Статьи */
-      $sheet->setCellValue('B5', 'Наименование статей');
-      $sheet->mergeCells('B5:B7');
-      $sheet->getStyle('B5')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('B5')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('B6', 'Наименование статей');
+      $sheet->mergeCells('B6:B7');
+      $sheet->getStyle('B6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('B6')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('B')->setAutoSize(false);
       $sheet->getColumnDimension('B')->setWidth(44);
       /* Период */
@@ -791,17 +792,18 @@ class ApplicationService
     $sheet->getStyle('A4')->getAlignment()->setHorizontal('right');
     $sheet->mergeCells('A4:M4');
     /* Заголовки */
-    $sheet->setCellValue('A5', '№ статьи');
-    $sheet->mergeCells('A5:A7');
-    $sheet->getStyle('A5')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('A5')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('A6', '№ статьи');
+    $sheet->mergeCells('A5:B5');
+    $sheet->mergeCells('A6:A7');
+    $sheet->getStyle('A6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('A6')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('A')->setAutoSize(false);
     $sheet->getColumnDimension('A')->setWidth(9);
     /* Статьи */
-    $sheet->setCellValue('B5', 'Наименование статей');
-    $sheet->mergeCells('B5:B7');
-    $sheet->getStyle('B5')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('B5')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('B6', 'Наименование статей');
+    $sheet->mergeCells('B6:B7');
+    $sheet->getStyle('B6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('B6')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('B')->setAutoSize(false);
     $sheet->getColumnDimension('B')->setWidth(44);
     /* Период */
