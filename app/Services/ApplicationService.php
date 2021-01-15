@@ -374,6 +374,7 @@ class ApplicationService
    */
   public function exportPeriod($period)
   {
+    $period_name = Period::find($period)->name;
     $this->spreadsheet->getDefaultStyle()->getFont()->setName('Times New Roman');
     $this->spreadsheet->getDefaultStyle()->getFont()->setSize('14');
     $application = Application::where('period_id', $period)->with(['article', 'dkre', 'period'])->get();
@@ -388,288 +389,283 @@ class ApplicationService
 
       $sheet = $this->spreadsheet->getActiveSheet();
       $sheet->getSheetView()->setZoomScale(75);
-      $sheet->setTitle(str_replace('ДКРЭ_', '', $item[0]->dkre->region));
-      $sheet->getStyle('A7:R45')->getBorders()->getAllBorders()->setBorderStyle('thin');
-      $sheet->getStyle('C10:R45')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
-      $sheet->getStyle('C10:R45')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('C10:R45')->getAlignment()->setVertical('center');
+      $sheet->setTitle(str_replace('ДКРЭ_', '', $item[0]->dkre->area));
+      $sheet->getStyle('A5:M43')->getBorders()->getAllBorders()->setBorderStyle('thin');
+      $sheet->getStyle('C8:M43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
+      $sheet->getStyle('C8:M43')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('C8:M43')->getAlignment()->setVertical('center');
       /* Заголовок */
-      $sheet->setCellValue('A1', 'ЗАЯВКА');
+      $sheet->setCellValue('A1', 'ЗАЯВКА на финансирование поставки МТР на ' . $item[0]->period->name . ' ' . date('Y') . ' года');
       $sheet->getStyle('A1')->getFont()->setBold(true);
       $sheet->getStyle('A1')->getFont()->setSize('20');
       $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
-      $sheet->mergeCells('A1:R1');
-      /* Подзаголовок */
-      $sheet->setCellValue('A2', 'на финансирование поставки материально-технических ресурсов на ' . $item[0]->period->name . ' 2020 г.');
-      $sheet->getStyle('A2')->getFont()->setSize('20');
-      $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
-      $sheet->mergeCells('A2:R2');
+      $sheet->mergeCells('A1:M1');
       /* ДКРЭ */
-      $sheet->setCellValue('A3', 'Дирекция капитального ремонта и реконструкции объектов электрификации и электроснабжения железных дорог (ДКРЭ)');
-      $sheet->getStyle('A3')->getAlignment()->setHorizontal('center');
-      $sheet->mergeCells('A3:R3');
-      $sheet->setCellValue('B5', $item[0]->dkre->region);
+      $sheet->setCellValue('B3', 'Наименование филиала');
+      $sheet->setCellValue('C3', 'ДКРЭ (' . $item[0]->dkre->area . ')');
+      $sheet->getStyle('C3')->getAlignment()->setHorizontal('center');
+      $sheet->mergeCells('C3:F3');
       /* ЕИ */
-      $sheet->setCellValue('A6', "(тыс.руб. с НДС)");
-      $sheet->getStyle('A6')->getFont()->setSize('12');
-      $sheet->getStyle('A6')->getAlignment()->setHorizontal('right');
-      $sheet->mergeCells('A6:R6');
+      $sheet->setCellValue('A4', "(тыс.руб. с НДС)");
+      $sheet->getStyle('A4')->getFont()->setSize('12');
+      $sheet->getStyle('A4')->getAlignment()->setHorizontal('right');
+      $sheet->mergeCells('A4:M4');
       /* Заголовки */
-      $sheet->setCellValue('A7', '№ статьи');
-      $sheet->mergeCells('A7:A9');
-      $sheet->getStyle('A7')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('A7')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('A5', '№ статьи');
+      $sheet->mergeCells('A5:A7');
+      $sheet->getStyle('A5')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('A5')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('A')->setAutoSize(false);
       $sheet->getColumnDimension('A')->setWidth(9);
       /* Статьи */
-      $sheet->setCellValue('B7', 'Наименование статей');
-      $sheet->mergeCells('B7:B9');
-      $sheet->getStyle('B7')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('B7')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('B5', 'Наименование статей');
+      $sheet->mergeCells('B5:B7');
+      $sheet->getStyle('B5')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('B5')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('B')->setAutoSize(false);
       $sheet->getColumnDimension('B')->setWidth(44);
       /* Период */
-      $sheet->setCellValue('C7', $item[0]->period->name);
-      $sheet->mergeCells('C7:R7');
-      $sheet->getStyle('C7')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('C7')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('C5', $item[0]->period->name . ' ' . date('Y') . ' г . ');
+      $sheet->mergeCells('C5:M5');
+      $sheet->getStyle('C5')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('C5')->getAlignment()->setVertical('center');
       /* ЦЗ */
-      $sheet->setCellValue('C8', 'Централизованная поставка');
-      $sheet->mergeCells('C8:F8');
-      $sheet->getStyle('C8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('C8')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('C6', 'Централизованная поставка');
+      $sheet->mergeCells('C6:F6');
+      $sheet->getStyle('C6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('C6')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('C')->setAutoSize(false);
       $sheet->getColumnDimension('C')->setWidth(14);
       /* Итого */
-      $sheet->setCellValue('G8', 'Итого');
-      $sheet->mergeCells('G8:G9');
-      $sheet->getStyle('G8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('G8')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('G6', 'Итого');
+      $sheet->mergeCells('G6:G7');
+      $sheet->getStyle('G6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('G6')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('G')->setAutoSize(false);
       $sheet->getColumnDimension('G')->setWidth(14);
       /* ПЕР */
-      $sheet->setCellValue('C9', 'Перевозки');
-      $sheet->getStyle('C9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('C9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('C7', 'Перевозки');
+      $sheet->getStyle('C7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('C7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('C')->setAutoSize(false);
       $sheet->getColumnDimension('C')->setWidth(14);
       /* ПВД */
-      $sheet->setCellValue('D9', 'ПВД');
-      $sheet->getStyle('D9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('D9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('D7', 'ПВД');
+      $sheet->getStyle('D7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('D7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('D')->setAutoSize(false);
       $sheet->getColumnDimension('D')->setWidth(14);
       /* ИНВ */
-      $sheet->setCellValue('E9', 'КВ');
-      $sheet->getStyle('E9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('E9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('E7', 'КВ');
+      $sheet->getStyle('E7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('E7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('E')->setAutoSize(false);
       $sheet->getColumnDimension('E')->setWidth(14);
       /* ПРО */
-      $sheet->setCellValue('F9', 'Прочие');
-      $sheet->getStyle('F9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('F9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('F7', 'Прочие');
+      $sheet->getStyle('F7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('F7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('F')->setAutoSize(false);
       $sheet->getColumnDimension('F')->setWidth(14);
       /* СЗ */
-      $sheet->setCellValue('H8', 'Самостоятельная закупка');
-      $sheet->mergeCells('H8:K8');
-      $sheet->getStyle('H8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('H8')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('H6', 'Самостоятельная закупка');
+      $sheet->mergeCells('H6:K6');
+      $sheet->getStyle('H6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('H6')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('H')->setAutoSize(false);
       $sheet->getColumnDimension('H')->setWidth(14);
       /* Итого */
-      $sheet->setCellValue('L8', 'Итого');
-      $sheet->mergeCells('L8:L9');
-      $sheet->getStyle('L8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('L8')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('L6', 'Итого');
+      $sheet->mergeCells('L6:L7');
+      $sheet->getStyle('L6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('L6')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('L')->setAutoSize(false);
       $sheet->getColumnDimension('L')->setWidth(14);
       /* ПЕР */
-      $sheet->setCellValue('H9', 'Перевозки');
-      $sheet->getStyle('H9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('H9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('H7', 'Перевозки');
+      $sheet->getStyle('H7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('H7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('H')->setAutoSize(false);
       $sheet->getColumnDimension('H')->setWidth(14);
       /* ПВД */
-      $sheet->setCellValue('I9', 'ПВД');
-      $sheet->getStyle('I9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('I9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('I7', 'ПВД');
+      $sheet->getStyle('I7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('I7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('I')->setAutoSize(false);
       $sheet->getColumnDimension('I')->setWidth(14);
       /* ИНВ */
-      $sheet->setCellValue('J9', 'КВ');
-      $sheet->getStyle('J9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('J9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('J7', 'КВ');
+      $sheet->getStyle('J7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('J7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('J')->setAutoSize(false);
       $sheet->getColumnDimension('J')->setWidth(14);
       /* ПРО */
-      $sheet->setCellValue('K9', 'Прочие');
-      $sheet->getStyle('K9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('K9')->getAlignment()->setVertical('center');
+      $sheet->setCellValue('K7', 'Самостоятельная закупка');
+      $sheet->getStyle('K7')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('K7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('K')->setAutoSize(false);
       $sheet->getColumnDimension('K')->setWidth(14);
       /* ВСЕГО */
-      $sheet->setCellValue('M8', 'ВСЕГО');
-      $sheet->mergeCells('M8:M9');
-      $sheet->getStyle('M8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('M8')->getAlignment()->setVertical('center');
-      $sheet->getStyle('M8')->getFont()->setBold(true);
+      $sheet->setCellValue('M6', 'ВСЕГО');
+      $sheet->mergeCells('M6:M7');
+      $sheet->getStyle('M6')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('M6')->getAlignment()->setVertical('center');
+      $sheet->getStyle('M6')->getFont()->setBold(true);
       $sheet->getColumnDimension('M')->setAutoSize(false);
       $sheet->getColumnDimension('M')->setWidth(14);
-      /* ЧДФ */
-      $sheet->setCellValue('N8', 'Закупка через другие филиалы');
-      $sheet->mergeCells('N8:Q8');
-      $sheet->getStyle('N8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('N8')->getAlignment()->setVertical('center');
-      $sheet->getColumnDimension('N')->setAutoSize(false);
-      $sheet->getColumnDimension('N')->setWidth(14);
-      /* Итого */
-      $sheet->setCellValue('R8', 'Итого');
-      $sheet->mergeCells('R8:R9');
-      $sheet->getStyle('R8')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('R8')->getAlignment()->setVertical('center');
-      $sheet->getColumnDimension('R')->setAutoSize(false);
-      $sheet->getColumnDimension('R')->setWidth(14);
-      /* ПЕР */
-      $sheet->setCellValue('N9', 'Перевозки');
-      $sheet->getStyle('N9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('N9')->getAlignment()->setVertical('center');
-      $sheet->getColumnDimension('N')->setAutoSize(false);
-      $sheet->getColumnDimension('N')->setWidth(14);
-      /* ПВД */
-      $sheet->setCellValue('O9', 'ПВД');
-      $sheet->getStyle('O9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('O9')->getAlignment()->setVertical('center');
-      $sheet->getColumnDimension('O')->setAutoSize(false);
-      $sheet->getColumnDimension('O')->setWidth(14);
-      /* ИНВ */
-      $sheet->setCellValue('P9', 'КВ');
-      $sheet->getStyle('P9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('P9')->getAlignment()->setVertical('center');
-      $sheet->getColumnDimension('P')->setAutoSize(false);
-      $sheet->getColumnDimension('P')->setWidth(14);
-      /* ПРО */
-      $sheet->setCellValue('Q9', 'Прочие');
-      $sheet->getStyle('Q9')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('Q9')->getAlignment()->setVertical('center');
-      $sheet->getColumnDimension('Q')->setAutoSize(false);
-      $sheet->getColumnDimension('Q')->setWidth(14);
+//      /* ЧДФ */
+//      $sheet->setCellValue('N8', 'Закупка через другие филиалы');
+//      $sheet->mergeCells('N8:Q8');
+//      $sheet->getStyle('N8')->getAlignment()->setHorizontal('center');
+//      $sheet->getStyle('N8')->getAlignment()->setVertical('center');
+//      $sheet->getColumnDimension('N')->setAutoSize(false);
+//      $sheet->getColumnDimension('N')->setWidth(14);
+//      /* Итого */
+//      $sheet->setCellValue('R8', 'Итого');
+//      $sheet->mergeCells('R8:R9');
+//      $sheet->getStyle('R8')->getAlignment()->setHorizontal('center');
+//      $sheet->getStyle('R8')->getAlignment()->setVertical('center');
+//      $sheet->getColumnDimension('R')->setAutoSize(false);
+//      $sheet->getColumnDimension('R')->setWidth(14);
+//      /* ПЕР */
+//      $sheet->setCellValue('N9', 'Перевозки');
+//      $sheet->getStyle('N9')->getAlignment()->setHorizontal('center');
+//      $sheet->getStyle('N9')->getAlignment()->setVertical('center');
+//      $sheet->getColumnDimension('N')->setAutoSize(false);
+//      $sheet->getColumnDimension('N')->setWidth(14);
+//      /* ПВД */
+//      $sheet->setCellValue('O9', 'ПВД');
+//      $sheet->getStyle('O9')->getAlignment()->setHorizontal('center');
+//      $sheet->getStyle('O9')->getAlignment()->setVertical('center');
+//      $sheet->getColumnDimension('O')->setAutoSize(false);
+//      $sheet->getColumnDimension('O')->setWidth(14);
+//      /* ИНВ */
+//      $sheet->setCellValue('P9', 'КВ');
+//      $sheet->getStyle('P9')->getAlignment()->setHorizontal('center');
+//      $sheet->getStyle('P9')->getAlignment()->setVertical('center');
+//      $sheet->getColumnDimension('P')->setAutoSize(false);
+//      $sheet->getColumnDimension('P')->setWidth(14);
+//      /* ПРО */
+//      $sheet->setCellValue('Q9', 'Прочие');
+//      $sheet->getStyle('Q9')->getAlignment()->setHorizontal('center');
+//      $sheet->getStyle('Q9')->getAlignment()->setVertical('center');
+//      $sheet->getColumnDimension('Q')->setAutoSize(false);
+//      $sheet->getColumnDimension('Q')->setWidth(14);
 
       /* Таблица с данными*/
-      $sheet->setCellValue('A10', '');
-      $sheet->setCellValue('B10', 'ВСЕГО РЖДС, в том числе:');
-      $sheet->setCellValue('C10', '=C11+C16');
-      $sheet->setCellValue('D10', '=D11+D16');
-      $sheet->setCellValue('E10', '=E11+E16');
-      $sheet->setCellValue('F10', '=F11+F16');
-      $sheet->setCellValue('G10', '=G11+G16');
-      $sheet->setCellValue('H10', '=H11+H16');
-      $sheet->setCellValue('I10', '=I11+I16');
-      $sheet->setCellValue('J10', '=J11+J16');
-      $sheet->setCellValue('K10', '=K11+K16');
-      $sheet->setCellValue('L10', '=L11+L16');
-      $sheet->setCellValue('M10', '=M11+M16');
-      $sheet->setCellValue('N10', '=N11+N16');
-      $sheet->setCellValue('O10', '=O11+O16');
-      $sheet->setCellValue('P10', '=P11+P16');
-      $sheet->setCellValue('Q10', '=Q11+Q16');
-      $sheet->setCellValue('R10', '=R11+R16');
+      $sheet->setCellValue('A8', '');
+      $sheet->setCellValue('B8', 'ВСЕГО РЖДС, в том числе:');
+      $sheet->setCellValue('C8', '=C9 + C14');
+      $sheet->setCellValue('D8', '=D9 + D14');
+      $sheet->setCellValue('E8', '=E9 + E14');
+      $sheet->setCellValue('F8', '=F9 + F14');
+      $sheet->setCellValue('G8', '=G9 + G14');
+      $sheet->setCellValue('H8', '=H9 + H14');
+      $sheet->setCellValue('I8', '=I9 + I14');
+      $sheet->setCellValue('J8', '=J9 + J14');
+      $sheet->setCellValue('K8', '=K9 + K14');
+      $sheet->setCellValue('L8', '=L9 + L14');
+      $sheet->setCellValue('M8', '=M9 + M14');
+//      $sheet->setCellValue('N8', '=N9 + N14');
+//      $sheet->setCellValue('O8', '=O9 + O14');
+//      $sheet->setCellValue('P8', '=P9 + P14');
+//      $sheet->setCellValue('Q8', '=Q9 + Q14');
+//      $sheet->setCellValue('R8', '=R9 + R14');
 
-      $sheet->setCellValue('A11', '63300');
-      $sheet->setCellValue('B11', 'ТОПЛИВО ВСЕГО');
-      $sheet->setCellValue('C11', '=SUM(C12:C15)');
-      $sheet->setCellValue('D11', '=SUM(D12:D15)');
-      $sheet->setCellValue('E11', '=SUM(E12:E15)');
-      $sheet->setCellValue('F11', '=SUM(F12:F15)');
-      $sheet->setCellValue('G11', '=SUM(G12:G15)');
-      $sheet->setCellValue('H11', '=SUM(H12:H15)');
-      $sheet->setCellValue('I11', '=SUM(I12:I15)');
-      $sheet->setCellValue('J11', '=SUM(J12:J15)');
-      $sheet->setCellValue('K11', '=SUM(K12:K15)');
-      $sheet->setCellValue('L11', '=SUM(L12:L15)');
-      $sheet->setCellValue('M11', '=SUM(M12:M15)');
-      $sheet->setCellValue('N11', '=SUM(N12:N15)');
-      $sheet->setCellValue('O11', '=SUM(O12:O15)');
-      $sheet->setCellValue('P11', '=SUM(P12:P15)');
-      $sheet->setCellValue('Q11', '=SUM(Q12:Q15)');
-      $sheet->setCellValue('R11', '=SUM(R12:R15)');
+      $sheet->setCellValue('A9', '63300');
+      $sheet->setCellValue('B9', 'ТОПЛИВО ВСЕГО');
+      $sheet->setCellValue('C9', '=SUM(C10:C13)');
+      $sheet->setCellValue('D9', '=SUM(D10:D13)');
+      $sheet->setCellValue('E9', '=SUM(E10:E13)');
+      $sheet->setCellValue('F9', '=SUM(F10:F13)');
+      $sheet->setCellValue('G9', '=SUM(G10:G13)');
+      $sheet->setCellValue('H9', '=SUM(H10:H13)');
+      $sheet->setCellValue('I9', '=SUM(I10:I13)');
+      $sheet->setCellValue('J9', '=SUM(J10:J13)');
+      $sheet->setCellValue('K9', '=SUM(K10:K13)');
+      $sheet->setCellValue('L9', '=SUM(L10:L13)');
+      $sheet->setCellValue('M9', '=SUM(M10:M13)');
+//      $sheet->setCellValue('N9', '=SUM(N10:N13)');
+//      $sheet->setCellValue('O9', '=SUM(O10:O13)');
+//      $sheet->setCellValue('P9', '=SUM(P10:P13)');
+//      $sheet->setCellValue('Q9', '=SUM(Q10:Q13)');
+//      $sheet->setCellValue('R9', '=SUM(R10:R13)');
 
-      $sheet->setCellValue('A16', '63400');
-      $sheet->setCellValue('B16', 'МАТЕРИАЛЫ ВСЕГО');
-      $sheet->setCellValue('C16', '=C17+C26+C38+SUM(C33:C37)');
-      $sheet->setCellValue('D16', '=D17+D26+D38+SUM(D33:D37)');
-      $sheet->setCellValue('E16', '=E17+E26+E38+SUM(E33:E37)');
-      $sheet->setCellValue('F16', '=F17+F26+F38+SUM(F33:F37)');
-      $sheet->setCellValue('G16', '=G17+G26+G38+SUM(G33:G37)');
-      $sheet->setCellValue('H16', '=H17+H26+H38+SUM(H33:H37)');
-      $sheet->setCellValue('I16', '=I17+I26+I38+SUM(I33:I37)');
-      $sheet->setCellValue('J16', '=J17+J26+J38+SUM(J33:J37)');
-      $sheet->setCellValue('K16', '=K17+K26+K38+SUM(K33:K37)');
-      $sheet->setCellValue('L16', '=L17+L26+L38+SUM(L33:L37)');
-      $sheet->setCellValue('M16', '=M17+M26+M38+SUM(M33:M37)');
-      $sheet->setCellValue('N16', '=N17+N26+N38+SUM(N33:N37)');
-      $sheet->setCellValue('O16', '=O17+O26+O38+SUM(O33:O37)');
-      $sheet->setCellValue('P16', '=P17+P26+P38+SUM(P33:P37)');
-      $sheet->setCellValue('Q16', '=Q17+Q26+Q38+SUM(Q33:Q37)');
-      $sheet->setCellValue('R16', '=R17+R26+R38+SUM(R33:R37)');
+      $sheet->setCellValue('A14', '63400');
+      $sheet->setCellValue('B14', 'МАТЕРИАЛЫ ВСЕГО');
+      $sheet->setCellValue('C14', '=C15 + C24 + C36 + SUM(C31:C35)');
+      $sheet->setCellValue('D14', '=D15 + D24 + D36 + SUM(D31:D35)');
+      $sheet->setCellValue('E14', '=E15 + E24 + E36 + SUM(E31:E35)');
+      $sheet->setCellValue('F14', '=F15 + F24 + F36 + SUM(F31:F35)');
+      $sheet->setCellValue('G14', '=G15 + G24 + G36 + SUM(G31:G35)');
+      $sheet->setCellValue('H14', '=H15 + H24 + H36 + SUM(H31:H35)');
+      $sheet->setCellValue('I14', '=I15 + I24 + I36 + SUM(I31:I35)');
+      $sheet->setCellValue('J14', '=J15 + J24 + J36 + SUM(J31:J35)');
+      $sheet->setCellValue('K14', '=K15 + K24 + K36 + SUM(K31:K35)');
+      $sheet->setCellValue('L14', '=L15 + L24 + L36 + SUM(L31:L35)');
+      $sheet->setCellValue('M14', '=M15 + M24 + M36 + SUM(M31:M35)');
+//      $sheet->setCellValue('N14', '=N15 + N24 + N36 + SUM(N31:N35)');
+//      $sheet->setCellValue('O14', '=O15 + O24 + O36 + SUM(O31:O35)');
+//      $sheet->setCellValue('P14', '=P15 + P24 + P36 + SUM(P31:P35)');
+//      $sheet->setCellValue('Q14', '=Q15 + Q24 + Q36 + SUM(Q31:Q35)');
+//      $sheet->setCellValue('R14', '=R15 + R24 + R36 + SUM(R31:R35)');
 
-      $sheet->setCellValue('A17', '63410');
-      $sheet->setCellValue('B17', 'материалы верхнего строения пути в т.ч.:');
-      $sheet->setCellValue('C17', '=SUM(C18:C25)');
-      $sheet->setCellValue('D17', '=SUM(D18:D25)');
-      $sheet->setCellValue('E17', '=SUM(E18:E25)');
-      $sheet->setCellValue('F17', '=SUM(F18:F25)');
-      $sheet->setCellValue('G17', '=SUM(G18:G25)');
-      $sheet->setCellValue('H17', '=SUM(H18:H25)');
-      $sheet->setCellValue('I17', '=SUM(I18:I25)');
-      $sheet->setCellValue('J17', '=SUM(J18:J25)');
-      $sheet->setCellValue('K17', '=SUM(K18:K25)');
-      $sheet->setCellValue('L17', '=SUM(L18:L25)');
-      $sheet->setCellValue('M17', '=SUM(M18:M25)');
-      $sheet->setCellValue('N17', '=SUM(N18:N25)');
-      $sheet->setCellValue('O17', '=SUM(O18:O25)');
-      $sheet->setCellValue('P17', '=SUM(P18:P25)');
-      $sheet->setCellValue('Q17', '=SUM(Q18:Q25)');
-      $sheet->setCellValue('R17', '=SUM(R18:R25)');
+      $sheet->setCellValue('A15', '63410');
+      $sheet->setCellValue('B15', 'материалы верхнего строения пути в т . ч .:');
+      $sheet->setCellValue('C15', '=SUM(C16:C23)');
+      $sheet->setCellValue('D15', '=SUM(D16:D23)');
+      $sheet->setCellValue('E15', '=SUM(E16:E23)');
+      $sheet->setCellValue('F15', '=SUM(F16:F23)');
+      $sheet->setCellValue('G15', '=SUM(G16:G23)');
+      $sheet->setCellValue('H15', '=SUM(H16:H23)');
+      $sheet->setCellValue('I15', '=SUM(I16:I23)');
+      $sheet->setCellValue('J15', '=SUM(J16:J23)');
+      $sheet->setCellValue('K15', '=SUM(K16:K23)');
+      $sheet->setCellValue('L15', '=SUM(L16:L23)');
+      $sheet->setCellValue('M15', '=SUM(M16:M23)');
+//      $sheet->setCellValue('N15', '=SUM(N16:N23)');
+//      $sheet->setCellValue('O15', '=SUM(O16:O23)');
+//      $sheet->setCellValue('P15', '=SUM(P16:P23)');
+//      $sheet->setCellValue('Q15', '=SUM(Q16:Q23)');
+//      $sheet->setCellValue('R15', '=SUM(R16:R23)');
 
-      $sheet->setCellValue('A26', '63420');
-      $sheet->setCellValue('B26', 'запасные части, узлы и литые детали подвижного состава в т.ч.:');
-      $sheet->setCellValue('C26', '=SUM(C27:C32)');
-      $sheet->setCellValue('D26', '=SUM(D27:D32)');
-      $sheet->setCellValue('E26', '=SUM(E27:E32)');
-      $sheet->setCellValue('F26', '=SUM(F27:F32)');
-      $sheet->setCellValue('G26', '=SUM(G27:G32)');
-      $sheet->setCellValue('H26', '=SUM(H27:H32)');
-      $sheet->setCellValue('I26', '=SUM(I27:I32)');
-      $sheet->setCellValue('J26', '=SUM(J27:J32)');
-      $sheet->setCellValue('K26', '=SUM(K27:K32)');
-      $sheet->setCellValue('L26', '=SUM(L27:L32)');
-      $sheet->setCellValue('M26', '=SUM(M27:M32)');
-      $sheet->setCellValue('N26', '=SUM(N27:N32)');
-      $sheet->setCellValue('O26', '=SUM(O27:O32)');
-      $sheet->setCellValue('P26', '=SUM(P27:P32)');
-      $sheet->setCellValue('Q26', '=SUM(Q27:Q32)');
-      $sheet->setCellValue('R26', '=SUM(R27:R32)');
+      $sheet->setCellValue('A24', '63420');
+      $sheet->setCellValue('B24', 'запасные части, узлы и литые детали подвижного состава в т . ч .:');
+      $sheet->setCellValue('C24', '=SUM(C25:C30)');
+      $sheet->setCellValue('D24', '=SUM(D25:D30)');
+      $sheet->setCellValue('E24', '=SUM(E25:E30)');
+      $sheet->setCellValue('F24', '=SUM(F25:F30)');
+      $sheet->setCellValue('G24', '=SUM(G25:G30)');
+      $sheet->setCellValue('H24', '=SUM(H25:H30)');
+      $sheet->setCellValue('I24', '=SUM(I25:I30)');
+      $sheet->setCellValue('J24', '=SUM(J25:J30)');
+      $sheet->setCellValue('K24', '=SUM(K25:K30)');
+      $sheet->setCellValue('L24', '=SUM(L25:L30)');
+      $sheet->setCellValue('M24', '=SUM(M25:M30)');
+//      $sheet->setCellValue('N24', '=SUM(N25:N30)');
+//      $sheet->setCellValue('O24', '=SUM(O25:O30)');
+//      $sheet->setCellValue('P24', '=SUM(P25:P30)');
+//      $sheet->setCellValue('Q24', '=SUM(Q25:Q30)');
+//      $sheet->setCellValue('R24', '=SUM(R25:R30)');
 
-      $sheet->setCellValue('A38', '63490');
-      $sheet->setCellValue('B38', 'прочие материалы, в т.ч.:');
-      $sheet->setCellValue('C38', '=SUM(C39:C45)');
-      $sheet->setCellValue('D38', '=SUM(D39:D45)');
-      $sheet->setCellValue('E38', '=SUM(E39:E45)');
-      $sheet->setCellValue('F38', '=SUM(F39:F45)');
-      $sheet->setCellValue('G38', '=SUM(G39:G45)');
-      $sheet->setCellValue('H38', '=SUM(H39:H45)');
-      $sheet->setCellValue('I38', '=SUM(I39:I45)');
-      $sheet->setCellValue('J38', '=SUM(J39:J45)');
-      $sheet->setCellValue('K38', '=SUM(K39:K45)');
-      $sheet->setCellValue('L38', '=SUM(L39:L45)');
-      $sheet->setCellValue('M38', '=SUM(M39:M45)');
-      $sheet->setCellValue('N38', '=SUM(N39:N45)');
-      $sheet->setCellValue('O38', '=SUM(O39:O45)');
-      $sheet->setCellValue('P38', '=SUM(P39:P45)');
-      $sheet->setCellValue('Q38', '=SUM(Q39:Q45)');
-      $sheet->setCellValue('R38', '=SUM(R39:R45)');
+      $sheet->setCellValue('A36', '63490');
+      $sheet->setCellValue('B36', 'прочие материалы, в т . ч .:');
+      $sheet->setCellValue('C36', '=SUM(C37:C43)');
+      $sheet->setCellValue('D36', '=SUM(D37:D43)');
+      $sheet->setCellValue('E36', '=SUM(E37:E43)');
+      $sheet->setCellValue('F36', '=SUM(F37:F43)');
+      $sheet->setCellValue('G36', '=SUM(G37:G43)');
+      $sheet->setCellValue('H36', '=SUM(H37:H43)');
+      $sheet->setCellValue('I36', '=SUM(I37:I43)');
+      $sheet->setCellValue('J36', '=SUM(J37:J43)');
+      $sheet->setCellValue('K36', '=SUM(K37:K43)');
+      $sheet->setCellValue('L36', '=SUM(L37:L43)');
+      $sheet->setCellValue('M36', '=SUM(M37:M43)');
+//      $sheet->setCellValue('N36', '=SUM(N37:N43)');
+//      $sheet->setCellValue('O36', '=SUM(O37:O43)');
+//      $sheet->setCellValue('P36', '=SUM(P37:P43)');
+//      $sheet->setCellValue('Q36', '=SUM(Q37:Q43)');
+//      $sheet->setCellValue('R36', '=SUM(R37:R43)');
 
       $item->groupBy('payment_balance_article_id')->each(function ($item, $key) use ($sheet) {
         $source = $item->groupBy('source_id')->map(function ($item) {
@@ -685,13 +681,32 @@ class ApplicationService
         });
 
         if ($key <= 4) {
+          $sheet->setCellValue('A' . (9 + $key), $item[0]->article->code);
+          $sheet->setCellValue('B' . (9 + $key), $item[0]->article->name);
+          $sheet->setCellValue('C' . (9 + $key), $source['1']['01']);
+          $sheet->setCellValue('D' . (9 + $key), $source['1']['21']);
+          $sheet->setCellValue('E' . (9 + $key), $source['1']['61']);
+          $sheet->setCellValue('F' . (9 + $key), $source['1']['81']);
+          $sheet->setCellValue('G' . (9 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81']);
+          $sheet->setCellValue('H' . (9 + $key), $source['2']['01']);
+          $sheet->setCellValue('I' . (9 + $key), $source['2']['21']);
+          $sheet->setCellValue('J' . (9 + $key), $source['2']['61']);
+          $sheet->setCellValue('K' . (9 + $key), $source['2']['81']);
+          $sheet->setCellValue('L' . (9 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
+          $sheet->setCellValue('M' . (9 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
+            $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+//          $sheet->setCellValue('N' . (9 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (9 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (9 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (9 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (9 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+        } else if ($key <= 12) {
           $sheet->setCellValue('A' . (11 + $key), $item[0]->article->code);
           $sheet->setCellValue('B' . (11 + $key), $item[0]->article->name);
           $sheet->setCellValue('C' . (11 + $key), $source['1']['01']);
           $sheet->setCellValue('D' . (11 + $key), $source['1']['21']);
           $sheet->setCellValue('E' . (11 + $key), $source['1']['61']);
           $sheet->setCellValue('F' . (11 + $key), $source['1']['81']);
-          $sheet->setCellValue('G' . (11 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81']);
           $sheet->setCellValue('H' . (11 + $key), $source['2']['01']);
           $sheet->setCellValue('I' . (11 + $key), $source['2']['21']);
           $sheet->setCellValue('J' . (11 + $key), $source['2']['61']);
@@ -699,12 +714,31 @@ class ApplicationService
           $sheet->setCellValue('L' . (11 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
           $sheet->setCellValue('M' . (11 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
             $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-          $sheet->setCellValue('N' . (11 + $key), $source['3']['01']);
-          $sheet->setCellValue('O' . (11 + $key), $source['3']['21']);
-          $sheet->setCellValue('P' . (11 + $key), $source['3']['61']);
-          $sheet->setCellValue('Q' . (11 + $key), $source['3']['81']);
-          $sheet->setCellValue('R' . (11 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        } else if ($key <= 12) {
+//          $sheet->setCellValue('N' . (11 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (11 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (11 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (11 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (11 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+        } else if ($key <= 23) {
+          $sheet->setCellValue('A' . (12 + $key), $item[0]->article->code);
+          $sheet->setCellValue('B' . (12 + $key), $item[0]->article->name);
+          $sheet->setCellValue('C' . (12 + $key), $source['1']['01']);
+          $sheet->setCellValue('D' . (12 + $key), $source['1']['21']);
+          $sheet->setCellValue('E' . (12 + $key), $source['1']['61']);
+          $sheet->setCellValue('F' . (12 + $key), $source['1']['81']);
+          $sheet->setCellValue('H' . (12 + $key), $source['2']['01']);
+          $sheet->setCellValue('I' . (12 + $key), $source['2']['21']);
+          $sheet->setCellValue('J' . (12 + $key), $source['2']['61']);
+          $sheet->setCellValue('K' . (12 + $key), $source['2']['81']);
+          $sheet->setCellValue('L' . (12 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
+          $sheet->setCellValue('M' . (12 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
+            $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+//          $sheet->setCellValue('N' . (12 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (12 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (12 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (12 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (12 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+        } else if ($key > 23) {
           $sheet->setCellValue('A' . (13 + $key), $item[0]->article->code);
           $sheet->setCellValue('B' . (13 + $key), $item[0]->article->name);
           $sheet->setCellValue('C' . (13 + $key), $source['1']['01']);
@@ -718,49 +752,11 @@ class ApplicationService
           $sheet->setCellValue('L' . (13 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
           $sheet->setCellValue('M' . (13 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
             $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-          $sheet->setCellValue('N' . (13 + $key), $source['3']['01']);
-          $sheet->setCellValue('O' . (13 + $key), $source['3']['21']);
-          $sheet->setCellValue('P' . (13 + $key), $source['3']['61']);
-          $sheet->setCellValue('Q' . (13 + $key), $source['3']['81']);
-          $sheet->setCellValue('R' . (13 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        } else if ($key <= 23) {
-          $sheet->setCellValue('A' . (14 + $key), $item[0]->article->code);
-          $sheet->setCellValue('B' . (14 + $key), $item[0]->article->name);
-          $sheet->setCellValue('C' . (14 + $key), $source['1']['01']);
-          $sheet->setCellValue('D' . (14 + $key), $source['1']['21']);
-          $sheet->setCellValue('E' . (14 + $key), $source['1']['61']);
-          $sheet->setCellValue('F' . (14 + $key), $source['1']['81']);
-          $sheet->setCellValue('H' . (14 + $key), $source['2']['01']);
-          $sheet->setCellValue('I' . (14 + $key), $source['2']['21']);
-          $sheet->setCellValue('J' . (14 + $key), $source['2']['61']);
-          $sheet->setCellValue('K' . (14 + $key), $source['2']['81']);
-          $sheet->setCellValue('L' . (14 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
-          $sheet->setCellValue('M' . (14 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
-            $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-          $sheet->setCellValue('N' . (14 + $key), $source['3']['01']);
-          $sheet->setCellValue('O' . (14 + $key), $source['3']['21']);
-          $sheet->setCellValue('P' . (14 + $key), $source['3']['61']);
-          $sheet->setCellValue('Q' . (14 + $key), $source['3']['81']);
-          $sheet->setCellValue('R' . (14 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        } else if ($key > 23) {
-          $sheet->setCellValue('A' . (15 + $key), $item[0]->article->code);
-          $sheet->setCellValue('B' . (15 + $key), $item[0]->article->name);
-          $sheet->setCellValue('C' . (15 + $key), $source['1']['01']);
-          $sheet->setCellValue('D' . (15 + $key), $source['1']['21']);
-          $sheet->setCellValue('E' . (15 + $key), $source['1']['61']);
-          $sheet->setCellValue('F' . (15 + $key), $source['1']['81']);
-          $sheet->setCellValue('H' . (15 + $key), $source['2']['01']);
-          $sheet->setCellValue('I' . (15 + $key), $source['2']['21']);
-          $sheet->setCellValue('J' . (15 + $key), $source['2']['61']);
-          $sheet->setCellValue('K' . (15 + $key), $source['2']['81']);
-          $sheet->setCellValue('L' . (15 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
-          $sheet->setCellValue('M' . (15 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
-            $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-          $sheet->setCellValue('N' . (15 + $key), $source['3']['01']);
-          $sheet->setCellValue('O' . (15 + $key), $source['3']['21']);
-          $sheet->setCellValue('P' . (15 + $key), $source['3']['61']);
-          $sheet->setCellValue('Q' . (15 + $key), $source['3']['81']);
-          $sheet->setCellValue('R' . (15 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+//          $sheet->setCellValue('N' . (13 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (13 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (13 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (13 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (13 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
         }
       });
     });
@@ -771,287 +767,283 @@ class ApplicationService
     $this->spreadsheet->setActiveSheetIndex($length);
     $sheet = $this->spreadsheet->getActiveSheet();
     $sheet->getSheetView()->setZoomScale(75);
-    $sheet->setTitle(str_replace('ДКРЭ_', '', 'ВСЕГО'));
-    $sheet->getStyle('A7:R45')->getBorders()->getAllBorders()->setBorderStyle('thin');
-    $sheet->getStyle('C10:R45')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
-    $sheet->getStyle('C10:R45')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('C10:R45')->getAlignment()->setVertical('center');
+    $sheet->setTitle(str_replace('ДКРЭ_', '', 'ИТОГО'));
+    $sheet->getStyle('A5:M43')->getBorders()->getAllBorders()->setBorderStyle('thin');
+    $sheet->getStyle('C8:M43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
+    $sheet->getStyle('C8:M43')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('C8:M43')->getAlignment()->setVertical('center');
     /* Заголовок */
-    $sheet->setCellValue('A1', 'ЗАЯВКА');
+    $sheet->setCellValue('A1', 'ЗАЯВКА на финансирование поставки МТР на ' . $period_name . ' ' . date('Y') . ' года');
     $sheet->getStyle('A1')->getFont()->setBold(true);
     $sheet->getStyle('A1')->getFont()->setSize('20');
     $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
-    $sheet->mergeCells('A1:R1');
-    /* Подзаголовок */
-    $sheet->setCellValue('A2', "на финансирование поставки материально-технических ресурсов на 2020 г.");
-    $sheet->getStyle('A2')->getFont()->setSize('20');
-    $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
-    $sheet->mergeCells('A2:R2');
+    $sheet->mergeCells('A1:M1');
     /* ДКРЭ */
-    $sheet->setCellValue('A3', 'Дирекция капитального ремонта и реконструкции объектов электрификации и электроснабжения железных дорог (ДКРЭ)');
-    $sheet->getStyle('A3')->getAlignment()->setHorizontal('center');
-    $sheet->mergeCells('A3:R3');
-    $sheet->setCellValue('B5', 'ВСЕГО');
+    $sheet->setCellValue('B3', 'Наименование филиала');
+    $sheet->setCellValue('C3', 'ДКРЭ (ИТОГ)');
+    $sheet->getStyle('C3')->getAlignment()->setHorizontal('center');
+    $sheet->mergeCells('C3:F3');
     /* ЕИ */
-    $sheet->setCellValue('A6', "(тыс.руб. с НДС)");
-    $sheet->getStyle('A6')->getFont()->setSize('12');
-    $sheet->getStyle('A6')->getAlignment()->setHorizontal('right');
-    $sheet->mergeCells('A6:R6');
+    $sheet->setCellValue('A4', "(тыс.руб. с НДС)");
+    $sheet->getStyle('A4')->getFont()->setSize('12');
+    $sheet->getStyle('A4')->getAlignment()->setHorizontal('right');
+    $sheet->mergeCells('A4:M4');
     /* Заголовки */
-    $sheet->setCellValue('A7', '№ статьи');
-    $sheet->mergeCells('A7:A9');
-    $sheet->getStyle('A7')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('A7')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('A5', '№ статьи');
+    $sheet->mergeCells('A5:A7');
+    $sheet->getStyle('A5')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('A5')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('A')->setAutoSize(false);
     $sheet->getColumnDimension('A')->setWidth(9);
     /* Статьи */
-    $sheet->setCellValue('B7', 'Наименование статей');
-    $sheet->mergeCells('B7:B9');
-    $sheet->getStyle('B7')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('B7')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('B5', 'Наименование статей');
+    $sheet->mergeCells('B5:B7');
+    $sheet->getStyle('B5')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('B5')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('B')->setAutoSize(false);
     $sheet->getColumnDimension('B')->setWidth(44);
     /* Период */
-    $sheet->setCellValue('C7', '');
-    $sheet->mergeCells('C7:R7');
-    $sheet->getStyle('C7')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('C7')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('C5', $period_name . ' ' . date('Y') . ' г . ');
+    $sheet->mergeCells('C5:M5');
+    $sheet->getStyle('C5')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('C5')->getAlignment()->setVertical('center');
     /* ЦЗ */
-    $sheet->setCellValue('C8', 'Централизованная поставка');
-    $sheet->mergeCells('C8:F8');
-    $sheet->getStyle('C8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('C8')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('C6', 'Централизованная поставка');
+    $sheet->mergeCells('C6:F6');
+    $sheet->getStyle('C6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('C6')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('C')->setAutoSize(false);
     $sheet->getColumnDimension('C')->setWidth(14);
     /* Итого */
-    $sheet->setCellValue('G8', 'Итого');
-    $sheet->mergeCells('G8:G9');
-    $sheet->getStyle('G8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('G8')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('G6', 'Итого');
+    $sheet->mergeCells('G6:G7');
+    $sheet->getStyle('G6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('G6')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('G')->setAutoSize(false);
     $sheet->getColumnDimension('G')->setWidth(14);
     /* ПЕР */
-    $sheet->setCellValue('C9', 'Перевозки');
-    $sheet->getStyle('C9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('C9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('C7', 'Перевозки');
+    $sheet->getStyle('C7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('C7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('C')->setAutoSize(false);
     $sheet->getColumnDimension('C')->setWidth(14);
     /* ПВД */
-    $sheet->setCellValue('D9', 'ПВД');
-    $sheet->getStyle('D9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('D9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('D7', 'ПВД');
+    $sheet->getStyle('D7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('D7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('D')->setAutoSize(false);
     $sheet->getColumnDimension('D')->setWidth(14);
     /* ИНВ */
-    $sheet->setCellValue('E9', 'КВ');
-    $sheet->getStyle('E9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('E9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('E7', 'КВ');
+    $sheet->getStyle('E7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('E7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('E')->setAutoSize(false);
     $sheet->getColumnDimension('E')->setWidth(14);
     /* ПРО */
-    $sheet->setCellValue('F9', 'Прочие');
-    $sheet->getStyle('F9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('F9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('F7', 'Прочие');
+    $sheet->getStyle('F7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('F7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('F')->setAutoSize(false);
     $sheet->getColumnDimension('F')->setWidth(14);
     /* СЗ */
-    $sheet->setCellValue('H8', 'Самостоятельная закупка');
-    $sheet->mergeCells('H8:K8');
-    $sheet->getStyle('H8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('H8')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('H6', 'Самостоятельная закупка');
+    $sheet->mergeCells('H6:K6');
+    $sheet->getStyle('H6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('H6')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('H')->setAutoSize(false);
     $sheet->getColumnDimension('H')->setWidth(14);
     /* Итого */
-    $sheet->setCellValue('L8', 'Итого');
-    $sheet->mergeCells('L8:L9');
-    $sheet->getStyle('L8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('L8')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('L6', 'Итого');
+    $sheet->mergeCells('L6:L7');
+    $sheet->getStyle('L6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('L6')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('L')->setAutoSize(false);
     $sheet->getColumnDimension('L')->setWidth(14);
     /* ПЕР */
-    $sheet->setCellValue('H9', 'Перевозки');
-    $sheet->getStyle('H9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('H9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('H7', 'Перевозки');
+    $sheet->getStyle('H7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('H7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('H')->setAutoSize(false);
     $sheet->getColumnDimension('H')->setWidth(14);
     /* ПВД */
-    $sheet->setCellValue('I9', 'ПВД');
-    $sheet->getStyle('I9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('I9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('I7', 'ПВД');
+    $sheet->getStyle('I7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('I7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('I')->setAutoSize(false);
     $sheet->getColumnDimension('I')->setWidth(14);
     /* ИНВ */
-    $sheet->setCellValue('J9', 'КВ');
-    $sheet->getStyle('J9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('J9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('J7', 'КВ');
+    $sheet->getStyle('J7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('J7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('J')->setAutoSize(false);
     $sheet->getColumnDimension('J')->setWidth(14);
     /* ПРО */
-    $sheet->setCellValue('K9', 'Прочие');
-    $sheet->getStyle('K9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('K9')->getAlignment()->setVertical('center');
+    $sheet->setCellValue('K7', 'Самостоятельная закупка');
+    $sheet->getStyle('K7')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('K7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('K')->setAutoSize(false);
     $sheet->getColumnDimension('K')->setWidth(14);
     /* ВСЕГО */
-    $sheet->setCellValue('M8', 'ВСЕГО');
-    $sheet->mergeCells('M8:M9');
-    $sheet->getStyle('M8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('M8')->getAlignment()->setVertical('center');
-    $sheet->getStyle('M8')->getFont()->setBold(true);
+    $sheet->setCellValue('M6', 'ВСЕГО');
+    $sheet->mergeCells('M6:M7');
+    $sheet->getStyle('M6')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('M6')->getAlignment()->setVertical('center');
+    $sheet->getStyle('M6')->getFont()->setBold(true);
     $sheet->getColumnDimension('M')->setAutoSize(false);
     $sheet->getColumnDimension('M')->setWidth(14);
     /* ЧДФ */
-    $sheet->setCellValue('N8', 'Закупка через другие филиалы');
-    $sheet->mergeCells('N8:Q8');
-    $sheet->getStyle('N8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('N8')->getAlignment()->setVertical('center');
-    $sheet->getColumnDimension('N')->setAutoSize(false);
-    $sheet->getColumnDimension('N')->setWidth(14);
-    /* Итого */
-    $sheet->setCellValue('R8', 'Итого');
-    $sheet->mergeCells('R8:R9');
-    $sheet->getStyle('R8')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('R8')->getAlignment()->setVertical('center');
-    $sheet->getColumnDimension('R')->setAutoSize(false);
-    $sheet->getColumnDimension('R')->setWidth(14);
-    /* ПЕР */
-    $sheet->setCellValue('N9', 'Перевозки');
-    $sheet->getStyle('N9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('N9')->getAlignment()->setVertical('center');
-    $sheet->getColumnDimension('N')->setAutoSize(false);
-    $sheet->getColumnDimension('N')->setWidth(14);
-    /* ПВД */
-    $sheet->setCellValue('O9', 'ПВД');
-    $sheet->getStyle('O9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('O9')->getAlignment()->setVertical('center');
-    $sheet->getColumnDimension('O')->setAutoSize(false);
-    $sheet->getColumnDimension('O')->setWidth(14);
-    /* ИНВ */
-    $sheet->setCellValue('P9', 'КВ');
-    $sheet->getStyle('P9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('P9')->getAlignment()->setVertical('center');
-    $sheet->getColumnDimension('P')->setAutoSize(false);
-    $sheet->getColumnDimension('P')->setWidth(14);
-    /* ПРО */
-    $sheet->setCellValue('Q9', 'Прочие');
-    $sheet->getStyle('Q9')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('Q9')->getAlignment()->setVertical('center');
-    $sheet->getColumnDimension('Q')->setAutoSize(false);
-    $sheet->getColumnDimension('Q')->setWidth(14);
+//    $sheet->setCellValue('N8', 'Закупка через другие филиалы');
+//    $sheet->mergeCells('N8:Q8');
+//    $sheet->getStyle('N8')->getAlignment()->setHorizontal('center');
+//    $sheet->getStyle('N8')->getAlignment()->setVertical('center');
+//    $sheet->getColumnDimension('N')->setAutoSize(false);
+//    $sheet->getColumnDimension('N')->setWidth(14);
+//    /* Итого */
+//    $sheet->setCellValue('R8', 'Итого');
+//    $sheet->mergeCells('R8:R9');
+//    $sheet->getStyle('R8')->getAlignment()->setHorizontal('center');
+//    $sheet->getStyle('R8')->getAlignment()->setVertical('center');
+//    $sheet->getColumnDimension('R')->setAutoSize(false);
+//    $sheet->getColumnDimension('R')->setWidth(14);
+//    /* ПЕР */
+//    $sheet->setCellValue('N9', 'Перевозки');
+//    $sheet->getStyle('N9')->getAlignment()->setHorizontal('center');
+//    $sheet->getStyle('N9')->getAlignment()->setVertical('center');
+//    $sheet->getColumnDimension('N')->setAutoSize(false);
+//    $sheet->getColumnDimension('N')->setWidth(14);
+//    /* ПВД */
+//    $sheet->setCellValue('O9', 'ПВД');
+//    $sheet->getStyle('O9')->getAlignment()->setHorizontal('center');
+//    $sheet->getStyle('O9')->getAlignment()->setVertical('center');
+//    $sheet->getColumnDimension('O')->setAutoSize(false);
+//    $sheet->getColumnDimension('O')->setWidth(14);
+//    /* ИНВ */
+//    $sheet->setCellValue('P9', 'КВ');
+//    $sheet->getStyle('P9')->getAlignment()->setHorizontal('center');
+//    $sheet->getStyle('P9')->getAlignment()->setVertical('center');
+//    $sheet->getColumnDimension('P')->setAutoSize(false);
+//    $sheet->getColumnDimension('P')->setWidth(14);
+//    /* ПРО */
+//    $sheet->setCellValue('Q9', 'Прочие');
+//    $sheet->getStyle('Q9')->getAlignment()->setHorizontal('center');
+//    $sheet->getStyle('Q9')->getAlignment()->setVertical('center');
+//    $sheet->getColumnDimension('Q')->setAutoSize(false);
+//    $sheet->getColumnDimension('Q')->setWidth(14);
 
-    $sheet->setCellValue('A10', '');
-    $sheet->setCellValue('B10', 'ВСЕГО РЖДС, в том числе:');
-    $sheet->setCellValue('C10', '=C11+C16');
-    $sheet->setCellValue('D10', '=D11+D16');
-    $sheet->setCellValue('E10', '=E11+E16');
-    $sheet->setCellValue('F10', '=F11+F16');
-    $sheet->setCellValue('G10', '=G11+G16');
-    $sheet->setCellValue('H10', '=H11+H16');
-    $sheet->setCellValue('I10', '=I11+I16');
-    $sheet->setCellValue('J10', '=J11+J16');
-    $sheet->setCellValue('K10', '=K11+K16');
-    $sheet->setCellValue('L10', '=L11+L16');
-    $sheet->setCellValue('M10', '=M11+M16');
-    $sheet->setCellValue('N10', '=N11+N16');
-    $sheet->setCellValue('O10', '=O11+O16');
-    $sheet->setCellValue('P10', '=P11+P16');
-    $sheet->setCellValue('Q10', '=Q11+Q16');
-    $sheet->setCellValue('R10', '=R11+R16');
+    /* Таблица с данными*/
+    $sheet->setCellValue('A8', '');
+    $sheet->setCellValue('B8', 'ВСЕГО РЖДС, в том числе:');
+    $sheet->setCellValue('C8', '=C9 + C14');
+    $sheet->setCellValue('D8', '=D9 + D14');
+    $sheet->setCellValue('E8', '=E9 + E14');
+    $sheet->setCellValue('F8', '=F9 + F14');
+    $sheet->setCellValue('G8', '=G9 + G14');
+    $sheet->setCellValue('H8', '=H9 + H14');
+    $sheet->setCellValue('I8', '=I9 + I14');
+    $sheet->setCellValue('J8', '=J9 + J14');
+    $sheet->setCellValue('K8', '=K9 + K14');
+    $sheet->setCellValue('L8', '=L9 + L14');
+    $sheet->setCellValue('M8', '=M9 + M14');
+//      $sheet->setCellValue('N8', '=N9 + N14');
+//      $sheet->setCellValue('O8', '=O9 + O14');
+//      $sheet->setCellValue('P8', '=P9 + P14');
+//      $sheet->setCellValue('Q8', '=Q9 + Q14');
+//      $sheet->setCellValue('R8', '=R9 + R14');
 
-    $sheet->setCellValue('A11', '63300');
-    $sheet->setCellValue('B11', 'ТОПЛИВО ВСЕГО');
-    $sheet->setCellValue('C11', '=SUM(C12:C15)');
-    $sheet->setCellValue('D11', '=SUM(D12:D15)');
-    $sheet->setCellValue('E11', '=SUM(E12:E15)');
-    $sheet->setCellValue('F11', '=SUM(F12:F15)');
-    $sheet->setCellValue('G11', '=SUM(G12:G15)');
-    $sheet->setCellValue('H11', '=SUM(H12:H15)');
-    $sheet->setCellValue('I11', '=SUM(I12:I15)');
-    $sheet->setCellValue('J11', '=SUM(J12:J15)');
-    $sheet->setCellValue('K11', '=SUM(K12:K15)');
-    $sheet->setCellValue('L11', '=SUM(L12:L15)');
-    $sheet->setCellValue('M11', '=SUM(M12:M15)');
-    $sheet->setCellValue('N11', '=SUM(N12:N15)');
-    $sheet->setCellValue('O11', '=SUM(O12:O15)');
-    $sheet->setCellValue('P11', '=SUM(P12:P15)');
-    $sheet->setCellValue('Q11', '=SUM(Q12:Q15)');
-    $sheet->setCellValue('R11', '=SUM(R12:R15)');
+    $sheet->setCellValue('A9', '63300');
+    $sheet->setCellValue('B9', 'ТОПЛИВО ВСЕГО');
+    $sheet->setCellValue('C9', '=SUM(C10:C13)');
+    $sheet->setCellValue('D9', '=SUM(D10:D13)');
+    $sheet->setCellValue('E9', '=SUM(E10:E13)');
+    $sheet->setCellValue('F9', '=SUM(F10:F13)');
+    $sheet->setCellValue('G9', '=SUM(G10:G13)');
+    $sheet->setCellValue('H9', '=SUM(H10:H13)');
+    $sheet->setCellValue('I9', '=SUM(I10:I13)');
+    $sheet->setCellValue('J9', '=SUM(J10:J13)');
+    $sheet->setCellValue('K9', '=SUM(K10:K13)');
+    $sheet->setCellValue('L9', '=SUM(L10:L13)');
+    $sheet->setCellValue('M9', '=SUM(M10:M13)');
+//      $sheet->setCellValue('N9', '=SUM(N10:N13)');
+//      $sheet->setCellValue('O9', '=SUM(O10:O13)');
+//      $sheet->setCellValue('P9', '=SUM(P10:P13)');
+//      $sheet->setCellValue('Q9', '=SUM(Q10:Q13)');
+//      $sheet->setCellValue('R9', '=SUM(R10:R13)');
 
-    $sheet->setCellValue('A16', '63400');
-    $sheet->setCellValue('B16', 'МАТЕРИАЛЫ ВСЕГО');
-    $sheet->setCellValue('C16', '=C17+C26+C38+SUM(C33:C37)');
-    $sheet->setCellValue('D16', '=D17+D26+D38+SUM(D33:D37)');
-    $sheet->setCellValue('E16', '=E17+E26+E38+SUM(E33:E37)');
-    $sheet->setCellValue('F16', '=F17+F26+F38+SUM(F33:F37)');
-    $sheet->setCellValue('G16', '=G17+G26+G38+SUM(G33:G37)');
-    $sheet->setCellValue('H16', '=H17+H26+H38+SUM(H33:H37)');
-    $sheet->setCellValue('I16', '=I17+I26+I38+SUM(I33:I37)');
-    $sheet->setCellValue('J16', '=J17+J26+J38+SUM(J33:J37)');
-    $sheet->setCellValue('K16', '=K17+K26+K38+SUM(K33:K37)');
-    $sheet->setCellValue('L16', '=L17+L26+L38+SUM(L33:L37)');
-    $sheet->setCellValue('M16', '=M17+M26+M38+SUM(M33:M37)');
-    $sheet->setCellValue('N16', '=N17+N26+N38+SUM(N33:N37)');
-    $sheet->setCellValue('O16', '=O17+O26+O38+SUM(O33:O37)');
-    $sheet->setCellValue('P16', '=P17+P26+P38+SUM(P33:P37)');
-    $sheet->setCellValue('Q16', '=Q17+Q26+Q38+SUM(Q33:Q37)');
-    $sheet->setCellValue('R16', '=R17+R26+R38+SUM(R33:R37)');
+    $sheet->setCellValue('A14', '63400');
+    $sheet->setCellValue('B14', 'МАТЕРИАЛЫ ВСЕГО');
+    $sheet->setCellValue('C14', '=C15 + C24 + C36 + SUM(C31:C35)');
+    $sheet->setCellValue('D14', '=D15 + D24 + D36 + SUM(D31:D35)');
+    $sheet->setCellValue('E14', '=E15 + E24 + E36 + SUM(E31:E35)');
+    $sheet->setCellValue('F14', '=F15 + F24 + F36 + SUM(F31:F35)');
+    $sheet->setCellValue('G14', '=G15 + G24 + G36 + SUM(G31:G35)');
+    $sheet->setCellValue('H14', '=H15 + H24 + H36 + SUM(H31:H35)');
+    $sheet->setCellValue('I14', '=I15 + I24 + I36 + SUM(I31:I35)');
+    $sheet->setCellValue('J14', '=J15 + J24 + J36 + SUM(J31:J35)');
+    $sheet->setCellValue('K14', '=K15 + K24 + K36 + SUM(K31:K35)');
+    $sheet->setCellValue('L14', '=L15 + L24 + L36 + SUM(L31:L35)');
+    $sheet->setCellValue('M14', '=M15 + M24 + M36 + SUM(M31:M35)');
+//      $sheet->setCellValue('N14', '=N15 + N24 + N36 + SUM(N31:N35)');
+//      $sheet->setCellValue('O14', '=O15 + O24 + O36 + SUM(O31:O35)');
+//      $sheet->setCellValue('P14', '=P15 + P24 + P36 + SUM(P31:P35)');
+//      $sheet->setCellValue('Q14', '=Q15 + Q24 + Q36 + SUM(Q31:Q35)');
+//      $sheet->setCellValue('R14', '=R15 + R24 + R36 + SUM(R31:R35)');
 
-    $sheet->setCellValue('A17', '63410');
-    $sheet->setCellValue('B17', 'материалы верхнего строения пути в т.ч.:');
-    $sheet->setCellValue('C17', '=SUM(C18:C25)');
-    $sheet->setCellValue('D17', '=SUM(D18:D25)');
-    $sheet->setCellValue('E17', '=SUM(E18:E25)');
-    $sheet->setCellValue('F17', '=SUM(F18:F25)');
-    $sheet->setCellValue('G17', '=SUM(G18:G25)');
-    $sheet->setCellValue('H17', '=SUM(H18:H25)');
-    $sheet->setCellValue('I17', '=SUM(I18:I25)');
-    $sheet->setCellValue('J17', '=SUM(J18:J25)');
-    $sheet->setCellValue('K17', '=SUM(K18:K25)');
-    $sheet->setCellValue('L17', '=SUM(L18:L25)');
-    $sheet->setCellValue('M17', '=SUM(M18:M25)');
-    $sheet->setCellValue('N17', '=SUM(N18:N25)');
-    $sheet->setCellValue('O17', '=SUM(O18:O25)');
-    $sheet->setCellValue('P17', '=SUM(P18:P25)');
-    $sheet->setCellValue('Q17', '=SUM(Q18:Q25)');
-    $sheet->setCellValue('R17', '=SUM(R18:R25)');
+    $sheet->setCellValue('A15', '63410');
+    $sheet->setCellValue('B15', 'материалы верхнего строения пути в т . ч .:');
+    $sheet->setCellValue('C15', '=SUM(C16:C23)');
+    $sheet->setCellValue('D15', '=SUM(D16:D23)');
+    $sheet->setCellValue('E15', '=SUM(E16:E23)');
+    $sheet->setCellValue('F15', '=SUM(F16:F23)');
+    $sheet->setCellValue('G15', '=SUM(G16:G23)');
+    $sheet->setCellValue('H15', '=SUM(H16:H23)');
+    $sheet->setCellValue('I15', '=SUM(I16:I23)');
+    $sheet->setCellValue('J15', '=SUM(J16:J23)');
+    $sheet->setCellValue('K15', '=SUM(K16:K23)');
+    $sheet->setCellValue('L15', '=SUM(L16:L23)');
+    $sheet->setCellValue('M15', '=SUM(M16:M23)');
+//      $sheet->setCellValue('N15', '=SUM(N16:N23)');
+//      $sheet->setCellValue('O15', '=SUM(O16:O23)');
+//      $sheet->setCellValue('P15', '=SUM(P16:P23)');
+//      $sheet->setCellValue('Q15', '=SUM(Q16:Q23)');
+//      $sheet->setCellValue('R15', '=SUM(R16:R23)');
 
-    $sheet->setCellValue('A26', '63420');
-    $sheet->setCellValue('B26', 'запасные части, узлы и литые детали подвижного состава в т.ч.:');
-    $sheet->setCellValue('C26', '=SUM(C27:C32)');
-    $sheet->setCellValue('D26', '=SUM(D27:D32)');
-    $sheet->setCellValue('E26', '=SUM(E27:E32)');
-    $sheet->setCellValue('F26', '=SUM(F27:F32)');
-    $sheet->setCellValue('G26', '=SUM(G27:G32)');
-    $sheet->setCellValue('H26', '=SUM(H27:H32)');
-    $sheet->setCellValue('I26', '=SUM(I27:I32)');
-    $sheet->setCellValue('J26', '=SUM(J27:J32)');
-    $sheet->setCellValue('K26', '=SUM(K27:K32)');
-    $sheet->setCellValue('L26', '=SUM(L27:L32)');
-    $sheet->setCellValue('M26', '=SUM(M27:M32)');
-    $sheet->setCellValue('N26', '=SUM(N27:N32)');
-    $sheet->setCellValue('O26', '=SUM(O27:O32)');
-    $sheet->setCellValue('P26', '=SUM(P27:P32)');
-    $sheet->setCellValue('Q26', '=SUM(Q27:Q32)');
-    $sheet->setCellValue('R26', '=SUM(R27:R32)');
+    $sheet->setCellValue('A24', '63420');
+    $sheet->setCellValue('B24', 'запасные части, узлы и литые детали подвижного состава в т . ч .:');
+    $sheet->setCellValue('C24', '=SUM(C25:C30)');
+    $sheet->setCellValue('D24', '=SUM(D25:D30)');
+    $sheet->setCellValue('E24', '=SUM(E25:E30)');
+    $sheet->setCellValue('F24', '=SUM(F25:F30)');
+    $sheet->setCellValue('G24', '=SUM(G25:G30)');
+    $sheet->setCellValue('H24', '=SUM(H25:H30)');
+    $sheet->setCellValue('I24', '=SUM(I25:I30)');
+    $sheet->setCellValue('J24', '=SUM(J25:J30)');
+    $sheet->setCellValue('K24', '=SUM(K25:K30)');
+    $sheet->setCellValue('L24', '=SUM(L25:L30)');
+    $sheet->setCellValue('M24', '=SUM(M25:M30)');
+//      $sheet->setCellValue('N24', '=SUM(N25:N30)');
+//      $sheet->setCellValue('O24', '=SUM(O25:O30)');
+//      $sheet->setCellValue('P24', '=SUM(P25:P30)');
+//      $sheet->setCellValue('Q24', '=SUM(Q25:Q30)');
+//      $sheet->setCellValue('R24', '=SUM(R25:R30)');
 
-    $sheet->setCellValue('A38', '63490');
-    $sheet->setCellValue('B38', 'прочие материалы, в т.ч.:');
-    $sheet->setCellValue('C38', '=SUM(C39:C45)');
-    $sheet->setCellValue('D38', '=SUM(D39:D45)');
-    $sheet->setCellValue('E38', '=SUM(E39:E45)');
-    $sheet->setCellValue('F38', '=SUM(F39:F45)');
-    $sheet->setCellValue('G38', '=SUM(G39:G45)');
-    $sheet->setCellValue('H38', '=SUM(H39:H45)');
-    $sheet->setCellValue('I38', '=SUM(I39:I45)');
-    $sheet->setCellValue('J38', '=SUM(J39:J45)');
-    $sheet->setCellValue('K38', '=SUM(K39:K45)');
-    $sheet->setCellValue('L38', '=SUM(L39:L45)');
-    $sheet->setCellValue('M38', '=SUM(M39:M45)');
-    $sheet->setCellValue('N38', '=SUM(N39:N45)');
-    $sheet->setCellValue('O38', '=SUM(O39:O45)');
-    $sheet->setCellValue('P38', '=SUM(P39:P45)');
-    $sheet->setCellValue('Q38', '=SUM(Q39:Q45)');
-    $sheet->setCellValue('R38', '=SUM(R39:R45)');
+    $sheet->setCellValue('A36', '63490');
+    $sheet->setCellValue('B36', 'прочие материалы, в т . ч .:');
+    $sheet->setCellValue('C36', '=SUM(C37:C43)');
+    $sheet->setCellValue('D36', '=SUM(D37:D43)');
+    $sheet->setCellValue('E36', '=SUM(E37:E43)');
+    $sheet->setCellValue('F36', '=SUM(F37:F43)');
+    $sheet->setCellValue('G36', '=SUM(G37:G43)');
+    $sheet->setCellValue('H36', '=SUM(H37:H43)');
+    $sheet->setCellValue('I36', '=SUM(I37:I43)');
+    $sheet->setCellValue('J36', '=SUM(J37:J43)');
+    $sheet->setCellValue('K36', '=SUM(K37:K43)');
+    $sheet->setCellValue('L36', '=SUM(L37:L43)');
+    $sheet->setCellValue('M36', '=SUM(M37:M43)');
+//      $sheet->setCellValue('N36', '=SUM(N37:N43)');
+//      $sheet->setCellValue('O36', '=SUM(O37:O43)');
+//      $sheet->setCellValue('P36', '=SUM(P37:P43)');
+//      $sheet->setCellValue('Q36', '=SUM(Q37:Q43)');
+//      $sheet->setCellValue('R36', '=SUM(R37:R43)');
 
     $application->groupBy('payment_balance_article_id')->each(function ($item, $key) use ($sheet) {
       $source = $item->groupBy('source_id')->map(function ($item) {
@@ -1069,13 +1061,32 @@ class ApplicationService
       });
 
       if ($key <= 4) {
+        $sheet->setCellValue('A' . (9 + $key), $item[0]->article->code);
+        $sheet->setCellValue('B' . (9 + $key), $item[0]->article->name);
+        $sheet->setCellValue('C' . (9 + $key), $source['1']['01']);
+        $sheet->setCellValue('D' . (9 + $key), $source['1']['21']);
+        $sheet->setCellValue('E' . (9 + $key), $source['1']['61']);
+        $sheet->setCellValue('F' . (9 + $key), $source['1']['81']);
+        $sheet->setCellValue('G' . (9 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81']);
+        $sheet->setCellValue('H' . (9 + $key), $source['2']['01']);
+        $sheet->setCellValue('I' . (9 + $key), $source['2']['21']);
+        $sheet->setCellValue('J' . (9 + $key), $source['2']['61']);
+        $sheet->setCellValue('K' . (9 + $key), $source['2']['81']);
+        $sheet->setCellValue('L' . (9 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
+        $sheet->setCellValue('M' . (9 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
+          $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+//          $sheet->setCellValue('N' . (9 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (9 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (9 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (9 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (9 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+      } else if ($key <= 12) {
         $sheet->setCellValue('A' . (11 + $key), $item[0]->article->code);
         $sheet->setCellValue('B' . (11 + $key), $item[0]->article->name);
         $sheet->setCellValue('C' . (11 + $key), $source['1']['01']);
         $sheet->setCellValue('D' . (11 + $key), $source['1']['21']);
         $sheet->setCellValue('E' . (11 + $key), $source['1']['61']);
         $sheet->setCellValue('F' . (11 + $key), $source['1']['81']);
-        $sheet->setCellValue('G' . (11 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81']);
         $sheet->setCellValue('H' . (11 + $key), $source['2']['01']);
         $sheet->setCellValue('I' . (11 + $key), $source['2']['21']);
         $sheet->setCellValue('J' . (11 + $key), $source['2']['61']);
@@ -1083,12 +1094,31 @@ class ApplicationService
         $sheet->setCellValue('L' . (11 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
         $sheet->setCellValue('M' . (11 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
           $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        $sheet->setCellValue('N' . (11 + $key), $source['3']['01']);
-        $sheet->setCellValue('O' . (11 + $key), $source['3']['21']);
-        $sheet->setCellValue('P' . (11 + $key), $source['3']['61']);
-        $sheet->setCellValue('Q' . (11 + $key), $source['3']['81']);
-        $sheet->setCellValue('R' . (11 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-      } else if ($key <= 12) {
+//          $sheet->setCellValue('N' . (11 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (11 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (11 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (11 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (11 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+      } else if ($key <= 23) {
+        $sheet->setCellValue('A' . (12 + $key), $item[0]->article->code);
+        $sheet->setCellValue('B' . (12 + $key), $item[0]->article->name);
+        $sheet->setCellValue('C' . (12 + $key), $source['1']['01']);
+        $sheet->setCellValue('D' . (12 + $key), $source['1']['21']);
+        $sheet->setCellValue('E' . (12 + $key), $source['1']['61']);
+        $sheet->setCellValue('F' . (12 + $key), $source['1']['81']);
+        $sheet->setCellValue('H' . (12 + $key), $source['2']['01']);
+        $sheet->setCellValue('I' . (12 + $key), $source['2']['21']);
+        $sheet->setCellValue('J' . (12 + $key), $source['2']['61']);
+        $sheet->setCellValue('K' . (12 + $key), $source['2']['81']);
+        $sheet->setCellValue('L' . (12 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
+        $sheet->setCellValue('M' . (12 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
+          $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+//          $sheet->setCellValue('N' . (12 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (12 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (12 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (12 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (12 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+      } else if ($key > 23) {
         $sheet->setCellValue('A' . (13 + $key), $item[0]->article->code);
         $sheet->setCellValue('B' . (13 + $key), $item[0]->article->name);
         $sheet->setCellValue('C' . (13 + $key), $source['1']['01']);
@@ -1102,49 +1132,11 @@ class ApplicationService
         $sheet->setCellValue('L' . (13 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
         $sheet->setCellValue('M' . (13 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
           $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        $sheet->setCellValue('N' . (13 + $key), $source['3']['01']);
-        $sheet->setCellValue('O' . (13 + $key), $source['3']['21']);
-        $sheet->setCellValue('P' . (13 + $key), $source['3']['61']);
-        $sheet->setCellValue('Q' . (13 + $key), $source['3']['81']);
-        $sheet->setCellValue('R' . (13 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-      } else if ($key <= 23) {
-        $sheet->setCellValue('A' . (14 + $key), $item[0]->article->code);
-        $sheet->setCellValue('B' . (14 + $key), $item[0]->article->name);
-        $sheet->setCellValue('C' . (14 + $key), $source['1']['01']);
-        $sheet->setCellValue('D' . (14 + $key), $source['1']['21']);
-        $sheet->setCellValue('E' . (14 + $key), $source['1']['61']);
-        $sheet->setCellValue('F' . (14 + $key), $source['1']['81']);
-        $sheet->setCellValue('H' . (14 + $key), $source['2']['01']);
-        $sheet->setCellValue('I' . (14 + $key), $source['2']['21']);
-        $sheet->setCellValue('J' . (14 + $key), $source['2']['61']);
-        $sheet->setCellValue('K' . (14 + $key), $source['2']['81']);
-        $sheet->setCellValue('L' . (14 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
-        $sheet->setCellValue('M' . (14 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
-          $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        $sheet->setCellValue('N' . (14 + $key), $source['3']['01']);
-        $sheet->setCellValue('O' . (14 + $key), $source['3']['21']);
-        $sheet->setCellValue('P' . (14 + $key), $source['3']['61']);
-        $sheet->setCellValue('Q' . (14 + $key), $source['3']['81']);
-        $sheet->setCellValue('R' . (14 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-      } else if ($key > 23) {
-        $sheet->setCellValue('A' . (15 + $key), $item[0]->article->code);
-        $sheet->setCellValue('B' . (15 + $key), $item[0]->article->name);
-        $sheet->setCellValue('C' . (15 + $key), $source['1']['01']);
-        $sheet->setCellValue('D' . (15 + $key), $source['1']['21']);
-        $sheet->setCellValue('E' . (15 + $key), $source['1']['61']);
-        $sheet->setCellValue('F' . (15 + $key), $source['1']['81']);
-        $sheet->setCellValue('H' . (15 + $key), $source['2']['01']);
-        $sheet->setCellValue('I' . (15 + $key), $source['2']['21']);
-        $sheet->setCellValue('J' . (15 + $key), $source['2']['61']);
-        $sheet->setCellValue('K' . (15 + $key), $source['2']['81']);
-        $sheet->setCellValue('L' . (15 + $key), $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81']);
-        $sheet->setCellValue('M' . (15 + $key), $source['1']['01'] + $source['1']['21'] + $source['1']['61'] + $source['1']['81'] +
-          $source['2']['01'] + $source['2']['21'] + $source['2']['61'] + $source['2']['81'] + $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
-        $sheet->setCellValue('N' . (15 + $key), $source['3']['01']);
-        $sheet->setCellValue('O' . (15 + $key), $source['3']['21']);
-        $sheet->setCellValue('P' . (15 + $key), $source['3']['61']);
-        $sheet->setCellValue('Q' . (15 + $key), $source['3']['81']);
-        $sheet->setCellValue('R' . (15 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
+//          $sheet->setCellValue('N' . (13 + $key), $source['3']['01']);
+//          $sheet->setCellValue('O' . (13 + $key), $source['3']['21']);
+//          $sheet->setCellValue('P' . (13 + $key), $source['3']['61']);
+//          $sheet->setCellValue('Q' . (13 + $key), $source['3']['81']);
+//          $sheet->setCellValue('R' . (13 + $key), $source['3']['01'] + $source['3']['21'] + $source['3']['61'] + $source['3']['81']);
       }
     });
 

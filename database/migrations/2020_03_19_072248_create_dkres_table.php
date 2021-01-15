@@ -18,6 +18,7 @@ class CreateDkresTable extends Migration
       $table->integer('be');
       $table->string('name');
       $table->string('region');
+      $table->string('area');
       $table->timestamps();
     });
   }

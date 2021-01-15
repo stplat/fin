@@ -59,8 +59,8 @@
     data() {
       return {
         data: {
-          periods: [ 3 ],
-          version: 11,
+          periods: [ 2 ],
+          version: 2,
         },
         modals: {
           upload: false

@@ -23,7 +23,7 @@ class ShipmentController extends Controller
       'data' => collect([
         'dkres' => $this->shipmentService->getDkres(),
         'regions' => $this->shipmentService->getRegions(),
-        'months' => $this->shipmentService->getPeriods('month'),
+        'months' => $this->shipmentService->getPeriods(),
         'versions' => $this->shipmentService->getVersions(),
       ])
     ]);

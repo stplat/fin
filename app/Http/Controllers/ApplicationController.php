@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Period;
 use App\Services\ApplicationService;
 use App\Http\Requests\Application\ApplicationAll;
 use App\Http\Requests\Application\ApplicationUpdate;
@@ -23,6 +24,7 @@ class ApplicationController extends Controller
 
   public function index()
   {
+
 //    dd($this->applicationService->getApplications([3], 24, 1, 11, 1, 11, 2)->toArray());
     return view('application')->with([
       'data' => collect([

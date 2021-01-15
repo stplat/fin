@@ -115,12 +115,12 @@
     data() {
       return {
         data: {
-          periods: [15],
+          periods: [2],
           article: 1,
-          version_budget: 11,
+          version_budget: 2,
           version_involvement: 1,
-          version_f22: 11,
-          version_shipment: 11
+          version_f22: 2,
+          version_shipment: 2
         },
         modals: {
           upload: false
