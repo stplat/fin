@@ -31,7 +31,7 @@
             <button class="btn btn-secondary float-right mr-1" @click="download">Экспорт</button>
           </div>
           <div class="col-md-3" v-if="consolidateToggle">
-            <button class="btn btn-danger mt-4" @click="consolidate">Консолидировать квартал</button>
+            <button class="btn btn-danger mt-4" @click="consolidate">Консолидировать</button>
           </div>
           <!--          <div class="col-md-3">-->
           <!--            <div class="form-group">-->
@@ -202,7 +202,7 @@
     computed: {
       consolidateToggle() {
         return this.dataForProps.periods.length === 1 &&
-          ( this.dataForProps.periods[0] === 2 || this.dataForProps.periods[0] === 6 || this.dataForProps.periods[0] === 10 || this.dataForProps.periods[0] === 14 )
+          ( this.dataForProps.periods[0] === 1 || this.dataForProps.periods[0] === 2 || this.dataForProps.periods[0] === 6 || this.dataForProps.periods[0] === 10 || this.dataForProps.periods[0] === 14 )
       },
       periods() {
         return this.initialData.periods;

@@ -350,6 +350,8 @@ class ApplicationService
       $months = '15, 16, 17';
     } else if ($period == 2) {
       $months = '3, 4, 5, 7, 8, 9, 11, 12, 13, 15, 16, 17';
+    } else if ($period == 1) {
+      $months = '2, 6, 10, 14';
     }
 
     $data = DB::select("
