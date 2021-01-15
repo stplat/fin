@@ -392,16 +392,22 @@ class ApplicationService
       $sheet = $this->spreadsheet->getActiveSheet();
       $sheet->getSheetView()->setZoomScale(75);
       $sheet->setTitle(str_replace('ДКРЭ_', '', $item[0]->dkre->area));
-      $sheet->getStyle('A5:M43')->getBorders()->getAllBorders()->setBorderStyle('thin');
-      $sheet->getStyle('C8:M43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
-      $sheet->getStyle('C8:M43')->getAlignment()->setHorizontal('center');
-      $sheet->getStyle('C8:M43')->getAlignment()->setVertical('center');
+      $sheet->getStyle('A5:O43')->getBorders()->getAllBorders()->setBorderStyle('thin');
+      $sheet->getStyle('C8:O43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
+      $sheet->getStyle('C8:O43')->getAlignment()->setHorizontal('center');
+      $sheet->getStyle('C8:O43')->getAlignment()->setVertical('center');
       /* Заголовок */
       $sheet->setCellValue('A1', 'ЗАЯВКА на финансирование поставки МТР на ' . $item[0]->period->name . ' ' . date('Y') . ' года');
       $sheet->getStyle('A1')->getFont()->setBold(true);
       $sheet->getStyle('A1')->getFont()->setSize('20');
       $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
       $sheet->mergeCells('A1:M1');
+      /* Товары */
+      $sheet->setCellValue('N6', 'Товары ЦЗ');
+      $sheet->setCellValue('O6', 'Товары СЗ');
+      $sheet->mergeCells('N5:O5');
+      $sheet->mergeCells('N6:N7');
+      $sheet->mergeCells('O6:O7');
       /* ДКРЭ */
       $sheet->setCellValue('B3', 'Наименование филиала');
       $sheet->setCellValue('C3', 'ДКРЭ (' . $item[0]->dkre->area . ')');
@@ -771,16 +777,22 @@ class ApplicationService
     $sheet = $this->spreadsheet->getActiveSheet();
     $sheet->getSheetView()->setZoomScale(75);
     $sheet->setTitle(str_replace('ДКРЭ_', '', 'ИТОГО'));
-    $sheet->getStyle('A5:M43')->getBorders()->getAllBorders()->setBorderStyle('thin');
-    $sheet->getStyle('C8:M43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
-    $sheet->getStyle('C8:M43')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('C8:M43')->getAlignment()->setVertical('center');
+    $sheet->getStyle('A5:O43')->getBorders()->getAllBorders()->setBorderStyle('thin');
+    $sheet->getStyle('C8:O43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
+    $sheet->getStyle('C8:O43')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('C8:O43')->getAlignment()->setVertical('center');
     /* Заголовок */
     $sheet->setCellValue('A1', 'ЗАЯВКА на финансирование поставки МТР на ' . $period_name . ' ' . date('Y') . ' года');
     $sheet->getStyle('A1')->getFont()->setBold(true);
     $sheet->getStyle('A1')->getFont()->setSize('20');
     $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
     $sheet->mergeCells('A1:M1');
+    /* Товары */
+    $sheet->setCellValue('N6', 'Товары ЦЗ');
+    $sheet->setCellValue('O6', 'Товары СЗ');
+    $sheet->mergeCells('N5:O5');
+    $sheet->mergeCells('N6:N7');
+    $sheet->mergeCells('O6:O7');
     /* ДКРЭ */
     $sheet->setCellValue('B3', 'Наименование филиала');
     $sheet->setCellValue('C3', 'ДКРЭ (ИТОГ)');
