@@ -1,0 +1,34 @@
+/* БЛОК с кастомным чекбоксом */
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  input:checked + label:after {
+    display: block;
+  }
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #007bff;
+    border-radius: 1px;
+    margin: 0;
+    background: #fff;
+    position: relative;
+    cursor: pointer;
+
+    &:after {
+      content: '';
+      width: 14px;
+      height: 14px;
+      background-color: #007bff;
+      display: none;
+      border-radius: 1px;
+    }
+  }
+}

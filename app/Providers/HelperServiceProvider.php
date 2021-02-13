@@ -25,5 +25,6 @@ class HelperServiceProvider extends ServiceProvider
   {
     require app_path('Helpers/FormatNumberHelper.php');
     require app_path('Helpers/ParserInObjectExcelHelper.php');
+    require app_path('Helpers/ExcelParseHelper.php');
   }
 }

@@ -1,4 +1,4 @@
-/* Боковое меню  */
+/* БЛОК с боковым меню  */
 .menu {
   list-style-type: none;
   color: #FFFFFF;
@@ -6,9 +6,20 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
+/* ЭЛЕМЕНТ подзаголовка меню */
+.menu__title {
+  padding: .75rem 1rem;
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 85%;
+  text-transform: uppercase;
+  transition: .25s;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ЭЛЕМЕНТ списка меню */
 .menu__item {
   flex: 0 0 auto;
 
@@ -21,6 +32,7 @@
   }
 }
 
+/* ЭЛЕМЕНТ ссылки меню */
 .menu__link {
   padding: 13px 10px 13px 65px;
   display: block;
@@ -30,7 +42,7 @@
   position: relative;
 
   &:before {
-    content: '\F0F7';
+    content: '\E803';
     font-family: $font-icons;
     position: absolute;
     left: 25px;
@@ -49,18 +61,25 @@
     color: #FFFFFF;
     background: #007bff;
   }
+
+  &.is-active + .menu__dropdown {
+    max-height: 1500px;
+  }
 }
 
-.menu__link--check:before {
-  content: '\E800';
+/* МОДИФИКАТОР ссылки - проверка */
+.menu__link--empty:before {
+  content: none;
   left: 24px;
 }
 
+/* МОДИФИКАТОР ссылки - проверка */
 .menu__link--settings:before {
   content: '\E801';
   left: 24px;
 }
 
+/* МОДИФИКАТОР ссылки - проверка */
 .menu__link--applicant {
 
   &:before {
@@ -76,18 +95,35 @@
   }
 }
 
+/* МОДИФИКАТОР ссылки - проверка */
 .menu__link--user:before {
   content: '\E802';
   left: 24px;
 }
 
+/* МОДИФИКАТОР ссылки - со стрелкой выпадающего списка */
+.menu__link--dropdown {
+  &:after {
+    content: '\E80B';
+    font-family: $font-icons;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    right: 15px;
+    transition: transform 0.08s;
+  }
 
-.menu__title {
-  padding: .75rem 1rem;
-  margin-top: 1rem;
-  font-weight: 700;
-  font-size: 85%;
-  text-transform: uppercase;
-  transition: .25s;
-  color: rgba(255, 255, 255, 0.6);
+  &.is-active {
+    &:after {
+      transform: translateY(-50%) rotate(0);
+    }
+  }
+}
+
+/* ЭЛЕМЕНТ выпадающего списка */
+.menu__dropdown {
+  max-height: 0;
+  overflow: hidden;
+  list-style-type: none;
+  padding: 0;
 }

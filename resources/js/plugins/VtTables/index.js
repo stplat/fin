@@ -5,7 +5,9 @@ import VtSortControl from './VtSortControl';
 
 Vue.use(ClientTable,
   {
-    sortByColumn: true, texts: {
+    sortByColumn: true,
+    sortable: ['code', 'size', 'gost', 'quantity', 'price'],
+    texts: {
       count: 'Показано с {from} по {to} из {count} записей|Записей: {count}|Одна запись',
       first: 'Первый',
       last: 'Последний',

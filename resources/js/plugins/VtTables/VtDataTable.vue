@@ -1,10 +1,33 @@
 <style lang="scss">
+  .table {
+
+  }
+
   .table-responsive {
     overflow-x: visible !important;
   }
 
   .VueTables__table {
     overflow: auto !important;
+
+    thead tr:hover {
+      background: none!important;
+    }
+
+    th {
+      background: transparent !important;
+      border: 2px solid #dee2e6 !important;
+      opacity: 1!important;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    td, th {
+      border: 1px solid #dee2e6 !important;
+      padding: .75rem;
+    }
   }
 
   .VueTables__row td {
@@ -54,7 +77,9 @@
             <template v-if="props.opts._data.length >= 1">
               <vnodes :vnodes="props.slots.beforeLimit"/>
               <vt-per-page-selector class="mr-3"/>
-              <button class="btn btn-primary mr-3" @click="download" v-if="props.opts._data && props.opts.isNeedDownloadButton === undefined">Экспорт</button>
+              <button class="btn btn-primary mr-3" @click="download"
+                      v-if="props.opts._data && props.opts.isNeedDownloadButton === undefined">Экспорт
+              </button>
             </template>
             <vnodes :vnodes="props.slots.afterLimit"/>
           </div>
@@ -68,7 +93,8 @@
           <vnodes :vnodes="props.slots.afterFilterWrapper"/>
 
           <div class="VueTables__pagination-wrapper" v-if="props.opts.pagination.dropdown && props.totalPages > 1">
-            <div :class="`${props.theme.field} ${props.theme.inline} ${props.theme.right} VueTables__dropdown-pagination`">
+            <div
+              :class="`${props.theme.field} ${props.theme.inline} ${props.theme.right} VueTables__dropdown-pagination`">
               <vt-dropdown-pagination/>
             </div>
           </div>

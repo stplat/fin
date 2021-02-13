@@ -2,6 +2,7 @@ require('./assets/bootstrap');
 require('./assets/modernizr');
 require('./assets/aside-slide');
 require('./assets/login-dropdown');
+require('./assets/menu-dropdown');
 
 import Vue from 'vue';
 import store from './stores';
@@ -12,6 +13,7 @@ Vue.mixin(require('./mixins/helpers').default);
 
 /* Plugins */
 import Union from './plugins/Unicon';
+import './plugins/VtTables';
 
 /* Components */
 Vue.component('alert', require('./components/Alert').default);
@@ -22,6 +24,7 @@ Vue.component('involvement', require('./components/Involvement').default);
 Vue.component('popup', require('./components/Popup').default);
 Vue.component('preloader', require('./components/Preloader').default);
 Vue.component('shipment', require('./components/Shipment').default);
+Vue.component('warehouse', require('./components/Warehouse').default);
 
 const app = new Vue({
   el: '#app',

@@ -34,7 +34,7 @@
   line-height: 1;
 
   &:before {
-    content: '\E80B';
+    content: '';
     font-family: $font-icons;
     color: rgba(60, 75, 100, 0.8);
     display: inline-block;

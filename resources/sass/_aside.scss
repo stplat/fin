@@ -12,6 +12,7 @@
   padding: 15px 0;
   background: #303C50;
   flex-grow: 0;
+  flex-shrink: 0;
   height: 104px;
 
   img {
@@ -21,4 +22,6 @@
 
 .aside__menu {
   flex: 1 0 auto;
+  overflow-y: auto;
+  height: calc(100% - 104px);
 }
