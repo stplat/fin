@@ -10,7 +10,20 @@
             <button class="btn btn-success" @click="modal.upload.show = true">Показать невостребованные</button>
           </template>
           <template v-slot:actions="props">
-            <button class="btn btn-danger" @click="modal.upload.show = true">Отдать</button>
+            <button class="btn btn-danger" @click="data.id = props.row.id" v v-if="data.id !== props.row.id">Отдать</button>
+            <div class="form-confirm" v-if="data.id === props.row.id">
+              <div class="form-confirm__input">
+                <input type="text" v-prevent-number="">
+              </div>
+              <div class="form-confirm__control">
+                <a href="" class="form-confirm__link" @click.prevent="">
+                  <unicon name="check" fill="green"/>
+                </a>
+                <a href="" class="form-confirm__link" @click.prevent="data.id = null">
+                  <unicon name="times" fill="red"/>
+                </a>
+              </div>
+            </div>
           </template>
         </v-client-table>
       </div>
@@ -23,10 +36,7 @@
     data() {
       return {
         data: {
-          regions: [],
-          periods: [ 2 ],
-          version: 2,
-          version_involvement: 1
+          id: null
         },
         isLoading: false,
         errors: [],
@@ -61,6 +71,13 @@
 
         return { data, options: { headings, _data: data }, columns: Object.keys(headings) };
       }
-    },
+    }
   }
 </script>
+<style lang="scss" scoped>
+  table {
+    th:last-child {
+      width: 120px;
+    }
+  }
+</style>

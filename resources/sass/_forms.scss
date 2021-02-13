@@ -33,3 +33,17 @@
     margin: 0 !important;
   }
 }
+
+/* БЛОК текстовое поле с подветрждением и отменой */
+.form-confirm {
+  display: flex;
+}
+
+/* ЭЛЕМЕНТ с текстовым полем */
+.form-confirm__input {
+  width: 50px;
+
+  input {
+    width: 100%;
+  }
+}
