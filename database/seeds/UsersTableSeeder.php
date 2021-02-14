@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
    */
   public function run()
   {
-    $excel = IOFactory::load(app()->basePath('database/dumps/users.xlsx'));
+    $excel = IOFactory::load(app()->basePath('database/seeds/assets/users.xlsx'));
     $excel->setActiveSheetIndex(0);
     $maxCell = $excel->getActiveSheet()->getHighestRowAndColumn();
     $data = $excel->getActiveSheet()->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
