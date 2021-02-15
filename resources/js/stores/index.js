@@ -5,6 +5,7 @@ import involvement from "./modules/involvement";
 import shipment from "./modules/shipment";
 import finance from "./modules/finance";
 import application from "./modules/application";
+import material from "./modules/material";
 
 Vue.use(Vuex);
 
@@ -14,7 +15,8 @@ export default new Vuex.Store({
     involvement,
     shipment,
     finance,
-    application
+    application,
+    material
   },
   state: {
     requestPath: ''

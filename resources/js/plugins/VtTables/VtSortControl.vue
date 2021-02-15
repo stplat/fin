@@ -4,9 +4,9 @@
   }
 </style>
 <template>
-  <span v-if="props.sortable" class="float-right">
+  <div v-if="props.sortable" class="pl-3">
     <unicon :name=icon fill="royalblue"/>
-  </span>
+  </div>
 </template>
 
 <script>

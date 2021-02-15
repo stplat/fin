@@ -1,4 +1,4 @@
 @extends('layouts.app', ['title' => 'Мой склад', 'subtitle' => '', 'subtitle_link' => ''])
 @section('content')
-  <warehouse></warehouse>
+  <warehouse :initial-data="{{ $materials }}"></warehouse>
 @endsection

@@ -2,11 +2,14 @@ import Vue from 'vue';
 import { ServerTable, ClientTable, Event } from 'vue-tables-2';
 import VtDataTable from './VtDataTable';
 import VtSortControl from './VtSortControl';
+import VtTableHeading from './VtTableHeading';
+
 
 Vue.use(ClientTable,
   {
     sortByColumn: true,
-    sortable: ['code', 'size', 'gost', 'quantity', 'price'],
+    sortable: ['name', 'size', 'gost', 'quantity', 'price', 'unused'],
+    resizableColumns: false,
     texts: {
       count: 'Показано с {from} по {to} из {count} записей|Записей: {count}|Одна запись',
       first: 'Первый',
@@ -23,7 +26,9 @@ Vue.use(ClientTable,
     }
   }, false, 'bootstrap4', {
     dataTable: VtDataTable,
-    sortControl: VtSortControl
+    sortControl: VtSortControl,
+    tableHeading: VtTableHeading,
   });
+
 
 export default ClientTable;

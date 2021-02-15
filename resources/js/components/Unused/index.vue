@@ -4,7 +4,7 @@
     <alert v-for="(error, key) in errors" :key="key" v-html="error"></alert>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Складские запасы (в том числе невостребованные)</h4>
+      <h4 class="card-header">Невостребованные материалы на складах других РДКРЭ</h4>
       <div class="card-body table-warehouse">
         <v-client-table :data="table.data" :columns="table.columns" :options="table.options">
           <template v-slot:afterLimit>
@@ -13,7 +13,7 @@
           <template v-slot:actions="props">
             <button class="btn btn-danger warehouse-document-click"
                     @click="give(props.row.id)"
-                    v-if="data.id !== props.row.id && props.row.unused < props.row.quantity">Отдать
+                    v-if="data.id !== props.row.id">Забрать
             </button>
             <div class="form-confirm warehouse-document-click" v-if="data.id === props.row.id">
               <div class="form-confirm__input">
@@ -61,15 +61,10 @@
           return false;
         }
 
-        if (this.data.value < 0) {
-          this.errors = [ 'Количество невостребованных материалов не может быть отрицательным числом' ];
-          return false;
-        }
-
         const quantity = this.initialData.filter(item => item.id === this.data.id)[0].quantity;
 
         if (quantity < this.data.value) {
-          this.errors = [ 'Количество для передачи не может превышать количество на складе' ];
+          this.errors = [ 'Количство для передачи не может превышать количество на складе' ];
           return false;
         }
 
@@ -111,7 +106,6 @@
       table() {
         const data = this.$store.getters['material/getMaterials'].map(item => {
           return {
-            id: item.id,
             dkre: item.dkre.name,
             code: item.code,
             name: item.name,
@@ -119,10 +113,9 @@
             gost: item.gost,
             type: item.type,
             unit: item.unit,
-            quantity: Number(item.quantity).toFixed(3),
-            price: Number(item.price).toFixed(3),
-            total: Number(item.total).toFixed(3),
             unused: Number(item.unused).toFixed(3),
+            price: Number(item.price).toFixed(3),
+            total: Number(item.price * item.unused).toFixed(3),
             actions: ''
           }
         });
@@ -135,10 +128,9 @@
           gost: 'ГОСТ, ОСТ, ТУ',
           type: 'Тип',
           unit: 'ЕИ',
-          quantity: 'Кол-во',
+          unused: 'Неликвид, кол-во',
           price: 'Цена, руб.',
           total: 'Сумма, руб.',
-          unused: 'Неликвид, кол-во',
           actions: 'Действия'
         };
 

@@ -4,7 +4,7 @@
   }
 
   .table-responsive {
-    overflow-x: visible !important;
+    overflow-x: auto;
   }
 
   .VueTables__table {

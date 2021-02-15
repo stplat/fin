@@ -26,7 +26,7 @@ export default {
     async editBudget({ commit }, payload) {
       const res = await axios.put(this.state.requestPath + '/budget', payload)
         .catch(err => console.log('In budget/editBudget -', err));
-console.log(res);
+
       if (!res.data.errors) {
         commit('setBudget', res.data);
         return res.data;

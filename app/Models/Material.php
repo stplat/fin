@@ -15,6 +15,7 @@ class Material extends Model
    * @var array
    */
   protected $fillable = [
+    'unused'
   ];
 
   public function period()

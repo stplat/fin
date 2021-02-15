@@ -23,13 +23,13 @@
             заявка</a>
         </li>
         <li class="menu__item"><a href=""
-                                  class="menu__link menu__link--dropdown {{!request()->is('warehouse') && !request()->is('application') ?: 'is-active'}}">Распределение</a>
+                                  class="menu__link menu__link--dropdown {{!request()->is('warehouse') && !request()->is('unused') ?: 'is-active'}}">Распределение</a>
           <ul class="menu__dropdown">
-            <li class="menu__item"><a href="{{ route('warehouse.index') }}"
+            <li class="menu__item"><a href="{{ route('material.index') }}"
                                       class="menu__link menu__link--empty {{!request()->is('warehouse') ?: 'is-active'}}">Мой склад</a>
             </li>
-            <li class="menu__item"><a href="{{ route('warehouse.index') }}"
-                                      class="menu__link menu__link--empty {{!request()->is('application') ?: 'is-active'}}">Невостребованные</a>
+            <li class="menu__item"><a href="{{ route('material.unused') }}"
+                                      class="menu__link menu__link--empty {{!request()->is('unused') ?: 'is-active'}}">Невостребованные</a>
             </li>
           </ul>
         </li>

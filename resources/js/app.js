@@ -25,6 +25,7 @@ Vue.component('popup', require('./components/Popup').default);
 Vue.component('preloader', require('./components/Preloader').default);
 Vue.component('shipment', require('./components/Shipment').default);
 Vue.component('warehouse', require('./components/Warehouse').default);
+Vue.component('unused', require('./components/Unused').default);
 
 const app = new Vue({
   el: '#app',

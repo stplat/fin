@@ -42,10 +42,15 @@ Route::middleware('auth')->group(function () {
   Route::post('/application/consolidate', 'ApplicationController@consolidate')->name('application.consolidate');
   Route::post('/application/export', 'ApplicationController@export')->name('application.export');
 
-  Route::get('/warehouse', 'WarehouseController@index')->name('warehouse.index');
+  Route::get('/warehouse', 'MaterialController@index')->name('material.index');
+  Route::get('/unused', 'MaterialController@unused')->name('material.unused');
+
+  /* МАТЕРИАЛЫ: */
+  /* Переводим материал в статус неликвида */
+  Route::post('/material/to-unused', 'MaterialController@toUnused')->name('material.to-unused');
 
   /* Таблицы vue-table-2 (экспорт) */
-//  Route::post('/table/export', 'TableController@export')->name('table-export');
+  Route::post('/table/export', 'TableController@export')->name('table-export');
 
 });
 
