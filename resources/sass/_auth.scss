@@ -10,9 +10,11 @@
   align-items: flex-end;
   padding: 30px;
 }
+
 .auth__logo {
   padding-right: 70px;
   width: 300px;
+  display: none;
 
   img {
     width: 100%;

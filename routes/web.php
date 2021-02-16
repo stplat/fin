@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'can:view-page'])->group(function () {
 
   Route::get('/', 'IndexController@index')->name('index');
 
@@ -42,17 +42,18 @@ Route::middleware('auth')->group(function () {
   Route::post('/application/consolidate', 'ApplicationController@consolidate')->name('application.consolidate');
   Route::post('/application/export', 'ApplicationController@export')->name('application.export');
 
-  Route::get('/warehouse', 'MaterialController@index')->name('material.index');
+  Route::get('/warehouse', 'MaterialController@index')->name('material.warehouse');
   Route::get('/unused', 'MaterialController@unused')->name('material.unused');
+  Route::get('/orders', 'MaterialController@orders')->name('material.orders');
 
   /* МАТЕРИАЛЫ: */
   /* Переводим материал в статус неликвида */
-  Route::post('/material/to-unused', 'MaterialController@toUnused')->name('material.to-unused');
-
-  /* Таблицы vue-table-2 (экспорт) */
-  Route::post('/table/export', 'TableController@export')->name('table-export');
-
+  Route::post('/material/push', 'MaterialController@push')->name('material.push');
+  Route::post('/material/pull', 'MaterialController@pull')->name('material.pull');
 });
+
+/* Таблицы vue-table-2 (экспорт) */
+Route::post('/table/export', 'TableController@export')->name('table-export');
 
 
 Auth::routes([

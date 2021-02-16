@@ -13,22 +13,22 @@ class CreateMaterialsTable extends Migration
    */
   public function up()
   {
-    Schema::create('materials', function (Blueprint $table) {
-      $table->id();
-      $table->integer('period_id');
-      $table->integer('dkre_id');
-      $table->string('code');
-      $table->string('name');
-      $table->string('size');
-      $table->string('gost');
-      $table->string('type');
-      $table->string('unit');
-      $table->double('quantity');
-      $table->string('price');
-      $table->string('total');
-      $table->double('unused')->nullable();
-      $table->timestamps();
-    });
+//    Schema::create('materials', function (Blueprint $table) {
+//      $table->id();
+//      $table->integer('period_id');
+//      $table->integer('dkre_id');
+//      $table->string('code');
+//      $table->string('name');
+//      $table->string('size');
+//      $table->string('gost');
+//      $table->string('type');
+//      $table->string('unit');
+//      $table->double('quantity');
+//      $table->string('price');
+//      $table->string('total');
+//      $table->double('unused')->nullable();
+//      $table->timestamps();
+//    });
   }
 
   /**
@@ -38,6 +38,6 @@ class CreateMaterialsTable extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists('materials');
+//    Schema::dropIfExists('materials');
   }
 }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class MaterialToUnused extends FormRequest
+class MaterialPush extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -28,11 +28,13 @@ class MaterialToUnused extends FormRequest
   {
     return [
       'id' => ['required'],
-      'value' => ['required', function ($attribute, $value, $fail) {
-        $material = Material::find($this->id);
+      'value' => ['required', 'numeric', 'min:1', function ($attribute, $value, $fail) {
+        if (!is_string($value)) {
+          $material = Material::find($this->id);
 
-        return $material->unused + $value <= $material->quantity ?:
-          $fail('Количство для передачи не может превышать количество на складе');
+          return $material->unused + $value <= $material->quantity ?:
+            $fail('Количество для передачи не может превышать количество на складе');
+        }
       }],
     ];
   }
@@ -46,7 +48,9 @@ class MaterialToUnused extends FormRequest
   {
     return [
       'id.required' => 'Поле <strong>id</strong> обязательно для заполнения',
-      'value.required' => 'Поле <strong>value</strong> обязательно для заполнения',
+      'value.required' => 'Поле <strong>со значением</strong> обязательно для заполнения',
+      'value.numeric' => 'Поле <strong>со значением</strong> должно быть положительным числом',
+      'value.min' => 'Поле <strong>со значением</strong> должно быть положительным числом',
     ];
   }
 

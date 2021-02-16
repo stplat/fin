@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Material extends Model
+class OrderMaterial extends Model
 {
 
   /**
@@ -13,21 +13,16 @@ class Material extends Model
    * @var array
    */
   protected $fillable = [
-    'unused'
+    'quantity'
   ];
-
-  public function period()
-  {
-    return $this->belongsTo(Period::class);
-  }
 
   public function dkre()
   {
     return $this->belongsTo(Dkre::class);
   }
 
-  public function order_materials()
+  public function material()
   {
-    return $this->hasMany(OrderMaterial::class);
+    return $this->belongsTo(Material::class);
   }
 }

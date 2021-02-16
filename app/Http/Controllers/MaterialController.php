@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Material\MaterialToUnused;
+use App\Http\Requests\Material\MaterialPull;
+use App\Http\Requests\Material\MaterialPush;
+use App\Models\OrderMaterial;
 use App\Services\MaterialService;
 
 class MaterialController extends Controller
@@ -39,15 +41,42 @@ class MaterialController extends Controller
   }
 
   /**
+   * Отображаем заявки на перераспределение
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function orders()
+  {
+    return view('material.orders')->with([
+      'materials' => $this->materialService->getOrderMaterials()
+    ]);
+  }
+
+  /**
    * Переводим материал в статус неликвида, для передачи другим ДКРЭ
    *
+   * @param MaterialPush $request
    * @return \Illuminate\Support\Collection
    */
-  public function toUnused(MaterialToUnused $request)
+  public function push(MaterialPush $request)
   {
     $id = $request->input('id');
     $value = $request->input('value');
 
     return $this->materialService->toUnused($id, $value);
+  }
+
+  /**
+   * Забирает материал, который числится в неликвидах у других РДКРЭ
+   *
+   * @param MaterialPull $request
+   * @return \Illuminate\Support\Collection
+   */
+  public function pull(MaterialPull $request)
+  {
+    $id = $request->input('id');
+    $value = $request->input('value');
+
+    return $this->materialService->toTransfer($id, $value);
   }
 }

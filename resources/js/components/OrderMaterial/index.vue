@@ -4,7 +4,7 @@
     <alert v-for="(error, key) in errors" :key="key" v-html="error"></alert>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
-      <h4 class="card-header">Складские запасы (в том числе невостребованные)</h4>
+      <h4 class="card-header">Заявка на получение материалов от других РДКРЭ</h4>
       <div class="card-body table-warehouse">
         <v-client-table :data="table.data" :columns="table.columns" :options="table.options">
           <template v-slot:afterLimit>
@@ -13,7 +13,7 @@
           <template v-slot:actions="props">
             <button class="btn btn-danger warehouse-document-click"
                     @click="open(props.row.id)"
-                    v-if="data.id !== props.row.id && Number(props.row.unused) < Number(props.row.quantity)">Отдать
+                    v-if="data.id !== props.row.id && props.row.unused < props.row.quantity">Отдать
             </button>
             <div class="form-confirm warehouse-document-click" v-if="data.id === props.row.id">
               <div class="form-confirm__input">
@@ -128,23 +128,24 @@
         const data = this.$store.getters['material/getMaterials'].map(item => {
           return {
             id: item.id,
-            dkre: item.dkre.name,
-            code: item.code,
-            name: item.name,
-            size: item.size,
-            gost: item.gost,
-            type: item.type,
-            unit: item.unit,
+            executor: item.material.dkre.name,
+            customer: item.dkre.name,
+            code: item.material.code,
+            name: item.material.name,
+            size: item.material.size,
+            gost: item.material.gost,
+            type: item.material.type,
+            unit: item.material.unit,
             quantity: Number(item.quantity).toFixed(3),
-            price: Number(item.price).toFixed(3),
-            total: Number(item.total).toFixed(3),
-            unused: Number(item.unused).toFixed(3),
-            actions: ''
+            price: Number(item.material.price).toFixed(3),
+            total: Number(item.quantity * item.material.price).toFixed(3),
+            date: this.formatDateHelper(item.updated_at),
           }
         });
 
         const headings = {
-          dkre: 'РДКРЭ',
+          executor: 'Передающий',
+          customer: 'Получатель',
           code: 'Код СКМТР',
           name: 'Наименование',
           size: 'Размеры',
@@ -154,8 +155,7 @@
           quantity: 'Кол-во',
           price: 'Цена, руб.',
           total: 'Сумма, руб.',
-          unused: 'Неликвид, кол-во',
-          actions: 'Действия'
+          date: 'Дата заявка',
         };
 
         return { data, options: { headings, _data: data }, columns: Object.keys(headings) };

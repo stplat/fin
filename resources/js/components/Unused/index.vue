@@ -1,6 +1,6 @@
 <template>
   <main>
-    <alert className="success" v-if="result" v-html="result"></alert>
+    <alert className="success" v-if="result.html" v-html="result.html"></alert>
     <alert v-for="(error, key) in errors" :key="key" v-html="error"></alert>
     <div class="card mt-3">
       <preloader v-if="isLoading"></preloader>
@@ -12,7 +12,7 @@
           </template>
           <template v-slot:actions="props">
             <button class="btn btn-danger warehouse-document-click"
-                    @click="give(props.row.id)"
+                    @click="open(props.row.id)"
                     v-if="data.id !== props.row.id">Забрать
             </button>
             <div class="form-confirm warehouse-document-click" v-if="data.id === props.row.id">
@@ -45,7 +45,10 @@
         },
         isLoading: false,
         errors: [],
-        result: ''
+        result: {
+          html: '',
+          timer: null
+        }
       }
     },
     props: {
@@ -64,14 +67,15 @@
         const quantity = this.initialData.filter(item => item.id === this.data.id)[0].quantity;
 
         if (quantity < this.data.value) {
-          this.errors = [ 'Количство для передачи не может превышать количество на складе' ];
+          this.errors = [ 'Количество для получения не может превышать количество на складе' ];
           return false;
         }
 
         return true;
       },
-      /* Передать материалы */
-      give(id) {
+      /* Открыть окно по вводу информации */
+      open(id) {
+        console.log(id)
         this.data = {
           id,
           value: null
@@ -83,12 +87,17 @@
       confirm(id) {
         if (this.validate()) {
           this.isLoading = true;
-          this.$store.dispatch('material/toUnused', {
+          this.$store.dispatch('material/pull', {
             id: this.data.id,
             value: this.data.value.replace(',', '.')
           }).then(res => {
             this.errors = res.errors;
             this.isLoading = false;
+
+            if (!res.errors) {
+              this.setResult('<strong>Успешно изменено!</strong>');
+              this.cancel();
+            }
           });
         }
       },
@@ -99,6 +108,14 @@
           value: null
         };
         this.errors = [];
+      },
+      /* Выводим результат */
+      setResult(html) {
+        clearTimeout(this.result.timer);
+        this.result.html = html;
+        this.result.timer = setTimeout(() => {
+          this.result.html = '';
+        }, 3000);
       }
     },
     computed: {
@@ -106,6 +123,7 @@
       table() {
         const data = this.$store.getters['material/getMaterials'].map(item => {
           return {
+            id: item.id,
             dkre: item.dkre.name,
             code: item.code,
             name: item.name,
@@ -113,7 +131,7 @@
             gost: item.gost,
             type: item.type,
             unit: item.unit,
-            unused: Number(item.unused).toFixed(3),
+            unused: Number(item.unused - item.reserved).toFixed(3),
             price: Number(item.price).toFixed(3),
             total: Number(item.price * item.unused).toFixed(3),
             actions: ''

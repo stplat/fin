@@ -4,13 +4,15 @@ use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\Permission;
 
-class RolesTableSeeder extends Seeder {
+class RolesTableSeeder extends Seeder
+{
   /**
    * Run the database seeds.
    *
    * @return void
    */
-  public function run() {
+  public function run()
+  {
     $roles = array(
       ['name' => 'Администратор', 'slug' => 'admin'],
       ['name' => 'Аппарат управления', 'slug' => 'center'],
@@ -24,17 +26,21 @@ class RolesTableSeeder extends Seeder {
       $model->created_at = now();
       $model->updated_at = now();
       $model->save();
-//      $model->permissions()->attach('1'); // Главная
-//      $model->permissions()->attach('2'); // Мониторинг
-//      $model->permissions()->attach('3'); // Библиотека
-//      $model->permissions()->attach('4'); // Управление
-//      $model->permissions()->attach('5'); // Посты контроля
-//      $model->permissions()->attach('6'); // События
-//      $model->permissions()->attach('7'); // Правонарушения
-//      $model->permissions()->attach('8'); // Белые номера
-//      $model->permissions()->attach('9'); // Статистика
-//      $model->permissions()->attach('10'); // Пользователи
-//      $model->permissions()->attach('11'); // Настройки
+
+      $model->permissions()->attach('1'); // Главная
+      $model->permissions()->attach('7'); // Мой склад
+      $model->permissions()->attach('8'); // Невостребованные
+      $model->permissions()->attach('9'); // Заявка
+      $model->permissions()->attach('10'); // Отдать материал
+      $model->permissions()->attach('11'); // Отдать материал
+
+      if ($role['slug'] == 'admin') {
+        $model->permissions()->attach('2'); //
+        $model->permissions()->attach('3'); //
+        $model->permissions()->attach('4'); //
+        $model->permissions()->attach('5'); //
+        $model->permissions()->attach('6'); //
+      }
     }
   }
 }

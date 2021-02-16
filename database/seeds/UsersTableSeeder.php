@@ -22,6 +22,7 @@ class UsersTableSeeder extends Seeder
 
     ExcelParseHelper($data)->each(function ($item) {
       $user = new User();
+      $user->role_id = $item['role_id'];
       $user->name = $item['name'];
       $user->email = $item['email'];
       $user->password = Hash::make($item['password']);

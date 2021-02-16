@@ -6,13 +6,27 @@ export default {
     materials: []
   },
   actions: {
-    /* Меняем значения неликвида у материала */
-    async toUnused({ commit }, payload) {
+    /* Переводим материал в статус неликвида */
+    async push({ commit }, payload) {
       let { id, value } = payload;
 
-      const res = await axios.post(this.state.requestPath + '/material/to-unused', payload)
-        .catch(err => console.log('In material/toUnused -', err));
+      const res = await axios.post(this.state.requestPath + '/material/push', payload)
+        .catch(err => console.log('In material/push -', err));
 
+      if (!res.data.errors) {
+        commit('setMaterials', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
+    /* Оформляем заявку на материал */
+    async pull({ commit }, payload) {
+      let { id, value } = payload;
+
+      const res = await axios.post(this.state.requestPath + '/material/pull', payload)
+        .catch(err => console.log('In material/pull -', err));
+console.log(res)
       if (!res.data.errors) {
         commit('setMaterials', res.data);
         return res.data;
