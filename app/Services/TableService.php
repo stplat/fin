@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Http\File;
 
 class TableService
 {
@@ -54,13 +55,20 @@ class TableService
       }
     }
 
+    $this->spreadsheet->getActiveSheet()->setAutoFilter(
+      $this->spreadsheet->getActiveSheet()
+        ->calculateWorksheetDimension()
+
+    );
+
     ob_start();
     $this->writer->save('php://output');
     $content = ob_get_contents();
     ob_end_clean();
 
-    Storage::disk('local')->put("public/table.xlsx", $content);
+    $name = uniqid();
+    Storage::disk('local')->put("public/$name.xlsx", $content);
 
-    return asset('storage/table.xlsx');
+    return asset("storage/$name.xlsx");
   }
 }
