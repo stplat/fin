@@ -33,6 +33,7 @@
   .VueTables__row td {
     max-width: 300px;
     vertical-align: middle !important;
+    word-break: break-word;
 
     .vuetable__icons {
       display: flex;
