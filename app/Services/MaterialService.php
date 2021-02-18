@@ -25,7 +25,7 @@ class MaterialService
       } else {
         return $query->where('id', $auth);
       }
-    })->get()->sortBy('total')->values();
+    })->get()->sortBy('total', SORT_REGULAR, true)->values();
   }
 
   /**
