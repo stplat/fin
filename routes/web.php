@@ -47,7 +47,7 @@ Route::middleware(['auth', 'can:view-page'])->group(function () {
   Route::get('/orders', 'MaterialController@orders')->name('material.orders');
 
   /* МАТЕРИАЛЫ: */
-  /* Переводим материал в статус неликвида */
+  Route::post('/material', 'MaterialController@all')->name('material.all');
   Route::post('/material/push', 'MaterialController@push')->name('material.push');
   Route::post('/material/pull', 'MaterialController@pull')->name('material.pull');
 });

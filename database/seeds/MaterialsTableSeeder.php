@@ -24,6 +24,7 @@ class MaterialsTableSeeder extends Seeder
       $material = new Material();
       $material->period_id = $item['period_id'];
       $material->dkre_id = $item['dkre_id'];
+      $material->payment_balance_article_id = $item['payment_balance_article_id'];
       $material->code = $item['code'];
       $material->name = $item['name'];
       $material->size = $item['size'];

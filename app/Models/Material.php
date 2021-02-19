@@ -30,4 +30,9 @@ class Material extends Model
   {
     return $this->hasMany(OrderMaterial::class);
   }
+
+  public function article()
+  {
+    return $this->belongsTo(PaymentBalanceArticle::class, 'payment_balance_article_id', 'id');
+  }
 }

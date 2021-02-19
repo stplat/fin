@@ -17,6 +17,7 @@ class CreateMaterialsTable extends Migration
 //      $table->id();
 //      $table->integer('period_id');
 //      $table->integer('dkre_id');
+//      $table->integer('payment_balance_article_id');
 //      $table->string('code');
 //      $table->string('name');
 //      $table->string('size');

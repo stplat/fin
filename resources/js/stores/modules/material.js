@@ -7,6 +7,20 @@ export default {
   },
   actions: {
     /* Переводим материал в статус неликвида */
+    async updateMaterials({ commit }, payload) {
+      let { article_id } = payload;
+
+      const res = await axios.post(this.state.requestPath + '/material', payload)
+        .catch(err => console.log('In material/updateMaterials -', err));
+
+      if (!res.data.errors) {
+        commit('setMaterials', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
+    /* Переводим материал в статус неликвида */
     async push({ commit }, payload) {
       let { id, value } = payload;
 
@@ -26,7 +40,7 @@ export default {
 
       const res = await axios.post(this.state.requestPath + '/material/pull', payload)
         .catch(err => console.log('In material/pull -', err));
-console.log(res)
+
       if (!res.data.errors) {
         commit('setMaterials', res.data);
         return res.data;
@@ -34,7 +48,6 @@ console.log(res)
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
     },
-
   },
   mutations: {
     setMaterials: (state, array) => state.materials = array

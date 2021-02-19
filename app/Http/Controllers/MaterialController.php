@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Material\MaterialPull;
 use App\Http\Requests\Material\MaterialPush;
-use App\Models\OrderMaterial;
+use App\Http\Requests\Material\MaterialAll;
 use App\Services\MaterialService;
 
 class MaterialController extends Controller
@@ -23,9 +23,25 @@ class MaterialController extends Controller
    */
   public function index()
   {
+    $materials = $this->materialService->getMaterials();
+
     return view('material.warehouse')->with([
-      'materials' => $this->materialService->getMaterials()
+      'data' => collect([
+        'materials' => $materials,
+        'articles' => $this->materialService->getArticles($materials)
+      ])
     ]);
+  }
+
+  /**
+   * Передаем материалы
+   *
+   * @param MaterialAll $request
+   * @return \Illuminate\Support\Collection
+   */
+  public function all(MaterialAll $request)
+  {
+    return $this->materialService->getMaterials($request->input('article_id'));
   }
 
   /**

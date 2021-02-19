@@ -49,6 +49,7 @@
   .VueTables__search,
   .VueTables__limit {
     display: inline-flex;
+    align-items: center;
   }
 
   .VueTables__search {

@@ -71,8 +71,14 @@ class PermissionsTableSeeder extends Seeder {
         'updated_at' => now()
       ],
       [
-        'name' => 'Забрать материал', // 10.
+        'name' => 'Забрать материал', // 11.
         'slug' => 'view-material.pull',
+        'created_at' => now(),
+        'updated_at' => now()
+      ],
+      [
+        'name' => 'Вывести материалы', // 12.
+        'slug' => 'view-material.all',
         'created_at' => now(),
         'updated_at' => now()
       ],

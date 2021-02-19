@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Material;
 use App\Models\OrderMaterial;
+use App\Models\PaymentBalanceArticle;
 use Illuminate\Support\Facades\Auth;
 
 class MaterialService
@@ -11,21 +12,27 @@ class MaterialService
   /**
    * Получаем все материалы относящиеся к ДКРЭ пользователя
    *
-   * @param $periods array
+   * @param $article_id integer
    *
    * @return \Illuminate\Support\Collection
    */
-  public function getMaterials()
+  public function getMaterials($article_id = false)
   {
     $auth = Auth::user()->dkre_id;
 
-    return Material::with('dkre')->whereHas('dkre', function ($query) use ($auth) {
+    $material = Material::with('dkre')->whereHas('dkre', function ($query) use ($auth) {
       if ($auth === 16) {
         return $query;
       } else {
         return $query->where('id', $auth);
       }
-    })->get()->sortBy('total', SORT_REGULAR, true)->values();
+    });
+
+    if ($article_id) {
+      $material->where('payment_balance_article_id', $article_id);
+    }
+
+    return $material->get()->sortBy('total', SORT_REGULAR, true)->values();
   }
 
   /**
@@ -115,5 +122,19 @@ class MaterialService
     ]);
 
     return !$changed ?: $this->getUnusedMaterials();
+  }
+
+  /**
+   * Получаем статьи
+   *
+   * @param $materials
+   *
+   * @return \Illuminate\Support\Collection
+   */
+  public function getArticles($materials)
+  {
+    $articleIds = $materials->unique('payment_balance_article_id')->values()->pluck('payment_balance_article_id');
+
+    return PaymentBalanceArticle::whereIn('id', $articleIds)->get();
   }
 }

@@ -8,7 +8,13 @@
       <div class="card-body table-warehouse">
         <v-client-table :data="table.data" :columns="table.columns" :options="table.options">
           <template v-slot:afterLimit>
-            <!--            <button class="btn btn-success" @click="modal.upload.show = true">Показать невостребованные</button>-->
+            <div class="form-group mb-0">
+              <select class="form-control" id="article" v-model="article" @change="changeArticle">
+                <option value="null" disabled>Выберите статью</option>
+                <option :value="article.id" v-for="(article, key) in computedArticles" :key="key">{{ article.name }}
+                </option>
+              </select>
+            </div>
           </template>
           <template v-slot:actions="props">
             <button class="btn btn-danger warehouse-document-click"
@@ -41,8 +47,9 @@
       return {
         data: {
           id: null,
-          value: null
+          value: null,
         },
+        article: null,
         isLoading: false,
         errors: [],
         result: {
@@ -53,7 +60,7 @@
     },
     props: {
       initialData: {
-        type: Array,
+        type: Object,
         required: false
       }
     },
@@ -113,6 +120,14 @@
         };
         this.errors = [];
       },
+      /* Меняем статью платежника */
+      changeArticle() {
+        this.isLoading = true;
+        this.$store.dispatch('material/updateMaterials', { article_id: this.article }).then(res => {
+          this.errors = res.errors;
+          this.isLoading = false;
+        });
+      },
       /* Выводим результат */
       setResult(html) {
         clearTimeout(this.result.timer);
@@ -159,6 +174,11 @@
         };
 
         return { data, options: { headings, _data: data }, columns: Object.keys(headings) };
+      },
+      /* Перчень статей */
+      computedArticles() {
+        console.log(this.initialData.articles)
+        return this.initialData.articles;
       }
     },
     mounted() {
@@ -172,7 +192,7 @@
         }
       });
 
-      this.$store.commit('material/setMaterials', this.initialData);
+      this.$store.commit('material/setMaterials', this.initialData.materials);
     }
   }
 </script>

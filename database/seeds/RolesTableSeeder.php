@@ -32,7 +32,8 @@ class RolesTableSeeder extends Seeder
       $model->permissions()->attach('8'); // Невостребованные
       $model->permissions()->attach('9'); // Заявка
       $model->permissions()->attach('10'); // Отдать материал
-      $model->permissions()->attach('11'); // Отдать материал
+      $model->permissions()->attach('11'); // Забрать материал
+      $model->permissions()->attach('12'); // Вывести материал
 
       if ($role['slug'] == 'admin') {
         $model->permissions()->attach('2'); //
