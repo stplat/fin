@@ -76,7 +76,7 @@
           return false;
         }
 
-        const quantity = this.initialData.filter(item => item.id === this.data.id)[0].quantity;
+        const quantity = this.initialData.materials.filter(item => item.id === this.data.id)[0].quantity;
 
         if (quantity < this.data.value) {
           this.errors = [ 'Количество для передачи не может превышать количество на складе' ];
