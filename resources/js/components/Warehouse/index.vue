@@ -177,7 +177,6 @@
       },
       /* Перчень статей */
       computedArticles() {
-        console.log(this.initialData.articles)
         return this.initialData.articles;
       }
     },

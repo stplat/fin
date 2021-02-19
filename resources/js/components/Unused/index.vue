@@ -75,7 +75,6 @@
       },
       /* Открыть окно по вводу информации */
       open(id) {
-        console.log(id)
         this.data = {
           id,
           value: null

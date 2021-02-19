@@ -29,12 +29,11 @@ class MaterialPull extends FormRequest
     return [
       'id' => ['required'],
       'value' => ['required', 'numeric', 'min:1', function ($attribute, $value, $fail) {
-        if (!is_string($value)) {
           $material = Material::find($this->id);
 
-          return $material->unused < $value ?:
-            $fail('Количество материалов для передачи не может превышать общее количество невостребованных');
-        }
+          if ($material->unused < $value) {
+            return $fail('Количество материалов для передачи не может превышать общее количество невостребованных');
+          }
       }],
     ];
   }
