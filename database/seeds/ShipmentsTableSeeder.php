@@ -13,7 +13,7 @@ class ShipmentsTableSeeder extends Seeder {
    * @return void
    */
   public function run() {
-    DB::unprepared(file_get_contents(__DIR__ . './../dumps/shipments-05.10.2020.sql'));
+    DB::unprepared(file_get_contents(__DIR__ . './../dumps/shipments.sql'));
 
 //    $excel = IOFactory::load(__DIR__ . '/assets/plan_postavki.xlsx');
 //

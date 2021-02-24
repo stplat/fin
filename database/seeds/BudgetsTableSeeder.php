@@ -13,7 +13,7 @@ class BudgetsTableSeeder extends Seeder {
    * @return void
    */
   public function run() {
-    DB::unprepared(file_get_contents(__DIR__ . './../dumps/budgets-05.10.2020.sql'));
+    DB::unprepared(file_get_contents(__DIR__ . './../dumps/budgets.sql'));
 
 //    $excel = IOFactory::load(__DIR__ . '/assets/budget.xlsx');
 //
