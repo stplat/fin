@@ -115,12 +115,12 @@
     data() {
       return {
         data: {
-          periods: [2],
+          periods: [ 5 ],
           article: 1,
-          version_budget: 2,
+          version_budget: 4,
           version_involvement: 1,
-          version_f22: 2,
-          version_shipment: 2
+          version_f22: 4,
+          version_shipment: 4
         },
         modals: {
           upload: false
@@ -137,7 +137,7 @@
           edit: false
         },
         dataForProps: {
-          periods: [1],
+          periods: [ 1 ],
           article: 1,
           version_budget: 2,
           version_involvement: 2,
@@ -202,7 +202,7 @@
     computed: {
       consolidateToggle() {
         return this.dataForProps.periods.length === 1 &&
-          ( this.dataForProps.periods[0] === 1 || this.dataForProps.periods[0] === 2 || this.dataForProps.periods[0] === 6 || this.dataForProps.periods[0] === 10 || this.dataForProps.periods[0] === 14 )
+          (this.dataForProps.periods[0] === 1 || this.dataForProps.periods[0] === 2 || this.dataForProps.periods[0] === 6 || this.dataForProps.periods[0] === 10 || this.dataForProps.periods[0] === 14)
       },
       periods() {
         return this.initialData.periods;
