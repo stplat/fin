@@ -37,7 +37,7 @@ export default {
 
       const res = await axios.post(this.state.requestPath + '/finance/upload', formData)
         .catch(err => console.log('In finance/uploadFinance -', err));
-console.log(res)
+
       if (!res.data.errors) {
         commit('setFinances', res.data);
         return res.data;

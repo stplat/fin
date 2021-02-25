@@ -60,7 +60,7 @@
       return {
         data: {
           periods: [ 2 ],
-          version: 2,
+          version: 4,
         },
         modals: {
           upload: false
