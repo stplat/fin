@@ -45,6 +45,9 @@ Route::middleware(['auth', 'can:view-page'])->group(function () {
   Route::get('/warehouse', 'MaterialController@index')->name('material.warehouse');
   Route::get('/unused', 'MaterialController@unused')->name('material.unused');
   Route::get('/orders', 'MaterialController@orders')->name('material.orders');
+  Route::get('/test', function (){
+    return view('material.test');
+  })->name('material.test');
 
   /* МАТЕРИАЛЫ: */
   Route::post('/material', 'MaterialController@all')->name('material.all');

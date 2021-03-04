@@ -1,0 +1,51 @@
+/* БЛОК для vue-компонента с таблицей */
+.v-table {
+  background: #D8D8D8;
+
+}
+
+/* ЭЛЕМЕНТ заголовков таблицы */
+.v-table__head {
+
+}
+
+/* ЭЛЕМЕНТ тела таблицы */
+.v-table__body {
+
+}
+
+/* БЛОК заголовков таблицы */
+.v-table-head {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 1px;
+
+}
+
+/* ЭЛЕМЕНТ ячейки у блока заголовков */
+.v-table-head__cell {
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px;
+  background: #E9ECF0;
+  width: 100%;
+}
+
+/* БЛОК тела таблицы */
+.v-table-body {
+
+
+}
+
+/* ЭЛЕМЕНТ строки у блока тела таблицы */
+.v-table-body__row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 1px;
+}
+
+/* ЭЛЕМЕНТ ячейки у блока тела таблицы */
+.v-table-body__cell {
+  background: #FFFFFF;
+  width: 100%;
+}
