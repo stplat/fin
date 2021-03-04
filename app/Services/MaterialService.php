@@ -131,8 +131,18 @@ class MaterialService
    *
    * @return \Illuminate\Support\Collection
    */
-  public function getArticles($materials)
+  public function getArticles()
   {
+    $auth = Auth::user()->dkre_id;
+
+    $materials = Material::with('dkre')->whereHas('dkre', function ($query) use ($auth) {
+      if ($auth === 16) {
+        return $query;
+      } else {
+        return $query->where('id', $auth);
+      }
+    })->get();
+
     $articleIds = $materials->unique('payment_balance_article_id')->values()->pluck('payment_balance_article_id');
 
     return PaymentBalanceArticle::whereIn('id', $articleIds)->get();

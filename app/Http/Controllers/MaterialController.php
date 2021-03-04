@@ -23,12 +23,12 @@ class MaterialController extends Controller
    */
   public function index()
   {
-    $materials = $this->materialService->getMaterials();
+    $materials = $this->materialService->getMaterials(19);
 
     return view('material.warehouse')->with([
       'data' => collect([
         'materials' => $materials,
-        'articles' => $this->materialService->getArticles($materials)
+        'articles' => $this->materialService->getArticles()
       ])
     ]);
   }
