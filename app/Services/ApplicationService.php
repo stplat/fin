@@ -393,7 +393,7 @@ class ApplicationService
       $sheet->getSheetView()->setZoomScale(75);
       $sheet->setTitle(str_replace('ДКРЭ_', '', $item[0]->dkre->area));
       $sheet->getStyle('A5:O43')->getBorders()->getAllBorders()->setBorderStyle('thin');
-      $sheet->getStyle('C8:O43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
+      $sheet->getStyle('C8:O43')->getNumberFormat()->setFormatCode('#,##0.000');
       $sheet->getStyle('C8:O43')->getAlignment()->setHorizontal('center');
       $sheet->getStyle('C8:O43')->getAlignment()->setVertical('center');
       /* Заголовок */
@@ -509,7 +509,7 @@ class ApplicationService
       $sheet->getColumnDimension('J')->setAutoSize(false);
       $sheet->getColumnDimension('J')->setWidth(14);
       /* ПРО */
-      $sheet->setCellValue('K7', 'Самостоятельная закупка');
+      $sheet->setCellValue('K7', 'Прочие');
       $sheet->getStyle('K7')->getAlignment()->setHorizontal('center');
       $sheet->getStyle('K7')->getAlignment()->setVertical('center');
       $sheet->getColumnDimension('K')->setAutoSize(false);
@@ -778,7 +778,7 @@ class ApplicationService
     $sheet->getSheetView()->setZoomScale(75);
     $sheet->setTitle(str_replace('ДКРЭ_', '', 'ИТОГО'));
     $sheet->getStyle('A5:O43')->getBorders()->getAllBorders()->setBorderStyle('thin');
-    $sheet->getStyle('C8:O43')->getNumberFormat()->setFormatCode('# ##0.000_-;#;-#;"---"');
+    $sheet->getStyle('C8:O43')->getNumberFormat()->setFormatCode('#,##0.000');
     $sheet->getStyle('C8:O43')->getAlignment()->setHorizontal('center');
     $sheet->getStyle('C8:O43')->getAlignment()->setVertical('center');
     /* Заголовок */
@@ -894,7 +894,7 @@ class ApplicationService
     $sheet->getColumnDimension('J')->setAutoSize(false);
     $sheet->getColumnDimension('J')->setWidth(14);
     /* ПРО */
-    $sheet->setCellValue('K7', 'Самостоятельная закупка');
+    $sheet->setCellValue('K7', 'Прочие');
     $sheet->getStyle('K7')->getAlignment()->setHorizontal('center');
     $sheet->getStyle('K7')->getAlignment()->setVertical('center');
     $sheet->getColumnDimension('K')->setAutoSize(false);

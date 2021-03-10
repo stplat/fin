@@ -250,59 +250,69 @@ class BudgetService
     /* Шапка */
     $this->spreadsheet->setActiveSheetIndex(0);
     $sheet = $this->spreadsheet->getActiveSheet();
+    $sheet->mergeCells('A1:P1');
+    $sheet->setCellValue('A1', "РАСЧЕТ\nлимитов на финансирование новых закупаемых материалов и топлива на $periodName");
+    $sheet->getStyle('A1')->getFont()->setSize(18)->setBold(true);
+    $sheet->getRowDimension('1')->setRowHeight(65);
+    $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('A1')->getAlignment()->setVertical('center');
+    $sheet->getStyle('A1')->getAlignment()->setWrapText(true);
+    $sheet->setCellValue('A2', 'версия: ' . $versionName);
+    $sheet->setCellValue('P2', 'млн.руб. без НДС');
+    $sheet->getStyle('P2')->getAlignment()->setHorizontal('right');
 
     /* 1-й столбец */
-    $sheet->mergeCells('A1:A2');
-    $sheet->setCellValue('A1', 'ДКРЭ/ВД');
+    $sheet->mergeCells('A3:A4');
+    $sheet->setCellValue('A3', 'ДКРЭ/ВД');
     /* 2-й столбец */
-    $sheet->mergeCells('B1:B2');
-    $sheet->setCellValue('B1', 'Бюджет на новые закупаемые');
+    $sheet->mergeCells('B3:B4');
+    $sheet->setCellValue('B3', 'Бюджет на новые закупаемые');
     /* 1-я объединенная строка */
-    $sheet->mergeCells('C1:F1');
-    $sheet->setCellValue('C1', 'Вовлечение');
+    $sheet->mergeCells('C3:F3');
+    $sheet->setCellValue('C3', 'Вовлечение');
     /* 3-й столбец */
-    $sheet->setCellValue('C2', 'ИТОГО:');
+    $sheet->setCellValue('C4', 'ИТОГО:');
     /* 4-й столбец */
-    $sheet->setCellValue('D2', 'за счет прошлого года');
+    $sheet->setCellValue('D4', 'за счет прошлого года');
     /* 5-й столбец */
-    $sheet->setCellValue('E2', 'за счет сверх-норматива');
+    $sheet->setCellValue('E4', 'за счет сверх-норматива');
     /* 6-й столбец */
-    $sheet->setCellValue('F2', 'за счет текущего года');
+    $sheet->setCellValue('F4', 'за счет текущего года');
     /* 2-я объединенная строка */
-    $sheet->mergeCells('G1:I1');
-    $sheet->setCellValue('G1', 'Опережающее финансирование');
+    $sheet->mergeCells('G3:I3');
+    $sheet->setCellValue('G3', 'Опережающее финансирование');
     /* 7-й столбец */
-    $sheet->setCellValue('G2', 'ИТОГО:');
+    $sheet->setCellValue('G4', 'ИТОГО:');
     /* 8-й столбец */
-    $sheet->setCellValue('H2', 'за счет текущего года');
+    $sheet->setCellValue('H4', 'за счет текущего года');
     /* 9-й столбец */
-    $sheet->setCellValue('I2', 'за счет следующего года');
+    $sheet->setCellValue('I4', 'за счет следующего года');
     /* 10-й столбец */
-    $sheet->mergeCells('J1:J2');
-    $sheet->setCellValue('J1', 'Лимит на закупку материалов');
+    $sheet->mergeCells('J3:J4');
+    $sheet->setCellValue('J3', 'Лимит на закупку материалов');
     /* 2-я объединенная строка */
-    $sheet->mergeCells('K1:O1');
-    $sheet->setCellValue('K1', 'Опережающее финансирование');
+    $sheet->mergeCells('K3:O3');
+    $sheet->setCellValue('K3', 'Опережающее финансирование');
     /* 11-й столбец */
-    $sheet->setCellValue('K2', 'ИТОГО:');
+    $sheet->setCellValue('K4', 'ИТОГО:');
     /* 12-й столбец */
-    $sheet->setCellValue('L2', 'Дизельное топливо');
+    $sheet->setCellValue('L4', 'Дизельное топливо');
     /* 13-й столбец */
-    $sheet->setCellValue('M2', 'Мазут');
+    $sheet->setCellValue('M4', 'Мазут');
     /* 14-й столбец */
-    $sheet->setCellValue('N2', 'Уголь');
+    $sheet->setCellValue('N4', 'Уголь');
     /* 15-й столбец */
-    $sheet->setCellValue('O2', ' 	Другие виды топлива (бензин и газ)');
+    $sheet->setCellValue('O4', ' 	Другие виды топлива (бензин и газ)');
     /* 16 -й столбец */
-    $sheet->mergeCells('P1:P2');
-    $sheet->setCellValue('P1', 'ВСЕГО:');
+    $sheet->mergeCells('P3:P4');
+    $sheet->setCellValue('P3', 'ВСЕГО:');
 
     $sheet->getSheetView()->setZoomScale(75);
 
     $rowOffset = 0;
 
     foreach ($budget as $key => $dkre) {
-      $rowIndex = $key + 3;
+      $rowIndex = $key + 5;
 
       $sheet->setCellValue('A' . ($rowIndex + $rowOffset), $dkre['dkre']);
       $sheet->setCellValue('B' . ($rowIndex + $rowOffset), $dkre['total']['article']['63400']);
@@ -359,10 +369,12 @@ class BudgetService
     }
 
     $maxCell = $sheet->getHighestRowAndColumn();
-    $sheet->getStyle('A1:' . $maxCell['column'] . $maxCell['row'])->getBorders()->getAllBorders()->setBorderStyle('thin');
-    $sheet->getStyle('A1:P2')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('A1:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setVertical('center');
-    $sheet->getStyle('A1:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setWrapText(true);
+    $sheet->getStyle('A3:' . $maxCell['column'] . $maxCell['row'])->getBorders()->getAllBorders()->setBorderStyle('thin');
+    $sheet->getStyle('A3:P4')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('B5:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('A3:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setVertical('center');
+    $sheet->getStyle('A3:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setWrapText(true);
+    $sheet->getStyle('B5:' . $maxCell['column'] . $maxCell['row'])->getNumberFormat()->setFormatCode('#,##0.000');
     $sheet->getColumnDimension('A')->setWidth(24);
 
     ob_start();
