@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class BudgetService
 {
@@ -249,6 +250,7 @@ class BudgetService
     /* Шапка */
     $this->spreadsheet->setActiveSheetIndex(0);
     $sheet = $this->spreadsheet->getActiveSheet();
+
     /* 1-й столбец */
     $sheet->mergeCells('A1:A2');
     $sheet->setCellValue('A1', 'ДКРЭ/ВД');
@@ -296,9 +298,6 @@ class BudgetService
     $sheet->setCellValue('P1', 'ВСЕГО:');
 
     $sheet->getSheetView()->setZoomScale(75);
-    $sheet->getStyle('A1:P74')->getBorders()->getAllBorders()->setBorderStyle('thin');
-    $sheet->getStyle('A1:P2')->getAlignment()->setHorizontal('center');
-    $sheet->getStyle('A1:P2')->getAlignment()->setVertical('center');
 
     $rowOffset = 0;
 
@@ -322,6 +321,12 @@ class BudgetService
       $sheet->setCellValue('N' . ($rowIndex + $rowOffset), $dkre['total']['article']['63330']);
       $sheet->setCellValue('O' . ($rowIndex + $rowOffset), $dkre['total']['article']['63340']);
       $sheet->setCellValue('P' . ($rowIndex + $rowOffset), $dkre['total']['finance']);
+
+      $sheet->getStyle('A' . ($rowIndex + $rowOffset) .':P' . ($rowIndex + $rowOffset))->getFont()->setBold(true);
+
+      $sheet->getStyle('A' . ($rowIndex + $rowOffset) .':P' . ($rowIndex + $rowOffset))->getFill()
+        ->setFillType(Fill::FILL_SOLID)
+        ->getStartColor()->setRGB('ddebf7');;
 
       foreach ($dkre['activity'] as $key => $activity) {
         $rowOffset++;
@@ -347,8 +352,18 @@ class BudgetService
         $sheet->setCellValue('N' . ($rowIndex + $rowOffset), $fuel_63330);
         $sheet->setCellValue('O' . ($rowIndex + $rowOffset), $fuel_63340);
         $sheet->setCellValue('P' . ($rowIndex + $rowOffset), $activity['finance']);
+
+        $sheet->getStyle('A' . ($rowIndex + $rowOffset))->getAlignment()->setIndent(1);
+
       }
     }
+
+    $maxCell = $sheet->getHighestRowAndColumn();
+    $sheet->getStyle('A1:' . $maxCell['column'] . $maxCell['row'])->getBorders()->getAllBorders()->setBorderStyle('thin');
+    $sheet->getStyle('A1:P2')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('A1:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setVertical('center');
+    $sheet->getStyle('A1:' . $maxCell['column'] . $maxCell['row'])->getAlignment()->setWrapText(true);
+    $sheet->getColumnDimension('A')->setWidth(24);
 
     ob_start();
     $this->writer->save('php://output');
