@@ -8,10 +8,22 @@ use App\Models\Dkre;
 use App\Models\Period;
 use App\Models\Budget;
 use App\Models\Version;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class BudgetService
 {
+
+  protected $spreadsheet;
+  protected $writer;
+
+  public function __construct(Spreadsheet $spreadsheet)
+  {
+    $this->spreadsheet = $spreadsheet;
+    $this->writer = new Xlsx($spreadsheet);
+  }
 
   /**
    * Getting budget by period and version.
@@ -214,5 +226,138 @@ class BudgetService
     $data = $excel->getActiveSheet()->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
 
     return ParserInObjectExcelHelper($data, $version);
+  }
+
+  /**
+   * Экспортируем бюджет
+   *
+   * @param $period integer
+   * @param $version integer
+   * @return \Illuminate\Support\Collection
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
+   * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+   */
+  public function export($period, $version)
+  {
+    $periodName = Period::find($period)->name;
+    $versionName = Version::find($version)->name;
+
+    $this->spreadsheet->getDefaultStyle()->getFont()->setName('Times New Roman');
+    $this->spreadsheet->getDefaultStyle()->getFont()->setSize('14');
+    $budget = $this->getBudget([$period], $version, 1);
+
+    /* Шапка */
+    $this->spreadsheet->setActiveSheetIndex(0);
+    $sheet = $this->spreadsheet->getActiveSheet();
+    /* 1-й столбец */
+    $sheet->mergeCells('A1:A2');
+    $sheet->setCellValue('A1', 'ДКРЭ/ВД');
+    /* 2-й столбец */
+    $sheet->mergeCells('B1:B2');
+    $sheet->setCellValue('B1', 'Бюджет на новые закупаемые');
+    /* 1-я объединенная строка */
+    $sheet->mergeCells('C1:F1');
+    $sheet->setCellValue('C1', 'Вовлечение');
+    /* 3-й столбец */
+    $sheet->setCellValue('C2', 'ИТОГО:');
+    /* 4-й столбец */
+    $sheet->setCellValue('D2', 'за счет прошлого года');
+    /* 5-й столбец */
+    $sheet->setCellValue('E2', 'за счет сверх-норматива');
+    /* 6-й столбец */
+    $sheet->setCellValue('F2', 'за счет текущего года');
+    /* 2-я объединенная строка */
+    $sheet->mergeCells('G1:I1');
+    $sheet->setCellValue('G1', 'Опережающее финансирование');
+    /* 7-й столбец */
+    $sheet->setCellValue('G2', 'ИТОГО:');
+    /* 8-й столбец */
+    $sheet->setCellValue('H2', 'за счет текущего года');
+    /* 9-й столбец */
+    $sheet->setCellValue('I2', 'за счет следующего года');
+    /* 10-й столбец */
+    $sheet->mergeCells('J1:J2');
+    $sheet->setCellValue('J1', 'Лимит на закупку материалов');
+    /* 2-я объединенная строка */
+    $sheet->mergeCells('K1:O1');
+    $sheet->setCellValue('K1', 'Опережающее финансирование');
+    /* 11-й столбец */
+    $sheet->setCellValue('K2', 'ИТОГО:');
+    /* 12-й столбец */
+    $sheet->setCellValue('L2', 'Дизельное топливо');
+    /* 13-й столбец */
+    $sheet->setCellValue('M2', 'Мазут');
+    /* 14-й столбец */
+    $sheet->setCellValue('N2', 'Уголь');
+    /* 15-й столбец */
+    $sheet->setCellValue('O2', ' 	Другие виды топлива (бензин и газ)');
+    /* 16 -й столбец */
+    $sheet->mergeCells('P1:P2');
+    $sheet->setCellValue('P1', 'ВСЕГО:');
+
+    $sheet->getSheetView()->setZoomScale(75);
+    $sheet->getStyle('A1:P74')->getBorders()->getAllBorders()->setBorderStyle('thin');
+    $sheet->getStyle('A1:P2')->getAlignment()->setHorizontal('center');
+    $sheet->getStyle('A1:P2')->getAlignment()->setVertical('center');
+
+    $rowOffset = 0;
+
+    foreach ($budget as $key => $dkre) {
+      $rowIndex = $key + 3;
+
+      $sheet->setCellValue('A' . ($rowIndex + $rowOffset), $dkre['dkre']);
+      $sheet->setCellValue('B' . ($rowIndex + $rowOffset), $dkre['total']['article']['63400']);
+      $sheet->setCellValue('C' . ($rowIndex + $rowOffset), $dkre['total']['involve_last'] + $dkre['total']['involve_current'] + $dkre['total']['involve_turnover']);
+      $sheet->setCellValue('D' . ($rowIndex + $rowOffset), $dkre['total']['involve_last']);
+      $sheet->setCellValue('E' . ($rowIndex + $rowOffset), $dkre['total']['involve_current']);
+      $sheet->setCellValue('F' . ($rowIndex + $rowOffset), $dkre['total']['involve_turnover']);
+      $sheet->setCellValue('G' . ($rowIndex + $rowOffset), $dkre['total']['prepayment_current'] + $dkre['total']['prepayment_next']);
+      $sheet->setCellValue('H' . ($rowIndex + $rowOffset), $dkre['total']['prepayment_current']);
+      $sheet->setCellValue('I' . ($rowIndex + $rowOffset), $dkre['total']['prepayment_next']);
+      $sheet->setCellValue('J' . ($rowIndex + $rowOffset), $dkre['total']['finance_material']);
+      $totalFuel = $dkre['total']['article']['63310'] + $dkre['total']['article']['63320'] + $dkre['total']['article']['63330'] + $dkre['total']['article']['63340'];
+      $sheet->setCellValue('K' . ($rowIndex + $rowOffset), $totalFuel);
+      $sheet->setCellValue('L' . ($rowIndex + $rowOffset), $dkre['total']['article']['63310']);
+      $sheet->setCellValue('M' . ($rowIndex + $rowOffset), $dkre['total']['article']['63320']);
+      $sheet->setCellValue('N' . ($rowIndex + $rowOffset), $dkre['total']['article']['63330']);
+      $sheet->setCellValue('O' . ($rowIndex + $rowOffset), $dkre['total']['article']['63340']);
+      $sheet->setCellValue('P' . ($rowIndex + $rowOffset), $dkre['total']['finance']);
+
+      foreach ($dkre['activity'] as $key => $activity) {
+        $rowOffset++;
+        $sheet->setCellValue('A' . ($rowIndex + $rowOffset), $activity['name']);
+        $sheet->setCellValue('B' . ($rowIndex + $rowOffset), $activity['article']['63400']);
+        $sheet->setCellValue('C' . ($rowIndex + $rowOffset), $activity['involve_last'] + $dkre['total']['involve_current'] + $dkre['total']['involve_turnover']);
+        $sheet->setCellValue('D' . ($rowIndex + $rowOffset), $activity['involve_last']);
+        $sheet->setCellValue('E' . ($rowIndex + $rowOffset), $activity['involve_current']);
+        $sheet->setCellValue('F' . ($rowIndex + $rowOffset), $activity['involve_turnover']);
+        $sheet->setCellValue('G' . ($rowIndex + $rowOffset), $activity['prepayment_current'] + $activity['prepayment_next']);
+        $sheet->setCellValue('H' . ($rowIndex + $rowOffset), $activity['prepayment_current']);
+        $sheet->setCellValue('I' . ($rowIndex + $rowOffset), $activity['prepayment_next']);
+        $sheet->setCellValue('J' . ($rowIndex + $rowOffset), $activity['finance_material']);
+        $fuel_63310 = in_array('63310', $activity['article']->toArray()) ? $activity['article']['63310'] : 0;
+        $fuel_63320 = in_array('63320', $activity['article']->toArray()) ? $activity['article']['63320'] : 0;
+        $fuel_63330 = in_array('63330', $activity['article']->toArray()) ? $activity['article']['63330'] : 0;
+        $fuel_63340 = in_array('63340', $activity['article']->toArray()) ? $activity['article']['63340'] : 0;
+        $totalFuel = $fuel_63310 + $fuel_63320 + $fuel_63330 + $fuel_63340;
+
+        $sheet->setCellValue('K' . ($rowIndex + $rowOffset), $totalFuel);
+        $sheet->setCellValue('L' . ($rowIndex + $rowOffset), $fuel_63310);
+        $sheet->setCellValue('M' . ($rowIndex + $rowOffset), $fuel_63320);
+        $sheet->setCellValue('N' . ($rowIndex + $rowOffset), $fuel_63330);
+        $sheet->setCellValue('O' . ($rowIndex + $rowOffset), $fuel_63340);
+        $sheet->setCellValue('P' . ($rowIndex + $rowOffset), $activity['finance']);
+      }
+    }
+
+    ob_start();
+    $this->writer->save('php://output');
+    $content = ob_get_contents();
+    ob_end_clean();
+
+    Storage::disk('local')->put("public/table.xlsx", $content);
+
+    return asset('storage/table.xlsx');
+
   }
 }

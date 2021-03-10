@@ -129,6 +129,8 @@ class ApplicationController extends Controller
    *
    * @param \App\Http\Requests\Application\ApplicationExport
    * @return \Illuminate\Support\Collection
+   * @throws Exception
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
    */
   public function export(ApplicationExport $request)
   {

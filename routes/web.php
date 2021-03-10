@@ -26,6 +26,7 @@ Route::middleware(['auth', 'can:view-page'])->group(function () {
   Route::put('/budget', 'BudgetController@update')->name('budget.update');
   Route::get('/budget/all', 'BudgetController@all')->name('budget.all');
   Route::post('/budget/upload', 'BudgetController@upload')->name('budget.upload');
+  Route::post('/budget/export', 'BudgetController@export')->name('budget.export');
 
   Route::get('/shipment/all', 'ShipmentController@all')->name('shipment.all');
   Route::resource('shipment', 'ShipmentController')->only('index');

@@ -8,6 +8,7 @@ use App\Services\BudgetService;
 use App\Http\Requests\Budget\BudgetAll;
 use App\Http\Requests\Budget\BudgetUpdate;
 use App\Http\Requests\Budget\BudgetUpload;
+use App\Http\Requests\Budget\BudgetExport;
 
 class BudgetController extends Controller
 {
@@ -101,5 +102,20 @@ class BudgetController extends Controller
     Budget::insert($data);
 
     return $this->budgetService->getBudget($periods, $version, $version_involvement, $regions);
+  }
+
+  /**
+   * Консолидируем квартал
+   *
+   * @param BudgetExport $request
+   * @return \Illuminate\Support\Collection
+   * @throws \PhpOffice\PhpSpreadsheet\Exception
+   * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+   */
+  public function export(BudgetExport $request)
+  {
+    $period = $request->input('period');
+    $version = $request->input('version');
+    return $this->budgetService->export($period, $version);
   }
 }

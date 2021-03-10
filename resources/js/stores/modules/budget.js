@@ -63,6 +63,18 @@ export default {
       } else {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
+    },
+    /* Экспорт */
+    async exportBudget({ commit }, payload) {
+      let { period } = payload;
+      const res = await axios.post(this.state.requestPath + '/budget/export', payload)
+        .catch(err => console.log('In budget/exportBudget -', err));
+
+      if (!res.data.errors) {
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
     }
   },
   mutations: {

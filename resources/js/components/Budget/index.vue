@@ -36,7 +36,7 @@
             </div>
             <button class="btn btn-primary mr-3" @click="confirm">Применить</button>
             <button class="btn btn-secondary float-right" @click="modals.upload = true">Импорт</button>
-            <button class="btn btn-secondary float-right mr-1">Экспорт</button>
+            <button class="btn btn-secondary float-right mr-1" @click="download">Экспорт</button>
           </div>
         </div>
         <div class="row mt-4">
@@ -120,6 +120,23 @@
 
         this.$store.dispatch('budget/updateBudget', this.data).then(res => {
           this.errors = res.errors;
+          this.isLoading = false;
+        });
+      },
+      download() {
+        this.isLoading = true;
+        this.mode.edit = false;
+        let { periods, version } = this.data;
+
+        this.$store.dispatch('budget/exportBudget', { period: periods[0], version }).then(res => {
+          this.errors = res.errors;
+
+          if (!res.errors) {
+            const a = document.createElement('a');
+            a.href = res;
+            a.click();
+          }
+
           this.isLoading = false;
         });
       },
