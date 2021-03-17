@@ -318,8 +318,8 @@ class BudgetService
       $sheet->setCellValue('B' . ($rowIndex + $rowOffset), $dkre['total']['article']['63400']);
       $sheet->setCellValue('C' . ($rowIndex + $rowOffset), $dkre['total']['involve_last'] + $dkre['total']['involve_current'] + $dkre['total']['involve_turnover']);
       $sheet->setCellValue('D' . ($rowIndex + $rowOffset), $dkre['total']['involve_last']);
-      $sheet->setCellValue('E' . ($rowIndex + $rowOffset), $dkre['total']['involve_current']);
-      $sheet->setCellValue('F' . ($rowIndex + $rowOffset), $dkre['total']['involve_turnover']);
+      $sheet->setCellValue('E' . ($rowIndex + $rowOffset), $dkre['total']['involve_turnover']);
+      $sheet->setCellValue('F' . ($rowIndex + $rowOffset), $dkre['total']['involve_current']);
       $sheet->setCellValue('G' . ($rowIndex + $rowOffset), $dkre['total']['prepayment_current'] + $dkre['total']['prepayment_next']);
       $sheet->setCellValue('H' . ($rowIndex + $rowOffset), $dkre['total']['prepayment_current']);
       $sheet->setCellValue('I' . ($rowIndex + $rowOffset), $dkre['total']['prepayment_next']);
@@ -342,10 +342,15 @@ class BudgetService
         $rowOffset++;
         $sheet->setCellValue('A' . ($rowIndex + $rowOffset), $activity['name']);
         $sheet->setCellValue('B' . ($rowIndex + $rowOffset), $activity['article']['63400']);
-        $sheet->setCellValue('C' . ($rowIndex + $rowOffset), $activity['involve_last'] + $dkre['total']['involve_current'] + $dkre['total']['involve_turnover']);
+
+        $involve_last = in_array('involve_last', $activity->toArray()) ? $activity['involve_last'] : 0;
+        $involve_current = in_array('involve_current', $activity->toArray()) ? $activity['involve_current'] : 0;
+        $involve_turnover = in_array('involve_turnover', $activity->toArray()) ? $activity['involve_turnover'] : 0;
+
+        $sheet->setCellValue('C' . ($rowIndex + $rowOffset), $involve_last + $involve_current + $involve_turnover);
         $sheet->setCellValue('D' . ($rowIndex + $rowOffset), $activity['involve_last']);
-        $sheet->setCellValue('E' . ($rowIndex + $rowOffset), $activity['involve_current']);
-        $sheet->setCellValue('F' . ($rowIndex + $rowOffset), $activity['involve_turnover']);
+        $sheet->setCellValue('E' . ($rowIndex + $rowOffset), $activity['involve_turnover']);
+        $sheet->setCellValue('F' . ($rowIndex + $rowOffset), $activity['involve_current']);
         $sheet->setCellValue('G' . ($rowIndex + $rowOffset), $activity['prepayment_current'] + $activity['prepayment_next']);
         $sheet->setCellValue('H' . ($rowIndex + $rowOffset), $activity['prepayment_current']);
         $sheet->setCellValue('I' . ($rowIndex + $rowOffset), $activity['prepayment_next']);
@@ -364,7 +369,6 @@ class BudgetService
         $sheet->setCellValue('P' . ($rowIndex + $rowOffset), $activity['finance']);
 
         $sheet->getStyle('A' . ($rowIndex + $rowOffset))->getAlignment()->setIndent(1);
-
       }
     }
 
