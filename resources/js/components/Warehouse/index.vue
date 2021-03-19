@@ -11,7 +11,7 @@
             <div class="form-group mb-0">
               <select class="form-control" id="article" v-model="article" @change="changeArticle">
                 <option value="null" disabled>Выберите статью</option>
-                <option :value="article.id" v-for="(article, key) in computedArticles" :key="key">{{ article.name }}
+                <option :value="article.id" v-for="(article, key) in computedArticles" :key="key">{{ article.sub_general_name }}
                 </option>
               </select>
             </div>
