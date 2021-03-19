@@ -49,7 +49,7 @@
           id: null,
           value: null,
         },
-        article: 19,
+        article: null,
         isLoading: false,
         errors: [],
         result: {
