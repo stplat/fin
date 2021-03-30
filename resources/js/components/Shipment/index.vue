@@ -72,7 +72,7 @@
         data: {
           regions: [],
           periods: [ 2 ],
-          version: 2,
+          version: 5,
         },
         modals: {
           upload: false

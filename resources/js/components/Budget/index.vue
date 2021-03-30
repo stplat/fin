@@ -86,7 +86,7 @@
         data: {
           regions: [],
           periods: [ 2 ],
-          version: 4,
+          version: 5,
           version_involvement: 1
         },
         modals: {

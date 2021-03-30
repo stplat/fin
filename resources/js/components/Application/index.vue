@@ -117,9 +117,9 @@
         data: {
           periods: [ 5 ],
           article: 1,
-          version_budget: 4,
+          version_budget: 5,
           version_involvement: 1,
-          version_f22: 4,
+          version_f22: 5,
           version_shipment: 4
         },
         modals: {
@@ -139,10 +139,10 @@
         dataForProps: {
           periods: [ 1 ],
           article: 1,
-          version_budget: 2,
-          version_involvement: 2,
-          version_f22: 2,
-          version_shipment: 1
+          version_budget: 5,
+          version_involvement: 1,
+          version_f22: 5,
+          version_shipment: 4
         }
       }
     },
